@@ -91,3 +91,4 @@ TOP_To_Do_List/
 ## Acknowledgments
 -**Fonts:**
 -**Photo credits:**
+    - Icons used in this project are from [Google Material Symbols and Icons](https://fonts.google.com/icons) and are licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).

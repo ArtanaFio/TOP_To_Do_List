@@ -6,7 +6,7 @@ export class makeTodoItem {
     constructor(title, description, dueDate, priority, notes, checklist) {
         this.title = title; // string
         this.description = description; // string
-        this.dueDate = dueDate ? new Date(dueDate) : null; // date object
+        this.dueDate = dueDate ? new Date(dueDate) : null; // date object, default to null if not specified
         this.priority = this.setPriority(priority); // priority object
         this.notes = notes; // array of strings
         this.checklist = checklist; // array of strings

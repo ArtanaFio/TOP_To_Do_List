@@ -29,13 +29,23 @@ function deleteLabels(label) {
 class makeProject {
 
     static PRIORITIES = new Set(["low priority", "average priority", "high priority"]);
+    static MASTER_STORAGE = []; // Central Storage for ALL lists, including the default list
 
     constructor(title, description, dueDate, priority, label) {
         this.title = title;
         this.description = description;
-        this.dueDate = dueDate ? new Date(dueDate) : null;
+        this.dueDate = dueDate ? new Date(dueDate) : null; // default to null if not specified
         this.priority = this.setPriority(priority);
-        this.label = label;
+        this.label = new Set(); //set ensures users can customize
+
+        if (labels.has(label) || userUniqueLabels.includes(label)) {
+            this.label.add(label);
+        } else {
+            console.log("Error: the label is invalid.");
+        }
+
+        // Add project to default list
+        makeProject.MASTER_STORAGE.push(this);
     }
 
     // method to edit project title
@@ -98,10 +108,10 @@ class makeProject {
             console.log(`Error: ${label} label was not assigned to ${this.title}`);
         }
     }
-};
+}
 
 // creation of a default project
-//const defaultProject = new makeProject("Default List");
+export const defaultProject = new makeProject("Default List", "List to begin tracking general todo items.", null, "average priority", "Work");
 
 // edit project
 

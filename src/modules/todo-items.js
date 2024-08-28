@@ -1,6 +1,6 @@
 
 // create todo-item
-export class makeTodoItem {
+class makeTodoItem {
     static PRIORITIES = new Set(["low priority", "average priority", "high priority"]);
 
     constructor(title, description, dueDate, priority, notes, checklist) {
@@ -110,9 +110,4 @@ export class makeTodoItem {
     }
 }
 
-// add todo-items to projects
-// project.todoItems.push(todoItems);
-
-
-// delete todo-item
-// project.splice(todo-item, 1);
+export default makeTodoItem;

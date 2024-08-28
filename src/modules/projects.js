@@ -37,6 +37,7 @@ class makeProject {
         this.dueDate = dueDate ? new Date(dueDate) : null; // default to null if not specified
         this.priority = this.setPriority(priority);
         this.label = new Set(); //set ensures users can customize
+        this.tasks = [];
 
         if (labels.has(label) || userUniqueLabels.includes(label)) {
             this.label.add(label);
@@ -44,7 +45,7 @@ class makeProject {
             console.log("Error: the label is invalid.");
         }
 
-        // Add project to default list
+        // Add project to Master Storage
         makeProject.MASTER_STORAGE.push(this);
     }
 
@@ -108,13 +109,21 @@ class makeProject {
             console.log(`Error: ${label} label was not assigned to ${this.title}`);
         }
     }
+
+    // method to delete project from Master Storage
+    deleteProject() {
+        const index = makeProject.MASTER_STORAGE.indexOf(this);
+        if (index > -1) {
+            makeProject.MASTER_STORAGE.splice(index, 1);
+        }
+    }
+
+    // Helper method to validate labels
+    isValidLabel(label) {
+        return labels.has(label) || userUniqueLabels.includes(label);
+    }
 }
 
-// creation of a default project
-export const defaultProject = new makeProject("Default List", "List to begin tracking general todo items.", null, "average priority", "Work");
-
-// edit project
-
-// delete project
+export default makeProject;
 
 // project completion status

@@ -1,13 +1,10 @@
 //import { functionName } from './modules/moduleName';
 import makeTodoItem from "./modules/todo-items";
 import makeProject from "./modules/projects";
-
-//window.makeTodoItem = makeTodoItem;
-//window.makeProject = makeProject;
-//window.defaultProject = defaultProject;
-
-// creation of a default project
-const defaultProject = new makeProject("Default List", "List to begin tracking general todo items.", null, "average priority", "Work");
+import { defaultProject } from "./modules/projects";
+import { layout } from "./modules/ui";
+import { defaultProjectDisplay } from "./modules/ui";
+import './assets/styles/main.css';
 
 // apply default project
 console.log('Default list to store all unassigned tasks, called defaultProject:');
@@ -30,3 +27,6 @@ function assignByDefault() {
 
 // delete todo-item
 // project.splice(todo-item, 1);
+
+layout();
+defaultProjectDisplay(defaultProject.title, defaultProject.description);

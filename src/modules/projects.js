@@ -126,4 +126,8 @@ class makeProject {
 
 export default makeProject;
 
+// creation of a default project
+export const defaultProject = new makeProject("Default List", "List to begin tracking general todo items.", null, "average priority", "Work");
+
+
 // project completion status

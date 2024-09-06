@@ -69,15 +69,23 @@ export function defaultProjectDisplay(title, description, arrayLength) {
     infoSvg.classList.add("info-icon");
     infoBox.appendChild(infoSvg);
 
-    const defaultName = document.createElement('p');
-    defaultName.classList.add("list-name");
-    defaultName.textContent = title; //defaultProject.title;
-    defaultTop.appendChild(defaultName);
-
     const defaultDescription = document.createElement('div');
     defaultDescription.classList.add("description", "invisible");
     defaultDescription.textContent = description; //defaultProject.description;
     defaultList.appendChild(defaultDescription);
+
+    infoSvg.addEventListener('mouseover', () => {
+        defaultDescription.classList.remove("invisible");
+    })
+
+    infoSvg.addEventListener('mouseleave', () => {
+        defaultDescription.classList.add("invisible")
+    })
+
+    const defaultName = document.createElement('p');
+    defaultName.classList.add("list-name");
+    defaultName.textContent = title; //defaultProject.title;
+    defaultTop.appendChild(defaultName);
 
     const editDoc = parser.parseFromString(edit, 'image/svg+xml');
     const editSvg = editDoc.querySelector('svg');
@@ -118,5 +126,9 @@ export function defaultProjectDisplay(title, description, arrayLength) {
     const prioritySvg = priorityDoc.querySelector('svg');
     prioritySvg.classList.add("priority");
     bottomLine.appendChild(prioritySvg);
+
+}
+
+function projectDisplay(title, description, arrayLength) {
 
 }

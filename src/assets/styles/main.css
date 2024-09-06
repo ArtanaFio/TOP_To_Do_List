@@ -70,10 +70,6 @@ body {
 .info-icon {
     grid-column: 1 / 2;
     justify-self: start;
-    border: 2px dotted green;
-}
-
-.info-icon:hover {
 }
 
 .list-name {
@@ -108,7 +104,7 @@ body {
     color: darkmagenta;
     background-color: #ffb6ff;
     position: absolute;
-    left: 0;
+    left: 75px;
     padding: 20px;
     border-radius: 10px;
 }
@@ -116,12 +112,12 @@ body {
 .description:after {
     content: '';
     position: absolute;
-    right: -4%;
+    left: -4%;
     top: 5px;
     width: 0;
     height: 0;
     border-top: 5px solid transparent;
-    border-left: 12px solid #ffb6ff;
+    border-right: 12px solid #ffb6ff;
     border-bottom: 6px solid transparent;
 }
 

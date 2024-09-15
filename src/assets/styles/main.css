@@ -188,9 +188,48 @@ fieldset {
 }
 
 .task-property {
-    width: 100;
     display: flex;
+    margin: 0 5px;
     /*border: 1px dashed magenta;*/
+}
+
+.double-div {
+    gap: 10px;
+}
+
+.half-property {
+    width: 100%;
+    display: flex;
+}
+
+label {
+    font-size: 1.25rem;
+    color: darkorchid;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-right: 5px;
+    width: 100px;
+}
+
+.first-label {
+    align-items: flex-start;
+}
+
+.priority-label {
+    width: 55px;
+    justify-content: flex-start;
+}
+
+.half-input {
+    height: 25px;
+    font-size: 1.25rem;
+    padding-left: 10px;
+    background-color: rgba(221, 160, 221, 0.25);
+    cursor: text;
+    border: none;
+    outline: none;
+    flex: 1;
 }
 
 .input-task {
@@ -200,6 +239,7 @@ fieldset {
     align-items: center;
     font-size: 1.25rem;
     padding-left: 10px;
+    margin: 0 5px;
     background-color: rgba(221, 160, 221, 0.25);
     cursor: text;
     border: none;
@@ -216,24 +256,8 @@ fieldset {
     display: flex;
     align-items: center;
     font-size: 1.5rem;
-    /*padding-left: 40px;*/
     padding-left: 10px;
     height: 25px;
-}
-
-label {
-    font-size: 1.25rem;
-    color: darkorchid;
-    /*padding-left: 30px;*/
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    margin-right: 5px;
-    flex: 1;
-}
-
-.first-label {
-    align-items: flex-start;
 }
 
 .input-element {
@@ -245,7 +269,6 @@ label {
     cursor: text;
     border: none;
     outline: none;
-    /*margin-left: 30px;*/
 }
 
 textarea {
@@ -263,7 +286,8 @@ textarea {
 
 .task-bottom {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    margin: 0 5px;
 }
 
 .no-task {

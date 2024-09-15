@@ -248,13 +248,18 @@ export function defaultProjectDisplay(title, description, arrayLength, priority)
                 descriptionInput.placeholder = "Enter description";
                 descriptionDiv.appendChild(descriptionInput);
 
+                const doubleDiv = document.createElement('div');
+                doubleDiv.classList.add("task-property", "double-div");
+                taskFieldset.appendChild(doubleDiv);
+
                 const dueDateDiv = document.createElement('div');
-                dueDateDiv.classList.add("task-property");
-                taskFieldset.appendChild(dueDateDiv);
+                dueDateDiv.classList.add("half-property");
+                doubleDiv.appendChild(dueDateDiv);
 
                 const dueDateLabel = document.createElement('label');
                 dueDateLabel.for = "due-date";
                 dueDateLabel.textContent = "Due Date:";
+                dueDateLabel.classList.add("half-label");
                 dueDateDiv.appendChild(dueDateLabel);
 
                 const dueDateInput = document.createElement('input');
@@ -262,8 +267,23 @@ export function defaultProjectDisplay(title, description, arrayLength, priority)
                 dueDateInput.id = "due-date";
                 dueDateInput.name = "task_due_date";
                 dueDateInput.placeholder = "Enter due date";
-                dueDateInput.classList.add("input-element");
+                dueDateInput.classList.add("half-input");
                 dueDateDiv.appendChild(dueDateInput);
+
+                const priorityDiv = document.createElement('div');
+                priorityDiv.classList.add("half-property");
+                doubleDiv.appendChild(priorityDiv);
+
+                const priorityLabel = document.createElement('label');
+                priorityLabel.for = "priority-level";
+                priorityLabel.textContent = "Priority:";
+                priorityLabel.classList.add("half-label", "priority-label");
+                priorityDiv.appendChild(priorityLabel);
+
+                const taskPriorityBox = document.createElement('div');
+                taskPriorityBox.classList.add("priority-box");
+                priorityDiv.appendChild(taskPriorityBox);
+                taskPriorityBox.appendChild(undefinedSvg);
 
                 const notesDiv = document.createElement('div');
                 notesDiv.classList.add("task-property");
@@ -282,6 +302,24 @@ export function defaultProjectDisplay(title, description, arrayLength, priority)
                 notesInput.classList.add("input-element");
                 notesDiv.appendChild(notesInput);
 
+                const checklistDiv = document.createElement('div');
+                checklistDiv.classList.add("task-property");
+                taskFieldset.appendChild(checklistDiv);
+
+                const checklistLabel = document.createElement('label');
+                checklistLabel.for = "checklist";
+                checklistLabel.textContent = "Checklist:";
+                checklistDiv.appendChild(checklistLabel);
+
+                const checklistInput = document.createElement('input');
+                checklistInput.type = "text";
+                checklistInput.id = "checklist";
+                checklistInput.name = "checklist_items";
+                checklistInput.placeholder = "Enter checklist reminders";
+                checklistInput.classList.add("input-element");
+                checklistDiv.appendChild(checklistInput);
+
+
                 const bottomSvgs = document.createElement('div');
                 bottomSvgs.classList.add("task-bottom");
                 taskFieldset.appendChild(bottomSvgs);
@@ -292,15 +330,6 @@ export function defaultProjectDisplay(title, description, arrayLength, priority)
                 const deleteSvg = deleteDoc.querySelector('svg');
                 deleteSvg.classList.add("delete-icon");
                 bottomSvgs.appendChild(deleteSvg);
-
-                const taskPriorityBox = document.createElement('div');
-                taskPriorityBox.classList.add("priority-box");
-                bottomSvgs.appendChild(taskPriorityBox);
-                taskPriorityBox.appendChild(undefinedSvg);
-                /*
-                priority
-                checklist
-                */
             })
 
             function convertInput(input) {

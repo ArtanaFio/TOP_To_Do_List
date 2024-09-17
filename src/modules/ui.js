@@ -6,6 +6,7 @@ import exclamation from '../assets/images/priority_high.svg';
 import low from '../assets/images/green-priority.svg';
 import mid from '../assets/images/yellow-priority.svg';
 import high from '../assets/images/red-priority.svg';
+import date from '../assets/images/date.svg';
 import trash from '../assets/images/delete.svg';
 
 document.getElementById('')
@@ -209,10 +210,20 @@ export function defaultProjectDisplay(title, description, arrayLength, priority)
             addSvg.classList.add("add-icon");
             taskBlock.appendChild(addSvg);
 
+            const dummyInput = document.createElement('input');
+            dummyInput.classList.add('input-task');
+            dummyInput.placeholder = "Enter a new task";
+            taskBlock.appendChild(dummyInput);
+
+
+            // This section is for the task form
+            const taskFormContainer = document.createElement('div');
+            taskFormContainer.classList.add("block");
+            taskArea.appendChild(taskFormContainer);
+
             const taskForm = document.createElement('form');
             taskBlock.classList.add("block");
-            taskBlock.appendChild(taskForm);
-
+            
             const taskFieldset = document.createElement('fieldset');
             taskForm.appendChild(taskFieldset);
 
@@ -225,182 +236,246 @@ export function defaultProjectDisplay(title, description, arrayLength, priority)
             taskTitleInput.placeholder = "Enter a new task";
             taskBar.appendChild(taskTitleInput);
 
+            const descriptionDiv = document.createElement('div');
+            descriptionDiv.classList.add("task-property");
+            taskFieldset.appendChild(descriptionDiv);
+
+            const descriptionLabel = document.createElement('label');
+            descriptionLabel.for = "description";
+            descriptionLabel.textContent = "Description:";
+            descriptionLabel.classList.add("textarea-label");
+            descriptionDiv.appendChild(descriptionLabel);
+
+            const descriptionInput = document.createElement('textarea');
+            descriptionInput.id = "description";
+            descriptionInput.name = "task_description";
+            descriptionInput.placeholder = "Enter description";
+            descriptionDiv.appendChild(descriptionInput);
+
+            const doubleDiv = document.createElement('div');
+            doubleDiv.classList.add("task-property", "double-div");
+            taskFieldset.appendChild(doubleDiv);
+
+            const dueDateDiv = document.createElement('div');
+            dueDateDiv.classList.add("half-property");
+            doubleDiv.appendChild(dueDateDiv);
+
+            const dueDateLabel = document.createElement('label');
+            dueDateLabel.for = "due-date";
+            dueDateLabel.textContent = "Due Date:";
+            dueDateLabel.classList.add("half-label");
+            dueDateDiv.appendChild(dueDateLabel);
+
+            const dueDateInput = document.createElement('input');
+            dueDateInput.type = "date";
+            dueDateInput.id = "due-date";
+            dueDateInput.name = "task_due_date";
+            dueDateInput.placeholder = "Enter due date";
+            dueDateInput.classList.add("half-input");
+            dueDateDiv.appendChild(dueDateInput);
+
+            const priorityDiv = document.createElement('div');
+            priorityDiv.classList.add("half-property");
+            doubleDiv.appendChild(priorityDiv);
+
+            const priorityLabel = document.createElement('label');
+            priorityLabel.for = "priority-level";
+            priorityLabel.textContent = "Priority:";
+            priorityLabel.classList.add("half-label", "priority-label");
+            priorityDiv.appendChild(priorityLabel);
+
+            const priorityDropBox = document.createElement('select');
+            priorityDropBox.classList.add("drop-box");
+            const notOption = document.createElement('option');
+            notOption.textContent = "select";
+            notOption.value = '';
+            notOption.disabled = true;
+            notOption.selected = true;
+            priorityDropBox.appendChild(notOption);
+            const priorityOptions = ['Low Priority', 'Average Priority', 'High Priority'];
+            priorityOptions.forEach(priorityType => {
+                const option = document.createElement('option');
+                option.value = priorityType;
+                option.textContent = priorityType;
+                priorityDropBox.appendChild(option);
+            })
+            priorityDiv.appendChild(priorityDropBox);
+
+            const notesDiv = document.createElement('div');
+            notesDiv.classList.add("task-property");
+            taskFieldset.appendChild(notesDiv);
+
+            const notesLabel = document.createElement('label');
+            notesLabel.for = "notes";
+            notesLabel.textContent = "Notes:";
+            notesLabel.classList.add("textarea-label");
+            notesDiv.appendChild(notesLabel);
+
+            const notesInput = document.createElement('input');
+            notesInput.type = "text";
+            notesInput.id = "notes";
+            notesInput.name = "task_notes";
+            notesInput.placeholder = "Enter notes";
+            notesInput.classList.add("input-element");
+            notesDiv.appendChild(notesInput);
+
+            const checklistDiv = document.createElement('div');
+            checklistDiv.classList.add("task-property");
+            taskFieldset.appendChild(checklistDiv);
+
+            const checklistLabel = document.createElement('label');
+            checklistLabel.for = "checklist";
+            checklistLabel.textContent = "Checklist:";
+            checklistLabel.classList.add("textarea-label");
+            checklistDiv.appendChild(checklistLabel);
+
+            const checklistInput = document.createElement('input');
+            checklistInput.type = "text";
+            checklistInput.id = "checklist";
+            checklistInput.name = "checklist_items";
+            checklistInput.placeholder = "Enter checklist reminders";
+            checklistInput.classList.add("input-element");
+            checklistDiv.appendChild(checklistInput);
+
+            const submitDiv = document.createElement('div');
+            submitDiv.classList.add("submit-div");
+            taskFieldset.appendChild(submitDiv);
+
+            const cancelButton = document.createElement('button');
+            cancelButton.type = "button";
+            cancelButton.classList.add("cancel-button", "cancel-unpressed");
+            cancelButton.textContent = "Cancel";
+            submitDiv.appendChild(cancelButton);
+
+            cancelButton.addEventListener("mousedown", () => {
+                cancelButton.classList.add("cancel-pressed");
+                cancelButton.classList.remove("cancel-unpressed");
+            });
+
+            cancelButton.addEventListener("mouseup", () => {
+                cancelButton.classList.add("cancel-unpressed");
+                cancelButton.classList.remove("cancel-pressed");
+
+                // enter code to convert form into text
+            });
+
+            const submitButton = document.createElement('button');
+            submitButton.type = "button";
+            submitButton.classList.add("submit-button", "unpressed");
+            submitButton.textContent = "Submit";
+            submitDiv.appendChild(submitButton);
+
+            submitButton.addEventListener("mousedown", () => {
+                submitButton.classList.add("pressed");
+                submitButton.classList.remove("unpressed");
+            });
+
             let initiateTask = false;
 
-            taskTitleInput.addEventListener("click", (event) => {
+            dummyInput.addEventListener("click", (event) => {
+
+                taskBlock.remove();
                 
                 if (initiateTask) return;
                 initiateTask = true;
 
-                const descriptionDiv = document.createElement('div');
-                descriptionDiv.classList.add("task-property");
-                taskFieldset.appendChild(descriptionDiv);
+                taskFormContainer.appendChild(taskForm);
+                
+                taskFieldset.classList.add("fieldset-border");
+            });
 
-                const descriptionLabel = document.createElement('label');
-                descriptionLabel.for = "description";
-                descriptionLabel.textContent = "Description:";
-                descriptionLabel.classList.add("first-label");
-                descriptionDiv.appendChild(descriptionLabel);
+            submitButton.addEventListener("mouseup", () => {
+                submitButton.classList.add("unpressed");
+                submitButton.classList.remove("pressed");
 
-                const descriptionInput = document.createElement('textarea');
-                descriptionInput.id = "description";
-                descriptionInput.name = "task_description";
-                descriptionInput.placeholder = "Enter description";
-                descriptionDiv.appendChild(descriptionInput);
+                // enter code to convert form into text
+                const taskTitle = taskTitleInput.value;
+                const taskDescription = descriptionInput.value;
+                const taskDueDate = dueDateInput.value;
+                const taskPriority = priorityDropBox.value;
+                const taskNotes = notesInput.value;
+                const taskChecklist = checklistInput.value;
 
-                const doubleDiv = document.createElement('div');
-                doubleDiv.classList.add("task-property", "double-div");
-                taskFieldset.appendChild(doubleDiv);
+                console.log(`taskTitle: ${taskTitle}`);
+                console.log(`taskDescription: ${taskDescription}`);
+                console.log(`taskDueDate: ${taskDueDate}`);
+                console.log(`taskPriority: ${taskPriority}`);
+                console.log(`taskNotes: ${taskNotes}`);
+                console.log(`taskChecklist: ${taskChecklist}`);
 
-                const dueDateDiv = document.createElement('div');
-                dueDateDiv.classList.add("half-property");
-                doubleDiv.appendChild(dueDateDiv);
+                taskFormContainer.remove();
+                
+                const fullTaskContainer = document.createElement('div');
+                fullTaskContainer.classList.add("block", "full-task");
+                taskArea.appendChild(fullTaskContainer);
 
-                const dueDateLabel = document.createElement('label');
-                dueDateLabel.for = "due-date";
-                dueDateLabel.textContent = "Due Date:";
-                dueDateLabel.classList.add("half-label");
-                dueDateDiv.appendChild(dueDateLabel);
+                const emptyCircle = document.createElement('div');
+                emptyCircle.classList.add("circle");
+                fullTaskContainer.appendChild(emptyCircle);
 
-                const dueDateInput = document.createElement('input');
-                dueDateInput.type = "date";
-                dueDateInput.id = "due-date";
-                dueDateInput.name = "task_due_date";
-                dueDateInput.placeholder = "Enter due date";
-                dueDateInput.classList.add("half-input");
-                dueDateDiv.appendChild(dueDateInput);
+                const fullTaskTitle = document.createElement('p');
+                fullTaskTitle.classList.add("task-paragraph");
+                fullTaskTitle.textContent = taskTitle;
+                fullTaskContainer.appendChild(fullTaskTitle);
 
-                const priorityDiv = document.createElement('div');
-                priorityDiv.classList.add("half-property");
-                doubleDiv.appendChild(priorityDiv);
+                emptyCircle.addEventListener("click", () => {
+                    fullTaskTitle.classList.add("strike-through");
+                });
 
-                const priorityLabel = document.createElement('label');
-                priorityLabel.for = "priority-level";
-                priorityLabel.textContent = "Priority:";
-                priorityLabel.classList.add("half-label", "priority-label");
-                priorityDiv.appendChild(priorityLabel);
+                const pictographBox = document.createElement('div');
+                pictographBox.classList.add("pictographs");
+                fullTaskContainer.appendChild(pictographBox);
 
                 const taskPriorityBox = document.createElement('div');
                 taskPriorityBox.classList.add("priority-box");
-                priorityDiv.appendChild(taskPriorityBox);
-                taskPriorityBox.appendChild(undefinedSvg);
+                pictographBox.appendChild(taskPriorityBox);
 
-                const notesDiv = document.createElement('div');
-                notesDiv.classList.add("task-property");
-                taskFieldset.appendChild(notesDiv);
+                
+                if (!taskPriority) {
+                } else if (taskPriority === "Low Priority") {
+                    taskPriorityBox.appendChild(lowSvg);
+                } else if (taskPriority === "Average Priority") {
+                    taskPriorityBox.appendChild(midSvg);
+                    taskPriorityBox.appendChild(midSvgTwo);
+                } else if (taskPriority === "High Priority") {
+                    taskPriorityBox.appendChild(highSvg);
+                    taskPriorityBox.appendChild(highSvgTwo);
+                    taskPriorityBox.appendChild(highSvgThree);
+                } else {
+                    console.log("Error: UI doesn't recognize task priority");
+                }
+                
 
-                const notesLabel = document.createElement('label');
-                notesLabel.for = "notes";
-                notesLabel.textContent = "Notes:";
-                notesDiv.appendChild(notesLabel);
+                const dateDoc = parser.parseFromString(date, 'image/svg+xml');
+                const dateSvg = dateDoc.querySelector('svg');
+                dateSvg.classList.add("date-icon");
+                pictographBox.appendChild(dateSvg);
 
-                const notesInput = document.createElement('input');
-                notesInput.type = "text";
-                notesInput.id = "notes";
-                notesInput.name = "task_notes";
-                notesInput.placeholder = "Enter notes";
-                notesInput.classList.add("input-element");
-                notesDiv.appendChild(notesInput);
+                const datePopup = document.createElement('div');
+                datePopup.classList.add("date-popup", "invisible");
+                if (taskDueDate) {
+                    datePopup.textContent = `Due Date: ${taskDueDate}`;
+                } else {
+                    datePopup.textContent = "No due date";
+                }
+                
+                pictographBox.appendChild(datePopup);
 
-                const checklistDiv = document.createElement('div');
-                checklistDiv.classList.add("task-property");
-                taskFieldset.appendChild(checklistDiv);
+                dateSvg.addEventListener("mouseover", () => {
+                    datePopup.classList.remove("invisible");
+                });
 
-                const checklistLabel = document.createElement('label');
-                checklistLabel.for = "checklist";
-                checklistLabel.textContent = "Checklist:";
-                checklistDiv.appendChild(checklistLabel);
-
-                const checklistInput = document.createElement('input');
-                checklistInput.type = "text";
-                checklistInput.id = "checklist";
-                checklistInput.name = "checklist_items";
-                checklistInput.placeholder = "Enter checklist reminders";
-                checklistInput.classList.add("input-element");
-                checklistDiv.appendChild(checklistInput);
-
-
-                const bottomSvgs = document.createElement('div');
-                bottomSvgs.classList.add("task-bottom");
-                taskFieldset.appendChild(bottomSvgs);
-
-                bottomSvgs.appendChild(editSvg);
+                dateSvg.addEventListener("mouseleave", () => {
+                    datePopup.classList.add("invisible");
+                })
+                
+                pictographBox.appendChild(editSvg);
 
                 const deleteDoc = parser.parseFromString(trash, 'image/svg+xml');
                 const deleteSvg = deleteDoc.querySelector('svg');
                 deleteSvg.classList.add("delete-icon");
-                bottomSvgs.appendChild(deleteSvg);
-            })
-
-            function convertInput(input) {
-                const taskContent = taskTitleInput.value;
-
-                const taskParagraph = document.createElement('p');
-                taskParagraph.classList.add("task-paragraph");
-                taskParagraph.textContent = taskContent;
-                input.parentNode.replaceChild(taskParagraph, taskTitleInput);
-            }
-
-            taskTitleInput.addEventListener('keypress', (event) => {
-                if (event.key === 'Enter') {
-                    convertInput(taskTitleInput);
-                    addSvg.remove();
-
-                    const newTaskBar = document.createElement('div');
-                    newTaskBar.classList.add("task-bar");
-                    taskArea.appendChild(newTaskBar);
-        
-                    newTaskBar.appendChild(addSvg);
-        
-                    const newTaskInput = document.createElement('input');
-                    newTaskInput.classList.add("input-task");
-                    newTaskInput.placeholder = "Enter a new task";
-                    newTaskBar.appendChild(newTaskInput);
-                }
-                
+                fullTaskContainer.appendChild(deleteSvg);
             });
-
-            /*
-            taskTitleInput.addEventListener('blur', () => {
-                convertInput();
-            });
-            */
-
-            newTaskMade = true;
-
-            addSvg.addEventListener("click", (event) => {
-
-                addSvg.remove();
-    
-                const newTaskBlock = document.createElement('div');
-                newTaskBlock.classList.add("block");
-                taskArea.appendChild(newTaskBlock);
-
-                newTaskBlock.appendChild(addSvg);
-
-                const newTaskBar = document.createElement('div');
-                newTaskBar.classList.add("task-bar");
-                newTaskBlock.appendChild(newTaskBar);
-    
-                const newTaskInput = document.createElement('input');
-                newTaskInput.classList.add("input-task");
-                newTaskInput.placeholder = "Enter a new task";
-                newTaskBar.appendChild(newTaskInput);
-
-                newTaskInput.addEventListener('keypress', (event) => {
-                    if (event.key === 'Enter') {
-                        console.log("At least this worked");
-                    }
-                });
-
-                /*
-                newTaskInput.addEventListener('keypress', (event) {
-                    if (event.key === 'Enter') {
-                        convertInput(newTaskInput);
-                    }
-                })
-                    */
-            })
         }
     })
 
@@ -415,8 +490,6 @@ export function defaultProjectDisplay(title, description, arrayLength, priority)
 
     editSvg.addEventListener("click", (event) => {
         event.stopPropagation();
-
-        
     })
 
 }

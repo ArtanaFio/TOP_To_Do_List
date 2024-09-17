@@ -140,14 +140,28 @@ body {
     justify-content: flex-end;
 }
 
-.edit-icon, .exit-icon, .add-icon, .delete-icon, .empty-priority-icon {
+.pictographs {
+    display: flex;
+    flex: 1;
+}
+
+.date-popup {
+    font-size: 1.2rem;
+    color: darkmagenta;
+    background-color: #ffb6ff;
+    position: absolute;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.edit-icon, .exit-icon, .add-icon, .delete-icon, .empty-priority-icon, .date-icon {
     width: 25px;
     height: 25px;
     cursor: pointer;
     border-radius: 50%;
 }
 
-.edit-icon:hover, .exit-icon:hover, .add-icon:hover, .delete-icon:hover, .empty-priority-icon:hover {
+.edit-icon:hover, .exit-icon:hover, .add-icon:hover, .delete-icon:hover, .empty-priority-icon:hover, .date-icon:hover {
     background-color: #ffb6ff;
 }
 
@@ -159,7 +173,6 @@ body {
     align-items: center;
     margin-top: 5px;
     gap: 5px;
-    /*border: 2px dashed dodgerblue;*/
 }
 
 .block {
@@ -172,25 +185,26 @@ form {
 }
 
 fieldset {
-    border: 1px solid darkorchid;
+    border: none;
     border-radius: 5px;
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
 
+.fieldset-border {
+    border: 1px solid darkorchid;
+}
+
 .task-bar {
     width: 100%;
     display: flex;
     margin: 0;
-    gap: 5px;
-    /*border: 1px dotted green;*/
 }
 
 .task-property {
     display: flex;
     margin: 0 5px;
-    /*border: 1px dashed magenta;*/
 }
 
 .double-div {
@@ -212,7 +226,7 @@ label {
     width: 100px;
 }
 
-.first-label {
+.textarea-label {
     align-items: flex-start;
 }
 
@@ -224,6 +238,7 @@ label {
 .half-input {
     height: 25px;
     font-size: 1.25rem;
+    color: orchid;
     padding-left: 10px;
     background-color: rgba(221, 160, 221, 0.25);
     cursor: text;
@@ -238,6 +253,8 @@ label {
     display: flex;
     align-items: center;
     font-size: 1.25rem;
+    font-weight: bold;
+    color: orchid;
     padding-left: 10px;
     margin: 0 5px;
     background-color: rgba(221, 160, 221, 0.25);
@@ -246,10 +263,27 @@ label {
     outline: none;
 }
 
-.input-task:focus {
-    border: none;
-    outline: none;
-    background-color: transparent;
+.notes-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.full-task {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.circle {
+    width: 20px;
+    height: 20px;
+    border: 3px solid darkorchid;
+    border-radius: 50%;
+}
+
+.circle:hover {
+    border-color: orchid;
 }
 
 .task-paragraph {
@@ -260,10 +294,15 @@ label {
     height: 25px;
 }
 
+.strike-through {
+    text-decoration: line-through;
+}
+
 .input-element {
-    flex: 7;
+    flex: 1;
     height: 25px;
     font-size: 1.25rem;
+    color: orchid;
     padding-left: 10px;
     background-color: rgba(221, 160, 221, 0.25);
     cursor: text;
@@ -276,12 +315,73 @@ textarea {
     vertical-align: top;
     background-color: rgba(221, 160, 221, 0.25);
     font-size: 1.25rem;
+    font-family: sans-serif;
+    color: orchid;
     padding-left: 10px;
     padding-top: 5px;
     cursor: text;
     flex: 7;
     border: none;
     outline: none;
+}
+
+.drop-box {
+    border: 1px solid darkorchid;
+    color: orchid;
+    background-color: rgba(221, 160, 221, 0.25);
+}
+
+.submit-div {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px;
+    gap: 50px;
+}
+
+.cancel-button {
+    background-color: #9c669a;
+    color: white;
+    padding: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.cancel-unpressed {
+    border-top: 2px solid #9c669a;
+    border-left: 2px solid #9c669a;
+    border-right: 2px solid #4b1964;
+    border-bottom: 2px solid #4b1964;
+}
+
+.cancel-pressed {
+    border-top: 2px solid #4b1964;
+    border-left: 2px solid #4b1964;
+    border-right: 2px solid #9c669a;
+    border-bottom: 2px solid #9c669a;
+}
+
+.submit-button {
+    background-color: orchid;
+    color: white;
+    padding: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+.unpressed {
+    border-top: 2px solid orchid;
+    border-left: 2px solid orchid;
+    border-right: 2px solid darkorchid;
+    border-bottom: 2px solid darkorchid;
+}
+
+.pressed {
+    border-top: 2px solid darkorchid;
+    border-left: 2px solid darkorchid;
+    border-right: 2px solid orchid;
+    border-bottom: 2px solid orchid;
 }
 
 .task-bottom {

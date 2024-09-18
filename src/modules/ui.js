@@ -481,10 +481,26 @@ export function defaultProjectDisplay(title, description, arrayLength, priority)
                 
                 pictographBox.appendChild(editSvg);
 
+                const taskDeleteBox = document.createElement('div');
+                taskDeleteBox.classList.add("invisible");
+                fullTaskContainer.appendChild(taskDeleteBox);
+
                 const deleteDoc = parser.parseFromString(trash, 'image/svg+xml');
                 const deleteSvg = deleteDoc.querySelector('svg');
                 deleteSvg.classList.add("delete-icon");
-                fullTaskContainer.appendChild(deleteSvg);
+                taskDeleteBox.appendChild(deleteSvg);
+
+                fullTaskContainer.addEventListener("mouseover", () => {
+                    taskDeleteBox.classList.remove("invisible");
+                });
+
+                fullTaskContainer.addEventListener("mouseleave", () => {
+                    taskDeleteBox.classList.add("invisible");
+                });
+
+                taskDeleteBox.addEventListener("click", () => {
+                    fullTaskContainer.remove();
+                });
 
                 taskTitleInput.value = '';
                 descriptionInput.value = '';

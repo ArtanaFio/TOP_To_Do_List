@@ -1,4 +1,5 @@
 import plus from '../assets/images/add.svg';
+import check from '../assets/images/check_circle.svg';
 import info from '../assets/images/info.svg';
 import edit from '../assets/images/edit.svg';
 import exit from '../assets/images/exit.svg';
@@ -219,10 +220,11 @@ export function defaultProjectDisplay(title, description, arrayLength, priority)
             // This section is for the task form
             const taskFormContainer = document.createElement('div');
             taskFormContainer.classList.add("block");
-            taskArea.appendChild(taskFormContainer);
+            
 
             const taskForm = document.createElement('form');
             taskBlock.classList.add("block");
+            taskFormContainer.appendChild(taskForm);
             
             const taskFieldset = document.createElement('fieldset');
             taskForm.appendChild(taskFieldset);
@@ -356,7 +358,6 @@ export function defaultProjectDisplay(title, description, arrayLength, priority)
                 cancelButton.classList.add("cancel-unpressed");
                 cancelButton.classList.remove("cancel-pressed");
 
-                // enter code to convert form into text
             });
 
             const submitButton = document.createElement('button');
@@ -370,16 +371,11 @@ export function defaultProjectDisplay(title, description, arrayLength, priority)
                 submitButton.classList.remove("unpressed");
             });
 
-            let initiateTask = false;
-
-            dummyInput.addEventListener("click", (event) => {
+            taskBlock.addEventListener("click", (event) => {
 
                 taskBlock.remove();
-                
-                if (initiateTask) return;
-                initiateTask = true;
 
-                taskFormContainer.appendChild(taskForm);
+                taskArea.appendChild(taskFormContainer);
                 
                 taskFieldset.classList.add("fieldset-border");
             });
@@ -413,6 +409,10 @@ export function defaultProjectDisplay(title, description, arrayLength, priority)
                 emptyCircle.classList.add("circle");
                 fullTaskContainer.appendChild(emptyCircle);
 
+                const checkDoc = parser.parseFromString(check, 'image/svg+xml');
+                const checkSvg = checkDoc.querySelector('svg');
+                checkSvg.classList.add("add-icon");
+
                 const fullTaskTitle = document.createElement('p');
                 fullTaskTitle.classList.add("task-paragraph");
                 fullTaskTitle.textContent = taskTitle;
@@ -420,6 +420,16 @@ export function defaultProjectDisplay(title, description, arrayLength, priority)
 
                 emptyCircle.addEventListener("click", () => {
                     fullTaskTitle.classList.add("strike-through");
+                    emptyCircle.classList.remove("circle");
+                    emptyCircle.appendChild(checkSvg);
+
+                    checkSvg.addEventListener("click", () => {
+                        // the event listener is working, but why won't it revert?
+
+                        //emptyCircle.classList.add("circle");
+                        //fullTaskTitle.classList.remove("strike-through");
+                        //checkSvg.remove();
+                    });
                 });
 
                 const pictographBox = document.createElement('div');
@@ -475,6 +485,15 @@ export function defaultProjectDisplay(title, description, arrayLength, priority)
                 const deleteSvg = deleteDoc.querySelector('svg');
                 deleteSvg.classList.add("delete-icon");
                 fullTaskContainer.appendChild(deleteSvg);
+
+                taskTitleInput.value = '';
+                descriptionInput.value = '';
+                dueDateInput.value = '';
+                priorityDropBox.selectedIndex = 0;
+                notesInput.value = '';
+                checklistInput.value = '';
+
+                taskArea.appendChild(taskBlock);
             });
         }
     })

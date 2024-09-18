@@ -358,6 +358,8 @@ export function defaultProjectDisplay(title, description, arrayLength, priority)
                 cancelButton.classList.add("cancel-unpressed");
                 cancelButton.classList.remove("cancel-pressed");
 
+                taskFormContainer.remove();
+                taskArea.appendChild(taskBlock);
             });
 
             const submitButton = document.createElement('button');
@@ -419,17 +421,15 @@ export function defaultProjectDisplay(title, description, arrayLength, priority)
                 fullTaskContainer.appendChild(fullTaskTitle);
 
                 emptyCircle.addEventListener("click", () => {
-                    fullTaskTitle.classList.add("strike-through");
-                    emptyCircle.classList.remove("circle");
-                    emptyCircle.appendChild(checkSvg);
-
-                    checkSvg.addEventListener("click", () => {
-                        // the event listener is working, but why won't it revert?
-
-                        //emptyCircle.classList.add("circle");
-                        //fullTaskTitle.classList.remove("strike-through");
-                        //checkSvg.remove();
-                    });
+                    if (!fullTaskTitle.classList.contains("strike-through")) {
+                        fullTaskTitle.classList.add("strike-through");
+                        emptyCircle.classList.remove("circle");
+                        emptyCircle.appendChild(checkSvg);
+                    } else {
+                        checkSvg.remove();
+                        emptyCircle.classList.add("circle");
+                        fullTaskTitle.classList.remove("strike-through");
+                    }
                 });
 
                 const pictographBox = document.createElement('div');

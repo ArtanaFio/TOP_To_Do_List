@@ -62,7 +62,7 @@ export function layout() {
 
 // function to create default project to be exported to entry point
 
-export function defaultProjectDisplay(title, description, arrayLength, priority, makeTask) {
+export function defaultProjectDisplay(title, description, arrayLength, priority, makeTask, getTaskArray) {
     const space = document.getElementById("space");
     
     const defaultList = document.createElement('div');
@@ -283,7 +283,7 @@ export function defaultProjectDisplay(title, description, arrayLength, priority,
     notOption.disabled = true;
     notOption.selected = true;
     priorityDropBox.appendChild(notOption);
-    const priorityOptions = ['Low Priority', 'Average Priority', 'High Priority'];
+    const priorityOptions = ['low priority', 'average priority', 'high priority'];
     priorityOptions.forEach(priorityType => {
         const option = document.createElement('option');
         option.value = priorityType;
@@ -363,11 +363,8 @@ export function defaultProjectDisplay(title, description, arrayLength, priority,
     });
 
     taskBlock.addEventListener("click", (event) => {
-
         taskBlock.remove();
-
-        taskArea.appendChild(taskFormContainer);
-                
+        taskArea.appendChild(taskFormContainer);                
         taskFieldset.classList.add("fieldset-border");
     });
 
@@ -384,14 +381,16 @@ export function defaultProjectDisplay(title, description, arrayLength, priority,
         const taskChecklist = checklistInput.value;
 
         //come back to this for returning values to make tasks
-        makeTask(taskTitle);
-
+        makeTask(taskTitle, taskDescription, taskDueDate, taskPriority, taskNotes, taskChecklist);
+        getTaskArray(defaultTaskNumber);
+        /*
         console.log(`taskTitle: ${taskTitle}`);
         console.log(`taskDescription: ${taskDescription}`);
         console.log(`taskDueDate: ${taskDueDate}`);
         console.log(`taskPriority: ${taskPriority}`);
         console.log(`taskNotes: ${taskNotes}`);
         console.log(`taskChecklist: ${taskChecklist}`);
+        */
 
         taskFormContainer.remove();
                 
@@ -434,12 +433,12 @@ export function defaultProjectDisplay(title, description, arrayLength, priority,
 
                 
         if (!taskPriority) {
-        } else if (taskPriority === "Low Priority") {
+        } else if (taskPriority === "low priority") {
             taskPriorityBox.appendChild(lowSvg);
-        } else if (taskPriority === "Average Priority") {
+        } else if (taskPriority === "average priority") {
             taskPriorityBox.appendChild(midSvg);
             taskPriorityBox.appendChild(midSvgTwo);
-        } else if (taskPriority === "High Priority") {
+        } else if (taskPriority === "high priority") {
             taskPriorityBox.appendChild(highSvg);
             taskPriorityBox.appendChild(highSvgTwo);
             taskPriorityBox.appendChild(highSvgThree);

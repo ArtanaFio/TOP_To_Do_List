@@ -150,19 +150,21 @@ body {
     color: darkmagenta;
     background-color: #ffb6ff;
     position: absolute;
+    margin-top: 30px;
     padding: 10px;
     border-radius: 10px;
+    border: 1px solid darkmagenta;
 }
 
-.edit-icon, .exit-icon, .add-icon, .delete-icon, .empty-priority-icon, .date-icon {
+.edit-icon, .exit-icon, .add-icon, .delete-icon, .empty-priority-icon, .date-icon, .check-icon {
     width: 25px;
     height: 25px;
     cursor: pointer;
     border-radius: 50%;
 }
 
-.edit-icon:hover, .exit-icon:hover, .add-icon:hover, .delete-icon:hover, .empty-priority-icon:hover, .date-icon:hover {
-    background-color: #ffb6ff;
+.edit-icon:hover, .exit-icon:hover, .add-icon:hover, .delete-icon:hover, .empty-priority-icon:hover, .date-icon:hover, .check-icon:hover {
+    background-color: orchid;
 }
 
 .task-area {
@@ -263,6 +265,23 @@ label {
     outline: none;
 }
 
+.dummy-input {
+    height: 25px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: orchid;
+    padding-left: 10px;
+    margin: 0 5px;
+    background-color: rgba(255, 216, 255, 0.25);
+    border: 1px solid rgb(255, 178, 252);
+    border-radius: 20px;
+    cursor: pointer;
+    outline: none;
+}
+
 .notes-box {
     flex: 1;
     display: flex;
@@ -273,6 +292,12 @@ label {
     width: 100%;
     display: flex;
     align-items: center;
+}
+
+.full-task:hover {
+    background-color: #ffd7ff;
+    padding: 0 5px;
+    border-radius: 20px;
 }
 
 .circle {

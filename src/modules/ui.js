@@ -17,7 +17,7 @@ export function layout() {
     const container = document.getElementById('container');
     const title = document.createElement('h1');
     title.id = "title";
-    title.textContent = "TOP ToDo";
+    title.textContent = "TOP ToDo Hub";
     container.appendChild(title);
 
     const space = document.createElement('div');
@@ -58,7 +58,7 @@ export function layout() {
     copyrightYear.className = 'year';
     copyrightYear.textContent = new Date().getFullYear();
     footer.appendChild(copyrightYear);
-}
+};
 
 // function to create default project to be exported to entry point
 
@@ -107,11 +107,12 @@ export function defaultProjectDisplay(title, description, arrayLength, priority,
     defaultTop.appendChild(pairBox);
 
     const defaultEditBox = document.createElement('div');
+    defaultEditBox.classList.add("invisible");
     pairBox.appendChild(defaultEditBox);
 
     const editDoc = parser.parseFromString(edit, 'image/svg+xml');
     const editSvg = editDoc.querySelector('svg');
-    editSvg.classList.add("edit-icon", "invisible");
+    editSvg.classList.add("edit-icon");
     defaultEditBox.appendChild(editSvg);
 
     const defaultExitBox  = document.createElement('div');
@@ -202,9 +203,9 @@ export function defaultProjectDisplay(title, description, arrayLength, priority,
     addSvg.classList.add("add-icon");
     taskBlock.appendChild(addSvg);
 
-    const dummyInput = document.createElement('input');
-    dummyInput.classList.add('input-task');
-    dummyInput.placeholder = "Enter a new task";
+    const dummyInput = document.createElement('div');
+    dummyInput.classList.add('dummy-input');
+    dummyInput.textContent = "Enter a new task here";
     taskBlock.appendChild(dummyInput);
 
     const taskFormContainer = document.createElement('div');
@@ -362,7 +363,7 @@ export function defaultProjectDisplay(title, description, arrayLength, priority,
         submitButton.classList.remove("unpressed");
     });
 
-    taskBlock.addEventListener("click", (event) => {
+    taskBlock.addEventListener("click", () => {
         taskBlock.remove();
         taskArea.appendChild(taskFormContainer);                
         taskFieldset.classList.add("fieldset-border");
@@ -372,7 +373,6 @@ export function defaultProjectDisplay(title, description, arrayLength, priority,
         submitButton.classList.add("unpressed");
         submitButton.classList.remove("pressed");
 
-        // enter code to convert form into text
         const taskTitle = taskTitleInput.value;
         const taskDescription = descriptionInput.value;
         const taskDueDate = dueDateInput.value;
@@ -380,127 +380,130 @@ export function defaultProjectDisplay(title, description, arrayLength, priority,
         const taskNotes = notesInput.value;
         const taskChecklist = checklistInput.value;
 
-        //come back to this for returning values to make tasks
-        makeTask(taskTitle, taskDescription, taskDueDate, taskPriority, taskNotes, taskChecklist);
-        getTaskArray(defaultTaskNumber);
-        /*
-        console.log(`taskTitle: ${taskTitle}`);
-        console.log(`taskDescription: ${taskDescription}`);
-        console.log(`taskDueDate: ${taskDueDate}`);
-        console.log(`taskPriority: ${taskPriority}`);
-        console.log(`taskNotes: ${taskNotes}`);
-        console.log(`taskChecklist: ${taskChecklist}`);
-        */
+        if (taskTitle === '') {
+            //alert("You have to enter a task");
+        } else {
+            makeTask(taskTitle, taskDescription, taskDueDate, taskPriority, taskNotes, taskChecklist);
+            getTaskArray(defaultTaskNumber);
 
-        taskFormContainer.remove();
-                
-        const fullTaskContainer = document.createElement('div');
-        fullTaskContainer.classList.add("block", "full-task");
-        taskArea.appendChild(fullTaskContainer);
+            taskFormContainer.remove();
+                    
+            const fullTaskContainer = document.createElement('div');
+            fullTaskContainer.classList.add("block", "full-task");
+            taskArea.appendChild(fullTaskContainer);
 
-        const emptyCircle = document.createElement('div');
-        emptyCircle.classList.add("circle");
-        fullTaskContainer.appendChild(emptyCircle);
+            const emptyCircle = document.createElement('div');
+            emptyCircle.classList.add("circle");
+            fullTaskContainer.appendChild(emptyCircle);
 
-        const checkDoc = parser.parseFromString(check, 'image/svg+xml');
-        const checkSvg = checkDoc.querySelector('svg');
-        checkSvg.classList.add("add-icon");
+            const checkDoc = parser.parseFromString(check, 'image/svg+xml');
+            const checkSvg = checkDoc.querySelector('svg');
+            checkSvg.classList.add("check-icon");
 
-        const fullTaskTitle = document.createElement('p');
-        fullTaskTitle.classList.add("task-paragraph");
-        fullTaskTitle.textContent = taskTitle;
-        fullTaskContainer.appendChild(fullTaskTitle);
+            const fullTaskTitle = document.createElement('p');
+            fullTaskTitle.classList.add("task-paragraph");
+            fullTaskTitle.textContent = taskTitle;
+            fullTaskContainer.appendChild(fullTaskTitle);
 
-        emptyCircle.addEventListener("click", () => {
-            if (!fullTaskTitle.classList.contains("strike-through")) {
-                fullTaskTitle.classList.add("strike-through");
-                emptyCircle.classList.remove("circle");
-                emptyCircle.appendChild(checkSvg);
+            emptyCircle.addEventListener("click", () => {
+                if (!fullTaskTitle.classList.contains("strike-through")) {
+                    fullTaskTitle.classList.add("strike-through");
+                    emptyCircle.classList.remove("circle");
+                    emptyCircle.appendChild(checkSvg);
+                } else {
+                    checkSvg.remove();
+                    emptyCircle.classList.add("circle");
+                    fullTaskTitle.classList.remove("strike-through");
+                }
+            });
+
+            const pictographBox = document.createElement('div');
+            pictographBox.classList.add("pictographs");
+            fullTaskContainer.appendChild(pictographBox);
+
+            const taskPriorityBox = document.createElement('div');
+            taskPriorityBox.classList.add("priority-box");
+            
+            if (!taskPriority) {
+            } else if (taskPriority === "low priority") {
+                pictographBox.appendChild(taskPriorityBox);
+                taskPriorityBox.appendChild(lowSvg);
+            } else if (taskPriority === "average priority") {
+                pictographBox.appendChild(taskPriorityBox);
+                taskPriorityBox.appendChild(midSvg);
+                taskPriorityBox.appendChild(midSvgTwo);
+            } else if (taskPriority === "high priority") {
+                pictographBox.appendChild(taskPriorityBox);
+                taskPriorityBox.appendChild(highSvg);
+                taskPriorityBox.appendChild(highSvgTwo);
+                taskPriorityBox.appendChild(highSvgThree);
             } else {
-                checkSvg.remove();
-                emptyCircle.classList.add("circle");
-                fullTaskTitle.classList.remove("strike-through");
+                console.log("Error: UI doesn't recognize task priority");
             }
-        });
+                    
+            const dateDoc = parser.parseFromString(date, 'image/svg+xml');
+            const dateSvg = dateDoc.querySelector('svg');
+            dateSvg.classList.add("date-icon");
+            pictographBox.appendChild(dateSvg);
 
-        const pictographBox = document.createElement('div');
-        pictographBox.classList.add("pictographs");
-        fullTaskContainer.appendChild(pictographBox);
+            const datePopup = document.createElement('div');
+            datePopup.classList.add("date-popup", "invisible");
+            if (taskDueDate) {
+                datePopup.textContent = `Due Date: ${taskDueDate}`;
+            } else {
+                datePopup.textContent = "No due date";
+            }
+                    
+            pictographBox.appendChild(datePopup);
 
-        const taskPriorityBox = document.createElement('div');
-        taskPriorityBox.classList.add("priority-box");
-        pictographBox.appendChild(taskPriorityBox);
+            dateSvg.addEventListener("mouseover", () => {
+                datePopup.classList.remove("invisible");
+            });
 
+            dateSvg.addEventListener("mouseleave", () => {
+                datePopup.classList.add("invisible");
+            });
                 
-        if (!taskPriority) {
-        } else if (taskPriority === "low priority") {
-            taskPriorityBox.appendChild(lowSvg);
-        } else if (taskPriority === "average priority") {
-            taskPriorityBox.appendChild(midSvg);
-            taskPriorityBox.appendChild(midSvgTwo);
-        } else if (taskPriority === "high priority") {
-            taskPriorityBox.appendChild(highSvg);
-            taskPriorityBox.appendChild(highSvgTwo);
-            taskPriorityBox.appendChild(highSvgThree);
-        } else {
-            console.log("Error: UI doesn't recognize task priority");
-        }
-                
+            const taskEditBox = document.createElement('div');
+            taskEditBox.classList.add("invisible");
+            pictographBox.appendChild(taskEditBox);
+            
+            const clonedEditSvg = editSvg.cloneNode(true);
+            taskEditBox.appendChild(clonedEditSvg);
 
-        const dateDoc = parser.parseFromString(date, 'image/svg+xml');
-        const dateSvg = dateDoc.querySelector('svg');
-        dateSvg.classList.add("date-icon");
-        pictographBox.appendChild(dateSvg);
-
-        const datePopup = document.createElement('div');
-        datePopup.classList.add("date-popup", "invisible");
-        if (taskDueDate) {
-            datePopup.textContent = `Due Date: ${taskDueDate}`;
-        } else {
-            datePopup.textContent = "No due date";
-        }
-                
-        pictographBox.appendChild(datePopup);
-
-        dateSvg.addEventListener("mouseover", () => {
-            datePopup.classList.remove("invisible");
-        });
-
-        dateSvg.addEventListener("mouseleave", () => {
-            datePopup.classList.add("invisible");
-        });
-                
-        pictographBox.appendChild(editSvg);
-
-        const taskDeleteBox = document.createElement('div');
-        taskDeleteBox.classList.add("invisible");
-        fullTaskContainer.appendChild(taskDeleteBox);
-
-        const deleteDoc = parser.parseFromString(trash, 'image/svg+xml');
-        const deleteSvg = deleteDoc.querySelector('svg');
-        deleteSvg.classList.add("delete-icon");
-        taskDeleteBox.appendChild(deleteSvg);
-
-        fullTaskContainer.addEventListener("mouseover", () => {
-            taskDeleteBox.classList.remove("invisible");
-        });
-
-        fullTaskContainer.addEventListener("mouseleave", () => {
+            const taskDeleteBox = document.createElement('div');
             taskDeleteBox.classList.add("invisible");
-        });
+            fullTaskContainer.appendChild(taskDeleteBox);
 
-        taskDeleteBox.addEventListener("click", () => {
-            fullTaskContainer.remove();
-        });
+            const deleteDoc = parser.parseFromString(trash, 'image/svg+xml');
+            const deleteSvg = deleteDoc.querySelector('svg');
+            deleteSvg.classList.add("delete-icon");
+            taskDeleteBox.appendChild(deleteSvg);
 
-        taskTitleInput.value = '';
-        descriptionInput.value = '';
-        dueDateInput.value = '';
-        priorityDropBox.selectedIndex = 0;
-        notesInput.value = '';
-        checklistInput.value = '';
+            fullTaskContainer.addEventListener("mouseover", () => {
+                taskDeleteBox.classList.remove("invisible");
+                taskEditBox.classList.remove("invisible");
+            });
 
-        taskArea.appendChild(taskBlock);
+            fullTaskContainer.addEventListener("mouseleave", () => {
+                taskDeleteBox.classList.add("invisible");
+                taskEditBox.classList.add("invisible");
+            });
+
+            taskDeleteBox.addEventListener("click", () => {
+                fullTaskContainer.remove();
+            });
+
+            taskTitleInput.value = '';
+            descriptionInput.value = '';
+            dueDateInput.value = '';
+            priorityDropBox.selectedIndex = 0;
+            notesInput.value = '';
+            checklistInput.value = '';
+
+            taskArea.appendChild(taskBlock);
+        }
+        
     });
 
     let fullSize = false;
@@ -514,7 +517,7 @@ export function defaultProjectDisplay(title, description, arrayLength, priority,
         fullSize = true;
 
         defaultList.style.cursor = "default";
-        editSvg.classList.remove("invisible");
+        defaultEditBox.classList.remove("invisible");
         exitSvg.classList.remove("invisible");
 
         taskItem.remove();
@@ -528,7 +531,7 @@ export function defaultProjectDisplay(title, description, arrayLength, priority,
         event.stopPropagation();
         defaultList.style.flex = "0";
         defaultList.style.cursor = "pointer";
-        editSvg.classList.add("invisible");
+        defaultEditBox.classList.add("invisible");
         exitSvg.classList.add("invisible");
         fullSize = false;
 
@@ -540,13 +543,9 @@ export function defaultProjectDisplay(title, description, arrayLength, priority,
         } else {
             console.log(`arrayLength: ${arrayLength}`);
         }
-    })
+    });
 
-    defaultEditBox.addEventListener("click", (event) => {
-        event.stopPropagation();
-    })
-
-}
+};
 
 export function projectDisplay() {
     const space = document.getElementById("space");
@@ -558,4 +557,4 @@ export function projectDisplay() {
         space.appendChild(newProject);
     })
     
-}
+};

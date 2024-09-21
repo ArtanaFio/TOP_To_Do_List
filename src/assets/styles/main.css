@@ -70,6 +70,27 @@ body {
     border-radius: 5px;
 }
 
+.static-list-button {
+    border-top: 2px solid darkorchid;
+    border-left: 2px solid darkorchid;
+    border-right: 2px solid #4b1964;
+    border-bottom: 2px solid #4b1964;
+}
+
+.list-button-pressed {
+    border-top: 2px solid darkorchid;
+    border-left: 2px solid darkorchid;
+    border-right: 2px solid #ffb6ff;
+    border-bottom: 2px solid #ffb6ff;
+}
+
+.list-button-unpressed {
+    border-top: 2px solid #ffb6ff;
+    border-left: 2px solid #ffb6ff;
+    border-right: 2px solid darkorchid;
+    border-bottom: 2px solid darkorchid;
+}
+
 #new-list-button:hover {
     background-color: #ffb6ff;
     color: darkorchid;
@@ -440,20 +461,36 @@ textarea {
 
 .priority-box {
     justify-self: end;
-    width: 50px;
     display: grid;
     grid-template-columns: repeat(1, 1fr);
+    /*border: 2px dotted skyblue;*/
 }
 
-.priority-box:hover {
-    cursor: pointer;
+.empty-box {
+    width: 5px;
+}
+
+.first-level-priority-box {
+    width: 25px;
+}
+
+.second-level-priority-box {
+    width: 38px;
+}
+
+.third-level-priority-box {
+    width: 50px;
+}
+
+.white-out {
+    background-color: white;
+    border: 2px solid #ffd7ff;
 }
 
 .three {
     grid-column: 1 / 2;
     grid-row: 1 / 2;
     justify-self: start;
-
 }
 
 .two {

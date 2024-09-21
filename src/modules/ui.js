@@ -62,7 +62,7 @@ export function layout() {
 
 // function to create default project to be exported to entry point
 
-export function defaultProjectDisplay(title, description, arrayLength, priority, makeTask, getTaskArray) {
+export function defaultProjectDisplay(title, description, arrayLength, priority, getTaskElements) {
     const space = document.getElementById("space");
     
     const defaultList = document.createElement('div');
@@ -167,7 +167,7 @@ export function defaultProjectDisplay(title, description, arrayLength, priority,
     midSvg.classList.add("one");
     const midDocTwo = parser.parseFromString(mid, 'image/svg+xml');
     const midSvgTwo = midDocTwo.querySelector('svg');
-    midSvgTwo.classList.add("two");
+    midSvgTwo.classList.add("three");
 
     const highDoc = parser.parseFromString(high, 'image/svg+xml');
     const highSvg = highDoc.querySelector('svg');
@@ -180,13 +180,21 @@ export function defaultProjectDisplay(title, description, arrayLength, priority,
     highSvgThree.classList.add("three");
 
     if (!priority) {
+        priorityBox.classList.remove("second-level-priority-box", "third-level-priority-box");
+        priorityBox.classList.add("first-level-priority-box");
         priorityBox.appendChild(undefinedSvg);
     } else if (priority === "low priority") {
+        priorityBox.classList.remove("second-level-priority-box", "third-level-priority-box");
+        priorityBox.classList.add("first-level-priority-box");
         priorityBox.appendChild(lowSvg);
     } else if (priority === "average priority") {
+        priorityBox.classList.remove("first-level-priority-box", "third-level-priority-box");
+        priorityBox.classList.add("second-level-priority-box");
         priorityBox.appendChild(midSvg);
         priorityBox.appendChild(midSvgTwo);
     } else if (priority === "high priority") {
+        priorityBox.classList.remove("first-level-priority-box", "second-level-priority-box");
+        priorityBox.classList.add("third-level-priority-box");
         priorityBox.appendChild(highSvg);
         priorityBox.appendChild(highSvgTwo);
         priorityBox.appendChild(highSvgThree);
@@ -367,6 +375,7 @@ export function defaultProjectDisplay(title, description, arrayLength, priority,
         taskBlock.remove();
         taskArea.appendChild(taskFormContainer);                
         taskFieldset.classList.add("fieldset-border");
+        taskTitleInput.focus();
     });
 
     submitButton.addEventListener("mouseup", () => {
@@ -383,8 +392,6 @@ export function defaultProjectDisplay(title, description, arrayLength, priority,
         if (taskTitle === '') {
             //alert("You have to enter a task");
         } else {
-            makeTask(taskTitle, taskDescription, taskDueDate, taskPriority, taskNotes, taskChecklist);
-            getTaskArray(defaultTaskNumber);
 
             taskFormContainer.remove();
                     
@@ -423,20 +430,53 @@ export function defaultProjectDisplay(title, description, arrayLength, priority,
 
             const taskPriorityBox = document.createElement('div');
             taskPriorityBox.classList.add("priority-box");
+
+            if (taskPriority) {
+                fullTaskContainer.addEventListener("mouseenter", () => {
+                    taskPriorityBox.classList.add("white-out");
+                });
+    
+                fullTaskContainer.addEventListener("mouseleave", () => {
+                    taskPriorityBox.classList.remove("white-out");
+                });
+            }
             
+            
+            const clonedLowSvg = lowSvg.cloneNode(true);
+            clonedLowSvg.classList.remove("one");
+            clonedLowSvg.classList.add("two");
+
+            const clonedMidSvg = midSvg.cloneNode(true);
+            const clonedMidSvgTwo = midSvgTwo.cloneNode(true);
+            clonedMidSvgTwo.classList.remove("two");
+            clonedMidSvgTwo.classList.add("three");
+
+            const clonedHighSvg = highSvg.cloneNode(true);
+            const clonedHighSvgTwo = highSvgTwo.cloneNode(true);
+            const clonedHighSvgThree = highSvgThree.cloneNode(true);
+
             if (!taskPriority) {
+                taskPriorityBox.classList.remove("first-level-priority-box", "second-level-priority-box", "third-level-priority-box");
+                taskPriorityBox.classList.add("empty-box");
+                pictographBox.appendChild(taskPriorityBox);
             } else if (taskPriority === "low priority") {
+                taskPriorityBox.classList.remove("empty-box", "second-level-priority-box", "third-level-priority-box");
+                taskPriorityBox.classList.add("first-level-priority-box");
                 pictographBox.appendChild(taskPriorityBox);
-                taskPriorityBox.appendChild(lowSvg);
+                taskPriorityBox.appendChild(clonedLowSvg);
             } else if (taskPriority === "average priority") {
+                taskPriorityBox.classList.remove("empty-box", "first-level-priority-box", "third-level-priority-box");
+                taskPriorityBox.classList.add("second-level-priority-box");
                 pictographBox.appendChild(taskPriorityBox);
-                taskPriorityBox.appendChild(midSvg);
-                taskPriorityBox.appendChild(midSvgTwo);
+                taskPriorityBox.appendChild(clonedMidSvg);
+                taskPriorityBox.appendChild(clonedMidSvgTwo);
             } else if (taskPriority === "high priority") {
+                taskPriorityBox.classList.remove("empty-box", "first-level-priority-box", "second-level-priority-box");
+                taskPriorityBox.classList.add("third-level-priority-box");
                 pictographBox.appendChild(taskPriorityBox);
-                taskPriorityBox.appendChild(highSvg);
-                taskPriorityBox.appendChild(highSvgTwo);
-                taskPriorityBox.appendChild(highSvgThree);
+                taskPriorityBox.appendChild(clonedHighSvg);
+                taskPriorityBox.appendChild(clonedHighSvgTwo);
+                taskPriorityBox.appendChild(clonedHighSvgThree);
             } else {
                 console.log("Error: UI doesn't recognize task priority");
             }
@@ -494,6 +534,8 @@ export function defaultProjectDisplay(title, description, arrayLength, priority,
                 fullTaskContainer.remove();
             });
 
+            getTaskElements(taskTitle, taskDescription, taskDueDate, taskPriority, taskNotes, taskChecklist, taskDeleteBox, defaultTaskNumber);
+
             taskTitleInput.value = '';
             descriptionInput.value = '';
             dueDateInput.value = '';
@@ -503,7 +545,6 @@ export function defaultProjectDisplay(title, description, arrayLength, priority,
 
             taskArea.appendChild(taskBlock);
         }
-        
     });
 
     let fullSize = false;
@@ -551,10 +592,32 @@ export function projectDisplay() {
     const space = document.getElementById("space");
 
     const newListButton = document.getElementById("new-list-button");
+    newListButton.classList.add("static-list-button");
+    
     newListButton.addEventListener("click", () => {
         const newProject = document.createElement("div");
         newProject.classList.add("list");
         space.appendChild(newProject);
-    })
+    });
+
+    newListButton.addEventListener("mouseover", () => {
+        newListButton.classList.add("list-button-unpressed");
+        newListButton.classList.remove("list-button-pressed", "static-list-button");
+    });
+
+    newListButton.addEventListener("mouseleave", () => {
+        newListButton.classList.add("static-list-button");
+        newListButton.classList.remove("list-button-pressed", "list-button-unpressed");
+    });
+
+    newListButton.addEventListener("mousedown", () => {
+        newListButton.classList.add("list-button-pressed");
+        newListButton.classList.remove("list-button-unpressed", "static-list-button");
+    });
+
+    newListButton.addEventListener("mouseup", () => {
+        newListButton.classList.add("list-button-unpressed");
+        newListButton.classList.remove("list-button-pressed", "static-list-button");
+    });
     
 };

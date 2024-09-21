@@ -29,16 +29,30 @@ function assignByDefault(task) {
 
 // delete todo-item
 // project.splice(todo-item, 1);
+function deleteDefaultTask(task) {
+    //defaultProject.tasks.splice(task, 1);
+};
 
 layout();
-defaultProjectDisplay(defaultProject.title, defaultProject.description, defaultProject.tasks.length, defaultProject.priority, function(taskTitle, taskDescription, taskDueDate, taskPriority, taskNotes, taskChecklist) {
-    const makedefaultTask = new makeTodoItem(taskTitle, taskDescription, taskDueDate, taskPriority, taskNotes, taskChecklist);
+defaultProjectDisplay(defaultProject.title, defaultProject.description, defaultProject.tasks.length, defaultProject.priority, function(taskTitle, taskDescription, taskDueDate, taskPriority, taskNotes, taskChecklist,taskDeleteBox, defaultTaskNumber) {
+    const makeDefaultTask = new makeTodoItem(taskTitle, taskDescription, taskDueDate, taskPriority, taskNotes, taskChecklist);
     console.log('the task was created!');
-    assignByDefault(makedefaultTask);
+    assignByDefault(makeDefaultTask);
+    // ERROR: only the first task is being added to the array
+    
     console.log(`default task array: ${defaultProject.tasks.length}`);
-    // the UI is not updating the number of tasks in the default list array
-}, function(defaultTaskNumber) {
     defaultTaskNumber.textContent = `${defaultProject.tasks.length}`;
+    /*
+    const oldTask = defaultProject.tasks.findIndex(task =>
+        task.title === taskTitle
+    );
+
+    
+    if (oldTask !== -1) {
+        defaultProject.tasks.splice(oldTask, 1);
+    }
+    */
+    //deleteDefaultTask(makeDefaultTask);
 });
 
 

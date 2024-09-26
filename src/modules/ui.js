@@ -62,7 +62,7 @@ export function layout() {
 
 // function to create default project to be exported to entry point
 
-export function defaultProjectDisplay(title, description, arrayLength, priority, getTaskElements) {
+export function defaultProjectDisplay(title, description, dueDate, arrayLength, priority, getTaskElements) {
     const space = document.getElementById("space");
     
     const defaultList = document.createElement('div');
@@ -122,6 +122,31 @@ export function defaultProjectDisplay(title, description, arrayLength, priority,
     const exitSvg = exitDoc.querySelector('svg');
     exitSvg.classList.add("exit-icon", "invisible");
     defaultExitBox.appendChild(exitSvg);
+
+    const middleBox = document.createElement('div');
+    middleBox.classList.add("date-label-box");
+    defaultList.appendChild(middleBox);
+
+    const defaultListDueDateBox = document.createElement('div');
+    middleBox.appendChild(defaultListDueDateBox);
+
+    const defaultPostedDueDate = document.createElement('p');
+    defaultPostedDueDate.classList.add("posted-date");
+    defaultListDueDateBox.appendChild(defaultPostedDueDate);
+
+    if (dueDate !== null) {
+        defaultPostedDueDate.textContent = dueDate;
+    } else {
+        defaultPostedDueDate.textContent = "no due date";
+    }
+
+    const defaultListLabelBox = document.createElement('div');
+    middleBox.appendChild(defaultListLabelBox);
+
+    const defaultPostedLabel = document.createElement('div');
+    defaultPostedLabel.textContent = "label not assigned";
+    defaultPostedLabel.classList.add("posted-label");
+    defaultListLabelBox.appendChild(defaultPostedLabel);
 
     const taskArea = document.createElement('div');
     taskArea.classList.add("task-area");
@@ -202,10 +227,305 @@ export function defaultProjectDisplay(title, description, arrayLength, priority,
         console.log("Error: UI doesn't recognize default priority");
     }
 
+    // don't forget to make the form invisible when everything is finished
+    const defaultListFormContainer = document.createElement('div');
+    defaultListFormContainer.id = "default-list-form-box";
+    document.body.appendChild(defaultListFormContainer);
+
+    defaultEditBox.addEventListener("click", () => {
+        document.body.appendChild(defaultListFormContainer);
+    });
+
+    const defaultListForm = document.createElement('form');
+    defaultListForm.id = "default-form";
+    defaultListFormContainer.appendChild(defaultListForm);
+            
+    const defaultListFieldset = document.createElement('fieldset');
+    defaultListForm.appendChild(defaultListFieldset);
+
+    const defaultListLegend = document.createElement('legend');
+    defaultListLegend.id = "default-legend";
+    defaultListLegend.textContent = "Edit Default List Details";
+    defaultListFieldset.appendChild(defaultListLegend);
+
+    const defaultListBar = document.createElement('div');
+    defaultListBar.classList.add("task-bar");
+    defaultListFieldset.appendChild(defaultListBar);
+    
+    const defaultListTitleInput = document.createElement('input');
+    defaultListTitleInput.classList.add("input-task");
+    //defaultListTitleInput.placeholder = "Edit default list name";
+    defaultListTitleInput.value = defaultName.textContent;
+    defaultListBar.appendChild(defaultListTitleInput);
+
+    const defaultListHalfDiv = document.createElement('div');
+    defaultListHalfDiv.classList.add("task-property", "double-div");
+    defaultListFieldset.appendChild(defaultListHalfDiv);
+
+    const defaultListLabelDiv = document.createElement('div');
+    defaultListLabelDiv.classList.add("half-property");
+    defaultListHalfDiv.appendChild(defaultListLabelDiv);
+
+    const defaultListLabelLabel = document.createElement('label');
+    defaultListLabelLabel.for = "label";
+    defaultListLabelLabel.textContent = "Label:";
+    defaultListLabelLabel.classList.add("half-label");
+    defaultListLabelDiv.appendChild(defaultListLabelLabel);
+
+    const defaultListLabelDropBox = document.createElement('select');
+    defaultListLabelDropBox.classList.add("drop-box");
+
+    const defaultListLabelNotOption = document.createElement('option');
+    defaultListLabelNotOption.textContent = "select";
+    defaultListLabelNotOption.value = '';
+    defaultListLabelNotOption.disabled = true;
+    //defaultListLabelNotOption.selected = true;
+    defaultListLabelDropBox.appendChild(defaultListLabelNotOption);
+    const defaultListLabelOptions = ["None", "Work", "Study", "Groceries", "Goals", "Daily", "Weekly", "Monthly", "Yearly"];
+    defaultListLabelOptions.forEach(priorityType => {
+        const option = document.createElement('option');
+        option.value = priorityType;
+        option.textContent = priorityType;
+        defaultListLabelDropBox.appendChild(option);
+    })
+    defaultListLabelDiv.appendChild(defaultListLabelDropBox);
+
+    if (defaultPostedLabel.textContent === "label not assigned") {
+        defaultListLabelDropBox.selectedIndex = 1;
+    } else if (defaultPostedLabel.textContent === "Work") {
+        defaultListLabelDropBox.selectedIndex = 2;
+    } else if (defaultPostedLabel.textContent === "Study") {
+        defaultListLabelDropBox.selectedIndex = 3;
+    } else if (defaultPostedLabel.textContent === "Groceries") {
+        defaultListLabelDropBox.selectedIndex = 4;
+    } else if (defaultPostedLabel.textContent === "Goals") {
+        defaultListLabelDropBox.selectedIndex = 5;
+    } else if (defaultPostedLabel.textContent === "Daily") {
+        defaultListLabelDropBox.selectedIndex = 6;
+    } else if (defaultPostedLabel.textContent === "Weekly") {
+        defaultListLabelDropBox.selectedIndex = 7;
+    } else if (defaultPostedLabel.textContent === "Monthly") {
+        defaultListLabelDropBox.selectedIndex = 8;
+    } else if (defaultPostedLabel.textContent === "Yearly") {
+        defaultListLabelDropBox.selectedIndex = 9;
+    } else {
+        alert("Error: default list label text content issue needs fixing");
+    }
+    const defaultListDescriptionDiv = document.createElement('div');
+    defaultListDescriptionDiv.classList.add("task-property");
+    defaultListFieldset.appendChild(defaultListDescriptionDiv);
+
+    const defaultListDescriptionLabel = document.createElement('label');
+    defaultListDescriptionLabel.for = "description";
+    defaultListDescriptionLabel.textContent = "Description:";
+    defaultListDescriptionLabel.classList.add("textarea-label");
+    defaultListDescriptionDiv.appendChild(defaultListDescriptionLabel);
+
+    const defaultListDescriptionInput = document.createElement('textarea');
+    defaultListDescriptionInput.id = "description";
+    defaultListDescriptionInput.name = "task_description";
+    //defaultListDescriptionInput.placeholder = "Edit default list description";
+    defaultListDescriptionInput.value = defaultDescription.textContent;
+    defaultListDescriptionDiv.appendChild(defaultListDescriptionInput);
+
+    const defaultListDoubleDiv = document.createElement('div');
+    defaultListDoubleDiv.classList.add("task-property", "double-div");
+    defaultListFieldset.appendChild(defaultListDoubleDiv);
+
+    const defaultListDueDateDiv = document.createElement('div');
+    defaultListDueDateDiv.classList.add("half-property");
+    defaultListDoubleDiv.appendChild(defaultListDueDateDiv);
+
+    const defaultListDueDateLabel = document.createElement('label');
+    defaultListDueDateLabel.for = "due-date";
+    defaultListDueDateLabel.textContent = "Due Date:";
+    defaultListDueDateLabel.classList.add("half-label");
+    defaultListDueDateDiv.appendChild(defaultListDueDateLabel);
+
+    const defaultListDueDateInput = document.createElement('input');
+    defaultListDueDateInput.type = "date";
+    defaultListDueDateInput.id = "due-date";
+    defaultListDueDateInput.name = "task_due_date";
+    defaultListDueDateInput.classList.add("half-input");
+    defaultListDueDateDiv.appendChild(defaultListDueDateInput);
+
+    
+    if (defaultPostedDueDate.textContent === "no due date") {
+        defaultListDueDateInput.value = '';
+    } else {
+        //defaultListDueDateInput.value = defaultPostedDueDate.textContent;
+    }
+    
+
+    const defaultListPriorityDiv = document.createElement('div');
+    defaultListPriorityDiv.classList.add("half-property");
+    defaultListDoubleDiv.appendChild(defaultListPriorityDiv);
+
+    const defaultListPriorityLabel = document.createElement('label');
+    defaultListPriorityLabel.for = "priority-level";
+    defaultListPriorityLabel.textContent = "Priority:";
+    defaultListPriorityLabel.classList.add("half-label", "priority-label");
+    defaultListPriorityDiv.appendChild(defaultListPriorityLabel);
+
+    const defaultListPriorityDropBox = document.createElement('select');
+    defaultListPriorityDropBox.classList.add("drop-box");
+
+    const defaultListNotOption = document.createElement('option');
+    defaultListNotOption.textContent = "select";
+    defaultListNotOption.value = '';
+    defaultListNotOption.disabled = true;
+    //defaultListNotOption.selected = true;
+    defaultListPriorityDropBox.appendChild(defaultListNotOption);
+    const defaultListPriorityOptions = ['low priority', 'average priority', 'high priority'];
+    defaultListPriorityOptions.forEach(priorityType => {
+        const option = document.createElement('option');
+        option.value = priorityType;
+        option.textContent = priorityType;
+        defaultListPriorityDropBox.appendChild(option);
+    })
+
+    if (priorityBox.contains(lowSvg)) {
+        defaultListPriorityDropBox.selectedIndex = 1;
+    } else if (priorityBox.contains(midSvg)) {
+        defaultListPriorityDropBox.selectedIndex = 2;
+    } else if (priorityBox.contains(highSvg)) {
+        defaultListPriorityDropBox.selectedIndex = 3;
+    } else {
+        console.log("Something went wrong with displaying the correct priority type in the dropbox");
+    }
+    
+    defaultListPriorityDiv.appendChild(defaultListPriorityDropBox);
+
+    const defaultListSubmitDiv = document.createElement('div');
+    defaultListSubmitDiv.classList.add("submit-div", "shift-down");
+    defaultListFieldset.appendChild(defaultListSubmitDiv);
+
+    const defaultListCancelButton = document.createElement('button');
+    defaultListCancelButton.type = "button";
+    defaultListCancelButton.classList.add("cancel-button", "cancel-unpressed");
+    defaultListCancelButton.textContent = "Cancel";
+    defaultListSubmitDiv.appendChild(defaultListCancelButton);
+
+    defaultListCancelButton.addEventListener("mousedown", () => {
+        defaultListCancelButton.classList.add("cancel-pressed");
+        defaultListCancelButton.classList.remove("cancel-unpressed");
+    });
+
+    defaultListCancelButton.addEventListener("mouseup", () => {
+        defaultListCancelButton.classList.add("cancel-unpressed");
+        defaultListCancelButton.classList.remove("cancel-pressed");
+
+        defaultListFormContainer.remove();
+    });
+
+    const DefaultListSubmitButton = document.createElement('button');
+    DefaultListSubmitButton.type = "button";
+    DefaultListSubmitButton.classList.add("submit-button", "unpressed");
+    DefaultListSubmitButton.textContent = "Submit";
+    defaultListSubmitDiv.appendChild(DefaultListSubmitButton);
+
+    DefaultListSubmitButton.addEventListener("mousedown", () => {
+        DefaultListSubmitButton.classList.add("pressed");
+        DefaultListSubmitButton.classList.remove("unpressed");
+    });
+
+    DefaultListSubmitButton.addEventListener("mouseup", () => {
+        DefaultListSubmitButton.classList.add("unpressed");
+        DefaultListSubmitButton.classList.remove("pressed");
+
+        const defaultTitle = defaultListTitleInput.value;
+        const defaultLabel = defaultListLabelDropBox.value;
+        const defaultNewDescription = defaultListDescriptionInput.value;
+        const defaultDueDate = defaultListDueDateInput.value;
+        const defaultPriority = defaultListPriorityDropBox.value;
+
+        if (defaultTitle.trim() === '') {
+            // use invalid stying;
+            defaultListTitleInput.classList.remove("input-task");
+            defaultListTitleInput.classList.add("invalid");
+            defaultListTitleInput.value = '';
+            defaultListTitleInput.placeholder = "Enter a valid list title";
+
+            defaultListTitleInput.addEventListener("blur", () => {
+                console.log("You clicked outside the default title input");
+                if (defaultListTitleInput.value.trim() !== '') {
+                    defaultListTitleInput.classList.remove("invalid");
+                    defaultListTitleInput.classList.add("input-task");
+                    console.log(defaultListTitleInput.value);
+                }
+            });
+        } else {
+            
+            defaultListFormContainer.remove();
+
+            defaultName.textContent = defaultTitle;
+
+            if (defaultLabel === "None") {
+                defaultPostedLabel.textContent = "label not assigned";
+            } else if (defaultLabel === "Work") {
+                defaultPostedLabel.textContent = "Work";
+            }  else if (defaultLabel === "Study") {
+                defaultPostedLabel.textContent = "Study";
+            }  else if (defaultLabel === "Groceries") {
+                defaultPostedLabel.textContent = "Groceries";
+            }  else if (defaultLabel === "Goals") {
+                defaultPostedLabel.textContent = "Goals";
+            }  else if (defaultLabel === "Daily") {
+                defaultPostedLabel.textContent = "Daily";
+            }  else if (defaultLabel === "Weekly") {
+                defaultPostedLabel.textContent = "Weekly";
+            }  else if (defaultLabel === "Monthly") {
+                defaultPostedLabel.textContent = "Monthly";
+            }  else if (defaultLabel === "Yearly") {
+                defaultPostedLabel.textContent = "Yearly";
+            } else {
+                alert("Error: default list label drop box issue needs fixing")
+            }
+
+            defaultDescription.textContent = defaultNewDescription;
+
+            if (defaultDueDate === '') {
+                defaultPostedDueDate.textContent = "no due date";
+            } else {
+                const [year, month, day] = defaultDueDate.split('-');
+
+                const formattedDueDate = `${month}/${day}/${year}`;
+                defaultPostedDueDate.textContent = formattedDueDate;
+            }
+
+            if (defaultPriority === "low priority") {
+                priorityBox.classList.remove("second-level-priority-box", "third-level-priority-box");
+                priorityBox.classList.add("first-level-priority-box");
+                priorityBox.appendChild(lowSvg);
+            } else if (defaultPriority === "average priority") {
+                priorityBox.classList.remove("first-level-priority-box", "third-level-priority-box");
+                priorityBox.classList.add("second-level-priority-box");
+                priorityBox.appendChild(midSvg);
+                priorityBox.appendChild(midSvgTwo);
+            } else if (defaultPriority === "high priority") {
+                priorityBox.classList.remove("first-level-priority-box", "second-level-priority-box");
+                priorityBox.classList.add("third-level-priority-box");
+                priorityBox.appendChild(highSvg);
+                priorityBox.appendChild(highSvgTwo);
+                priorityBox.appendChild(highSvgThree);
+            } else {
+                console.log("Error: UI doesn't recognize the default priority");
+            }
+
+        }
+
+        
+        // add the code to make the form work
+    });
+
+    defaultEditBox.addEventListener("click", () => {
+        //add the code to open the default list edit form
+    });
+
+    // DON'T EDIT PAST THIS LINE!
     const taskBlock = document.createElement('div');
     taskBlock.id = "add-task";
     
-
     const addDoc = parser.parseFromString(plus, 'image/svg+xml');
     const addSvg = addDoc.querySelector('svg');
     addSvg.classList.add("add-icon");

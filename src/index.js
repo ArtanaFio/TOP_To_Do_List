@@ -34,7 +34,7 @@ function deleteDefaultTask(task) {
 };
 
 layout();
-defaultProjectDisplay(defaultProject.title, defaultProject.description, defaultProject.tasks.length, defaultProject.priority, function(taskTitle, taskDescription, taskDueDate, taskPriority, taskNotes, taskChecklist,taskDeleteBox, defaultTaskNumber) {
+defaultProjectDisplay(defaultProject.title, defaultProject.description, defaultProject.dueDate, defaultProject.tasks.length, defaultProject.priority, function(taskTitle, taskDescription, taskDueDate, taskPriority, taskNotes, taskChecklist,taskDeleteBox, defaultTaskNumber) {
     const makeDefaultTask = new makeTodoItem(taskTitle, taskDescription, taskDueDate, taskPriority, taskNotes, taskChecklist);
     console.log('the task was created!');
     assignByDefault(makeDefaultTask);

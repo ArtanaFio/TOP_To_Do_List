@@ -62,7 +62,7 @@ export function layout() {
 
 // function to create default project to be exported to entry point
 
-export function defaultProjectDisplay(title, description, dueDate, arrayLength, priority, getTaskElements) {
+export function defaultProjectDisplay(title, description, dueDate, arrayLength, priority, label, getTaskElements, getDefaultElements) {
     const space = document.getElementById("space");
     
     const defaultList = document.createElement('div');
@@ -144,9 +144,11 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
     middleBox.appendChild(defaultListLabelBox);
 
     const defaultPostedLabel = document.createElement('div');
-    defaultPostedLabel.textContent = "label not assigned";
     defaultPostedLabel.classList.add("posted-label");
     defaultListLabelBox.appendChild(defaultPostedLabel);
+
+    defaultPostedLabel.textContent = Array.from(label).join(', ');
+    
 
     const taskArea = document.createElement('div');
     taskArea.classList.add("task-area");
@@ -289,7 +291,7 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
         defaultListLabelDropBox.appendChild(option);
     })
     defaultListLabelDiv.appendChild(defaultListLabelDropBox);
-
+    
     if (defaultPostedLabel.textContent === "label not assigned") {
         defaultListLabelDropBox.selectedIndex = 1;
     } else if (defaultPostedLabel.textContent === "Work") {
@@ -309,8 +311,9 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
     } else if (defaultPostedLabel.textContent === "Yearly") {
         defaultListLabelDropBox.selectedIndex = 9;
     } else {
-        alert("Error: default list label text content issue needs fixing");
+        alert(`Error detection at line 313 of module ui.js. The default list label is not defined correctly.`);
     }
+    
     const defaultListDescriptionDiv = document.createElement('div');
     defaultListDescriptionDiv.classList.add("task-property");
     defaultListFieldset.appendChild(defaultListDescriptionDiv);
@@ -324,7 +327,6 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
     const defaultListDescriptionInput = document.createElement('textarea');
     defaultListDescriptionInput.id = "description";
     defaultListDescriptionInput.name = "task_description";
-    //defaultListDescriptionInput.placeholder = "Edit default list description";
     defaultListDescriptionInput.value = defaultDescription.textContent;
     defaultListDescriptionDiv.appendChild(defaultListDescriptionInput);
 
@@ -352,11 +354,8 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
     
     if (defaultPostedDueDate.textContent === "no due date") {
         defaultListDueDateInput.value = '';
-    } else {
-        //defaultListDueDateInput.value = defaultPostedDueDate.textContent;
     }
     
-
     const defaultListPriorityDiv = document.createElement('div');
     defaultListPriorityDiv.classList.add("half-property");
     defaultListDoubleDiv.appendChild(defaultListPriorityDiv);
@@ -484,6 +483,11 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
 
             defaultDescription.textContent = defaultNewDescription;
 
+            if (defaultListDescriptionInput.value === "") {
+                defaultListDescriptionInput.placeholder = "Edit default list description";
+                defaultDescription.textContent = "This list prefers to stay mysterious";
+            }
+
             if (defaultDueDate === '') {
                 defaultPostedDueDate.textContent = "no due date";
             } else {
@@ -512,10 +516,10 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
                 console.log("Error: UI doesn't recognize the default priority");
             }
 
+            getDefaultElements(defaultTitle, defaultLabel, defaultNewDescription, defaultDueDate, defaultPriority);
         }
 
-        
-        // add the code to make the form work
+        // add the code to make the form work with backend
     });
 
     defaultEditBox.addEventListener("click", () => {
@@ -709,9 +713,33 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
         const taskNotes = notesInput.value;
         const taskChecklist = checklistInput.value;
 
-        if (taskTitle === '') {
-            //alert("You have to enter a task");
-        } else {
+        if (taskTitle.trim() === '') {
+            taskTitleInput.classList.remove("input-task");
+            taskTitleInput.classList.add("invalid");
+
+            taskTitleInput.addEventListener("blur", () => {
+                if (taskTitleInput.value.trim() !== '') {
+                    taskTitleInput.classList.remove("invalid");
+                    taskTitleInput.classList.add("input-task");
+                }
+            });
+        } 
+
+        if (!taskPriority) {
+            priorityDropBox.classList.remove("drop-box");
+            priorityDropBox.classList.add("red-border");
+
+            priorityDropBox.addEventListener("blur", () => {
+                if (priorityDropBox.value) {
+                    console.log(taskPriority);
+                    priorityDropBox.classList.remove("red-border");
+                    priorityDropBox.classList.add("drop-box");
+                }
+                console.log(priorityDropBox.classList, priorityDropBox.value);
+            });
+        }
+        
+        if (taskTitle.trim() !== '' && taskPriority) {
 
             taskFormContainer.remove();
                     
@@ -761,7 +789,6 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
                 });
             }
             
-            
             const clonedLowSvg = lowSvg.cloneNode(true);
             clonedLowSvg.classList.remove("one");
             clonedLowSvg.classList.add("two");
@@ -775,11 +802,7 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
             const clonedHighSvgTwo = highSvgTwo.cloneNode(true);
             const clonedHighSvgThree = highSvgThree.cloneNode(true);
 
-            if (!taskPriority) {
-                taskPriorityBox.classList.remove("first-level-priority-box", "second-level-priority-box", "third-level-priority-box");
-                taskPriorityBox.classList.add("empty-box");
-                pictographBox.appendChild(taskPriorityBox);
-            } else if (taskPriority === "low priority") {
+            if (taskPriority === "low priority") {
                 taskPriorityBox.classList.remove("empty-box", "second-level-priority-box", "third-level-priority-box");
                 taskPriorityBox.classList.add("first-level-priority-box");
                 pictographBox.appendChild(taskPriorityBox);

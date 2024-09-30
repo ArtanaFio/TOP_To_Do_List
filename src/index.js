@@ -1,5 +1,6 @@
 //import { functionName } from './modules/moduleName';
 import makeTodoItem from "./modules/todo-items";
+import { labels } from "./modules/projects";
 import makeProject from "./modules/projects";
 import { defaultProject } from "./modules/projects";
 import { layout } from "./modules/ui";
@@ -30,30 +31,47 @@ function assignByDefault(task) {
 // delete todo-item
 // project.splice(todo-item, 1);
 function deleteDefaultTask(task) {
-    //defaultProject.tasks.splice(task, 1);
+    defaultProject.tasks.splice(task, 1);
+};
+
+function editDefaultProject() {
+    // find ways to edit default list
 };
 
 layout();
-defaultProjectDisplay(defaultProject.title, defaultProject.description, defaultProject.dueDate, defaultProject.tasks.length, defaultProject.priority, function(taskTitle, taskDescription, taskDueDate, taskPriority, taskNotes, taskChecklist,taskDeleteBox, defaultTaskNumber) {
+defaultProjectDisplay(defaultProject.title, defaultProject.description, defaultProject.dueDate, defaultProject.tasks.length, defaultProject.priority, defaultProject.label, function(taskTitle, taskDescription, taskDueDate, taskPriority, taskNotes, taskChecklist,taskDeleteBox, defaultTaskNumber) {
     const makeDefaultTask = new makeTodoItem(taskTitle, taskDescription, taskDueDate, taskPriority, taskNotes, taskChecklist);
     console.log('the task was created!');
     assignByDefault(makeDefaultTask);
-    // ERROR: only the first task is being added to the array
     
     console.log(`default task array: ${defaultProject.tasks.length}`);
     defaultTaskNumber.textContent = `${defaultProject.tasks.length}`;
-    /*
-    const oldTask = defaultProject.tasks.findIndex(task =>
-        task.title === taskTitle
-    );
-
     
-    if (oldTask !== -1) {
-        defaultProject.tasks.splice(oldTask, 1);
-    }
-    */
-    //deleteDefaultTask(makeDefaultTask);
+    const taskDeleteButton = taskDeleteBox;
+    taskDeleteButton.addEventListener("click", () => {
+        const oldTask = defaultProject.tasks.findIndex(task =>
+            task.title === taskTitle
+        );
+        
+        if (oldTask !== -1) {
+            deleteDefaultTask(oldTask);
+        }
+        console.log(`default task array: ${defaultProject.tasks.length}`);
+        defaultTaskNumber.textContent = `${defaultProject.tasks.length}`;
+    });
+}, function(defaultTitle, defaultLabel, defaultNewDescription, defaultDueDate, defaultPriority) {
+// function to edit the default list
+
+    defaultProject.editTitle(defaultTitle);
+    defaultProject.setLabel(defaultLabel);
+    defaultProject.editDescription(defaultNewDescription);
+    defaultProject.editDueDate(defaultDueDate);
+    defaultProject.editPriority(defaultPriority);
+
+    console.log(defaultProject);
 });
 
 
 projectDisplay();
+
+console.log(defaultProject);

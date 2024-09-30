@@ -1,14 +1,11 @@
-/* altered description popup to avoid display issues like gap*/
-/* put the due date and label next to each other in a div under the title*/
-/* restyle top grid to fit long list titles */
-/* correctly display the current priority type and list label in the associated drop boxes on the default list form and change the UI default list's priority and label using form. */
-/* show the list's current priority in the dropbox on the list form */
-/* + show the list's current label in the dropbox on the list form */
-/* + connect the UI label with the list form */
-/* + connect the UI date with the list form */
-/* + limit space width and centered */
-/* - finish styling the due date and label tags */
-/* + finish invalid styling for default title */
+
+/* On-going issues: */
+/* Need to connect backend to UI to edit default details*/
+/* label UI only shows one label instead of all labels assigned to the list. Only shows the newest one */
+/* The form's responsive design needs attention because there is overflow when the browser window descreases past a point (both height and width) */
+
+/* Possible solutions/things to implement: */
+/* replace label dropbox with multiple choices */
 
 
 * {
@@ -65,10 +62,11 @@ body {
 
 #default-form {
     width: 80%;
+    max-width: 1000px;
     height: 50%;
     background-color: #ffd7ff;
     border-radius: 10px;
-    box-shadow: 3px 3px 5px rgb(98, 34, 131);
+    box-shadow: 1px 1px 5px rgb(98, 34, 131);
     padding: 20px;
 }
 
@@ -188,11 +186,14 @@ body {
 }
 
 .description {
+    width: 300px;
     font-size: 1.2rem;
     color: darkmagenta;
     background-color: #ffb6ff;
     position: absolute;
-    left: 65px;
+    /*left: 65px;*/
+    align-self: flex-start;
+    margin-left: 25px;
     padding: 20px;
     border-radius: 10px;
 }
@@ -470,6 +471,16 @@ textarea {
     height: 25px;
     width: 150px;
     border: 1px solid darkorchid;
+    color: orchid;
+    background-color: rgba(221, 160, 221, 0.25);
+    text-align: center;
+}
+
+
+.red-border {
+    height: 25px;
+    width: 150px;
+    border: 2px solid red;
     color: orchid;
     background-color: rgba(221, 160, 221, 0.25);
     text-align: center;

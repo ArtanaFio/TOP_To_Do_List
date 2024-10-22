@@ -1,13 +1,4 @@
 
-/* On-going issues: */
-/* Need to connect backend to UI to edit default details*/
-/* label UI only shows one label instead of all labels assigned to the list. Only shows the newest one */
-/* The form's responsive design needs attention because there is overflow when the browser window descreases past a point (both height and width) */
-
-/* Possible solutions/things to implement: */
-/* replace label dropbox with multiple choices */
-
-
 * {
     box-sizing: border-box;
     margin: 0;
@@ -16,6 +7,7 @@
 
 html {
     font-size: 12px;
+    font-family: sans-serif;
 }
 
 body {
@@ -60,10 +52,34 @@ body {
     align-items: center;
 }
 
+
+.add-new-label-form-container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-new-label-form {
+    width: 325px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 1px 1px 5px rgb(98, 34, 131);
+    padding: 20px;
+}
+
+.legend {
+    font-size: 2.5rem;
+    color: darkorchid;
+    text-align: center;
+}
+
 #default-form {
     width: 80%;
     max-width: 1000px;
-    height: 50%;
+    /*height: 50%;*/
     background-color: #ffd7ff;
     border-radius: 10px;
     box-shadow: 1px 1px 5px rgb(98, 34, 131);
@@ -77,7 +93,6 @@ body {
 }
 
 #space {
-    /*height: 550px;*/
     width: 100%;
     max-width: 1250px;
     align-self: center;
@@ -154,7 +169,7 @@ body {
 .top {
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 10fr 1fr;/*repeat(3, 1fr);*/
+    grid-template-columns: 1fr 10fr 1fr;
 }
 
 .date-label-box {
@@ -172,12 +187,25 @@ body {
     padding: 5px;
 }
 
+#default-label-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+/* STYLING FOR THE DEFAULT LIST TAGS */
 .posted-label {
-    background-color: #ffb6ff;
-    color: darkorchid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    background-color: rgba(148, 0, 211, 0.75);
+    color: white;
+    font-size: 1rem;
     font-weight: bold;
-    border-radius: 5px;
-    padding: 5px;
+    border-radius: 25px;
+    padding: 5px 10px;
 }
 
 .info-icon {
@@ -191,25 +219,11 @@ body {
     color: darkmagenta;
     background-color: #ffb6ff;
     position: absolute;
-    /*left: 65px;*/
     align-self: flex-start;
     margin-left: 25px;
     padding: 20px;
     border-radius: 10px;
 }
-/*
-.description:after {
-    content: '';
-    position: absolute;
-    left: -4%;
-    top: 5px;
-    width: 0;
-    height: 0;
-    border-top: 5px solid transparent;
-    border-right: 12px solid #ffb6ff;
-    border-bottom: 6px solid transparent;
-}
-*/
 
 .list-name {
     font-size: 2rem;
@@ -303,6 +317,70 @@ fieldset {
 .half-property {
     width: 100%;
     display: flex;
+}
+
+/* STYLING FOR THE DEFAULT LIST FORM TAG BOXES */
+.tag {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* STYLING FOR THE DEFAULT LIST FORM TAGS */
+.label-option {
+    border-radius: 25px;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    padding: 5px 10px;
+    width: fit-content;
+    border: 3px solid transparent;
+    margin: 5px 5px 5px 0px;
+    cursor: pointer;
+}
+
+.add-tag-icon {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+}
+
+.add-tag {
+    width: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 25px;
+    border: 3px solid transparent;
+    background-color: white;
+    color: orchid;
+    font-size: 1.25rem;
+    font-weight: bold;
+    padding: 2px 10px 2px 5px;
+    margin: 5px 5px 5px 0px;
+    cursor: pointer;
+}
+
+.add-tag:hover {
+    
+    box-shadow: 2px 0px 5px violet, 0px 2px 5px violet, -2px 0px 5px violet, 0px -2px 5px violet;
+}
+
+.off {
+    background-color: violet;
+}
+
+.off:hover {
+    border-color: darkviolet;
+}
+
+.on {
+    background-color: darkviolet;
+}
+
+.inactive {
+    background-color:rgb(192, 188, 192);
+    color: gray;
 }
 
 label {
@@ -440,6 +518,15 @@ input:focus, textarea:focus, select:focus {
     text-decoration: line-through;
 }
 
+.tag-box {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    border: 2px dashed orange;
+}
+
 .input-element {
     flex: 1;
     height: 25px;
@@ -523,6 +610,10 @@ textarea {
     font-size: 1.25rem;
     font-weight: bold;
     border-radius: 5px;
+}
+
+button:hover {
+    cursor: pointer;
 }
 
 .unpressed {

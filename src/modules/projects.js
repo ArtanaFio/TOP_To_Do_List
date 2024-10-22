@@ -68,8 +68,11 @@ class makeProject {
         const date = new Date(newDueDate);
         if (!isNaN(date.getTime())) {
             this.dueDate = date;
+        }else if (this.dueDate = null) {
+            console.log("No due date has been assigned to the list");
         } else {
-            console.log("Error: date format is invalid.")
+            //console.log("Error: date format is invalid.");
+            //console.log(date.getTime());
         }
     }
 
@@ -95,8 +98,9 @@ class makeProject {
     setLabel(label) {
         if (labels.has(label) || userUniqueLabels.includes(label)) {
             this.label.add(label);
+            console.log(label);
         } else {
-            console.log("Error: the label is invalid.")
+            //console.log("Either no label has been added or the label is invalid.")
         }
     }
 

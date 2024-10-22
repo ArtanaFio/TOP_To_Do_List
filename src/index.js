@@ -59,14 +59,14 @@ defaultProjectDisplay(defaultProject.title, defaultProject.description, defaultP
         console.log(`default task array: ${defaultProject.tasks.length}`);
         defaultTaskNumber.textContent = `${defaultProject.tasks.length}`;
     });
-}, function(defaultTitle, defaultLabel, defaultNewDescription, defaultDueDate, defaultPriority) {
+}, function(defaultTitle, defaultNewDescription, defaultDueDate, defaultPriority, defaultLabel) {
 // function to edit the default list
 
     defaultProject.editTitle(defaultTitle);
-    defaultProject.setLabel(defaultLabel);
     defaultProject.editDescription(defaultNewDescription);
     defaultProject.editDueDate(defaultDueDate);
     defaultProject.editPriority(defaultPriority);
+    defaultProject.setLabel(defaultLabel);
 
     console.log(defaultProject);
 });

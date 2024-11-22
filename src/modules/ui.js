@@ -63,9 +63,6 @@ export function layout() {
 // function to create default project to be exported to entry point
 
 export function defaultProjectDisplay(title, description, dueDate, arrayLength, priority, label, getTaskElements, getDefaultElements) {
-    
-    let checkboxCounter = 1;
-
     const space = document.getElementById("space");
     
     const defaultList = document.createElement('div');
@@ -153,8 +150,10 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
     defaultPostedLabel.classList.add("posted-label");
     defaultListLabelBox.appendChild(defaultPostedLabel);
 
+    // label is the parameter given to the defaultProjectDisplay function
     defaultPostedLabel.textContent = Array.from(label).join(', ');
-    
+    //console.log("HEY NIADA! Don't forget to uncomment line 154 after you finish fixing the other label issues!");
+
     const taskArea = document.createElement('div');
     taskArea.classList.add("task-area");
     taskArea.id = "task-area";
@@ -234,10 +233,8 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
         console.log("Error: UI doesn't recognize default priority");
     }
 
-    // don't forget to make the form invisible when everything is finished
     const defaultListFormContainer = document.createElement('div');
     defaultListFormContainer.id = "default-list-form-box";
-    document.body.appendChild(defaultListFormContainer);
 
     defaultEditBox.addEventListener("click", () => {
         document.body.appendChild(defaultListFormContainer);
@@ -272,7 +269,7 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
     const defaultListBar = document.createElement('div');
     defaultListBar.classList.add("task-bar");
     defaultListFieldset.appendChild(defaultListBar);
-    
+
     const defaultListTitleInput = document.createElement('input');
     defaultListTitleInput.classList.add("input-task");
     defaultListTitleInput.value = defaultName.textContent;
@@ -291,168 +288,41 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
     defaultListTagBox.classList.add("tag-box");
     defaultListLabelDiv.appendChild(defaultListTagBox);
 
-    const firstTag = document.createElement('div');
-    firstTag.classList.add("tag");
-    defaultListTagBox.appendChild(firstTag);
+    function createLabelOptions(id, value, labelText) {
+        const tagBox = document.createElement('div');
+        tagBox.classList.add("tag");
+        defaultListTagBox.appendChild(tagBox);
 
-    const noneLabelCheckBox = document.createElement('input');
-    noneLabelCheckBox.type = "checkbox";
-    noneLabelCheckBox.id = "label1";
-    noneLabelCheckBox.name = "label1";
-    noneLabelCheckBox.value = "None";
-    noneLabelCheckBox.classList.add("invisible", "checkbox");
-    firstTag.appendChild(noneLabelCheckBox);
+        const checkBox = document.createElement('input');
+        checkBox.type = 'checkbox';
+        checkBox.id = id;
+        checkBox.name = "label-option";
+        checkBox.value = value;
+        checkBox.classList.add("checkbox", "default-checkbox");
+        tagBox.appendChild(checkBox);
 
-    const noneLabelLabel = document.createElement('label');
-    noneLabelLabel.for = "label1";
-    noneLabelLabel.textContent = "None";
-    noneLabelLabel.classList.add("label-option", "off");
-    firstTag.appendChild(noneLabelLabel);
+        const label = document.createElement('label');
+        label.htmlFor = id; // associates the label with the checkbox
+        label.textContent = labelText;
+        label.classList.add("label-option", "off");
+        tagBox.appendChild(label);
 
-    const secondTag = document.createElement('div');
-    secondTag.classList.add("tag");
-    defaultListTagBox.appendChild(secondTag);
+        return [tagBox, checkBox, label];
+    };
 
-    const workLabelCheckBox = document.createElement('input');
-    workLabelCheckBox.type = "checkbox";
-    workLabelCheckBox.id = "label2";
-    workLabelCheckBox.name = "label2";
-    workLabelCheckBox.value = "Work";
-    workLabelCheckBox.classList.add("invisible", "checkbox");
-    secondTag.appendChild(workLabelCheckBox);
+    const noneOption = createLabelOptions('none', 'tag1', 'None');
+    const workOption = createLabelOptions('work', 'tag2', 'Work');
+    const studyOption = createLabelOptions('study', 'tag3', 'Study');
+    const groceriesOption = createLabelOptions('groceries', 'tag4', 'Groceries');
+    const goalsOption = createLabelOptions('goals', 'tag5', 'Goals');
+    const dailyOption = createLabelOptions('daily', 'tag6', 'Daily');
+    const weeklyOption = createLabelOptions('weekly', 'tag7', 'Weekly');
+    const monthlyOption = createLabelOptions('monthly', 'tag8', 'Monthly');
+    const yearlyOption = createLabelOptions('yearly', 'tag9', 'Yearly');
 
-    const workLabelLabel = document.createElement('label');
-    workLabelLabel.for = "label2";
-    workLabelLabel.textContent = "Work";
-    workLabelLabel.classList.add("label-option", "off");
-    secondTag.appendChild(workLabelLabel);
+    const allLabelOptions = [noneOption, workOption, studyOption, groceriesOption, goalsOption, dailyOption, weeklyOption, monthlyOption, yearlyOption];
 
-    const thirdTag = document.createElement('div');
-    thirdTag.classList.add("tag");
-    defaultListTagBox.appendChild(thirdTag);
-
-    const studyLabelCheckBox = document.createElement('input');
-    studyLabelCheckBox.type = "checkbox";
-    studyLabelCheckBox.id = "label3";
-    studyLabelCheckBox.name = "label3";
-    studyLabelCheckBox.value = "Study";
-    studyLabelCheckBox.classList.add("invisible", "checkbox");
-    thirdTag.appendChild(studyLabelCheckBox);
-
-    const studyLabelLabel = document.createElement('label');
-    studyLabelLabel.for = "label3";
-    studyLabelLabel.textContent = "Study";
-    studyLabelLabel.classList.add("label-option", "off");
-    thirdTag.appendChild(studyLabelLabel);
-
-    const fourthTag = document.createElement('div');
-    fourthTag.classList.add("tag");
-    defaultListTagBox.appendChild(fourthTag);
-
-    const groceriesLabelCheckBox = document.createElement('input');
-    groceriesLabelCheckBox.type = "checkbox";
-    groceriesLabelCheckBox.id = "label14";
-    groceriesLabelCheckBox.name = "label4";
-    groceriesLabelCheckBox.value = "Groceries";
-    groceriesLabelCheckBox.classList.add("invisible", "checkbox");
-    fourthTag.appendChild(groceriesLabelCheckBox);
-
-    const groceriesLabelLabel = document.createElement('label');
-    groceriesLabelLabel.for = "label4";
-    groceriesLabelLabel.textContent = "Groceries";
-    groceriesLabelLabel.classList.add("label-option", "off");
-    fourthTag.appendChild(groceriesLabelLabel);
-
-    const fifthTag = document.createElement('div');
-    fifthTag.classList.add("tag");
-    defaultListTagBox.appendChild(fifthTag);
-
-    const goalsLabelCheckBox = document.createElement('input');
-    goalsLabelCheckBox.type = "checkbox";
-    goalsLabelCheckBox.id = "label5";
-    goalsLabelCheckBox.name = "label5";
-    goalsLabelCheckBox.value = "Goals";
-    goalsLabelCheckBox.classList.add("invisible", "checkbox");
-    fifthTag.appendChild(goalsLabelCheckBox);
-
-    const goalsLabelLabel = document.createElement('label');
-    goalsLabelLabel.for = "label5";
-    goalsLabelLabel.textContent = "Goals";
-    goalsLabelLabel.classList.add("label-option", "off");
-    fifthTag.appendChild(goalsLabelLabel);
-
-    const sixthTag = document.createElement('div');
-    sixthTag.classList.add("tag");
-    defaultListTagBox.appendChild(sixthTag);
-
-    const dailyLabelCheckBox = document.createElement('input');
-    dailyLabelCheckBox.type = "checkbox";
-    dailyLabelCheckBox.id = "label6";
-    dailyLabelCheckBox.name = "label6";
-    dailyLabelCheckBox.value = "Daily";
-    dailyLabelCheckBox.classList.add("invisible", "checkbox");
-    sixthTag.appendChild(dailyLabelCheckBox);
-
-    const dailyLabelLabel = document.createElement('label');
-    dailyLabelLabel.for = "label6";
-    dailyLabelLabel.textContent = "Daily";
-    dailyLabelLabel.classList.add("label-option", "off");
-    sixthTag.appendChild(dailyLabelLabel);
-
-    const seventhTag = document.createElement('div');
-    seventhTag.classList.add("tag");
-    defaultListTagBox.appendChild(seventhTag);
-
-    const weeklyLabelCheckBox = document.createElement('input');
-    weeklyLabelCheckBox.type = "checkbox";
-    weeklyLabelCheckBox.id = "label7";
-    weeklyLabelCheckBox.name = "label7";
-    weeklyLabelCheckBox.value = "Weekly";
-    weeklyLabelCheckBox.classList.add("invisible", "checkbox");
-    seventhTag.appendChild(weeklyLabelCheckBox);
-
-    const weeklyLabelLabel = document.createElement('label');
-    weeklyLabelLabel.for = "label7";
-    weeklyLabelLabel.textContent = "Weekly";
-    weeklyLabelLabel.classList.add("label-option", "off");
-    seventhTag.appendChild(weeklyLabelLabel);
-
-    const eigthTag = document.createElement('div');
-    eigthTag.classList.add("tag");
-    defaultListTagBox.appendChild(eigthTag);
-
-    const monthlyLabelCheckBox = document.createElement('input');
-    monthlyLabelCheckBox.type = "checkbox";
-    monthlyLabelCheckBox.id = "label8";
-    monthlyLabelCheckBox.name = "label8";
-    monthlyLabelCheckBox.value = "Monthly";
-    monthlyLabelCheckBox.classList.add("invisible", "checkbox");
-    eigthTag.appendChild(monthlyLabelCheckBox);
-
-    const monthlyLabelLabel = document.createElement('label');
-    monthlyLabelLabel.for = "label8";
-    monthlyLabelLabel.textContent = "Monthly";
-    monthlyLabelLabel.classList.add("label-option", "off");
-    eigthTag.appendChild(monthlyLabelLabel);
-
-    const ninthTag = document.createElement('div');
-    ninthTag.classList.add("tag");
-    defaultListTagBox.appendChild(ninthTag);
-
-    const yearlyLabelCheckBox = document.createElement('input');
-    yearlyLabelCheckBox.type = "checkbox";
-    yearlyLabelCheckBox.id = "label9";
-    yearlyLabelCheckBox.name = "label9";
-    yearlyLabelCheckBox.value = "Yearly";
-    yearlyLabelCheckBox.classList.add("invisible", "checkbox");
-    ninthTag.appendChild(yearlyLabelCheckBox);
-
-    const yearlyLabelLabel = document.createElement('label');
-    yearlyLabelLabel.for = "label9";
-    yearlyLabelLabel.textContent = "Yearly";
-    yearlyLabelLabel.classList.add("label-option", "off");
-    ninthTag.appendChild(yearlyLabelLabel);
-
+    console.log(`Label Option: 'Goals', value: ${goalsOption[1].value}`);
     const newTag = document.createElement('div');
     newTag.classList.add("add-tag");
     defaultListTagBox.appendChild(newTag);
@@ -467,6 +337,42 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
     newTag.appendChild(addTagText);
 
     // MINI FORM TO ADD NEW LABEL
+    let checkboxCount = 9;
+
+    function titleCase(string) {
+        const newString = string
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+        return newString;
+    };
+
+    function lowerCase(string) {
+        return string.toLowerCase();
+    };
+
+    function createCustomLabelOptions() {
+        const customTagBox = document.createElement('div');
+        customTagBox.classList.add("tag");
+        defaultListTagBox.insertBefore(customTagBox, newTag);
+
+        const customCheckBox = document.createElement('input');
+        customCheckBox.type = 'checkbox';
+        customCheckBox.id = `${lowerCase(addNewLabelInput.value)}`;
+        customCheckBox.name = "label-option";
+        customCheckBox.value = `tag${checkboxCount}`;
+        customCheckBox.classList.add("checkbox", "default-checkbox");
+        customTagBox.appendChild(customCheckBox);
+
+        const customLabel = document.createElement('label');
+        customLabel.htmlFor = `${lowerCase(addNewLabelInput.value)}`; // associates the label with the checkbox
+        customLabel.textContent = `${titleCase(addNewLabelInput.value)}`;
+        customLabel.classList.add("label-option", "new-label-option");
+        customTagBox.appendChild(customLabel);
+
+        return [customTagBox, customCheckBox, customLabel];
+    };
+
     const addNewLabelFormContainer = document.createElement('div');
     addNewLabelFormContainer.classList.add("add-new-label-form-container");
 
@@ -530,22 +436,12 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
         addNewLabelSubmitButton.classList.add("unpressed");
         addNewLabelSubmitButton.classList.remove("pressed");
 
-        // Function to transform any string input into a title case version of the string
-        function titleCase(string) {
-            const newString = string
-            .split(' ')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-            .join(' ');
-            return newString;
-        };
-
         const existingTagOptions = defaultListTagBox.querySelectorAll(".label-option");
         const currentTagArray = Array.from(existingTagOptions);
 
         let labelDuplicate = currentTagArray.find(existingTag =>
             existingTag.textContent === titleCase(addNewLabelInput.value.trim())
         );
-
 
         if (addNewLabelInput.value.trim() === "") {
             addNewLabelInput.classList.remove("input-task");
@@ -574,35 +470,24 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
                 }
             });
         } else {
+            checkboxCount++;
+
+            const newCustomLabelOption = createCustomLabelOptions();
+            allLabelOptions.push(newCustomLabelOption);
+
             addNewLabelInput.placeholder = '';
             addNewLabelFormContainer.remove();
-
-            const newlyAddedTag = document.createElement('div');
-            newlyAddedTag.classList.add("tag");
-
-            defaultListTagBox.insertBefore(newlyAddedTag, newTag);
-
-            const newlyAddedLabelCheckBox = document.createElement('input');
-            newlyAddedLabelCheckBox.type = "checkbox";
-            newlyAddedLabelCheckBox.id = `new-checkbox-${checkboxCounter}`;
-
-            const newlyAddedTagLabel = document.createElement('label');
-            newlyAddedTagLabel.for = `new-checkbox-${checkboxCounter}`;
-            newlyAddedTagLabel.textContent = titleCase(addNewLabelInput.value);
-            newlyAddedTagLabel.classList.add("label-option", "new-label-option");
-            newlyAddedTag.appendChild(newlyAddedTagLabel);
             
-            const allTags = defaultListTagBox.querySelectorAll(".label-option");
-            const allTagsArray = Array.from(allTags);
-            const noneTag = allTagsArray.find((tag) => tag.textContent === "None");
-            
-            if (noneTag.classList.contains("on")) {
-                newlyAddedTagLabel.classList.add("inactive");
+            if (noneOption[1].checked === true) {
+                newCustomLabelOption[1].disabled = true;
+                newCustomLabelOption[2].classList.add("inactive");
             } else {
-                newlyAddedTagLabel.classList.add("off");
+                newCustomLabelOption[1].disabled = false;
+                newCustomLabelOption[2].classList.add("off");
             }
 
             addNewLabelInput.value = "";
+            console.log(`New option's id: ${newCustomLabelOption[1].id}, name: ${newCustomLabelOption[1].name}, value: ${newCustomLabelOption[1].value}, label: ${newCustomLabelOption[2].textContent}`);
         }
     });
     // END OF THE NEWLY ADDED LABEL SUBMIT BUTTON EVENT HANDING
@@ -611,223 +496,171 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
         document.body.appendChild(addNewLabelFormContainer);
     });
 
-    const assignedLabels = document.getElementsByClassName("posted-label");
-    const defaultLabels = Array.from(assignedLabels);
     const labelOptions = document.getElementsByClassName("label-option");
     const tagOptions = Array.from(labelOptions);
 
-    // This is just the initial set up for assigned labels, don't change
-    defaultLabels.forEach((label) => {
-        tagOptions.forEach((tag) => {
-            if (label.textContent !== "None" && tag.textContent === label.textContent) {
-                tag.classList.add("on");
-                tag.classList.remove("off");
-                if (label.textContent === "Work") {
-                    tagOptions.forEach((tag) => {
-                        if (tag.textContent === "Study" || tag.textContent === "Groceries") {
-                            tag.classList.remove("off");
-                            tag.classList.add("inactive");
-                        }
-                    });
-                }
-            }
+    noneOption[1].checked = true;
+    noneOption[2].classList.remove("off", "inactive");
+
+    if (noneOption[1].checked) {
+        allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id !== "none").forEach(([tagBox, checkBox, label]) => {
+            checkBox.disabled = true;
+            label.classList.add("inactive");
+            label.classList.remove("off");
         });
-    });
+    }
 
     defaultListTagBox.addEventListener("click", (event) => {
         if (event.target.classList.contains("label-option")) {
-            if (event.target.textContent === "None" && event.target.classList.contains("off")) {
-                event.target.classList.add("on");
-                event.target.classList.remove("off");
-                console.log(`You selected ${event.target.textContent}`);
-                const tags = defaultListTagBox.getElementsByClassName('label-option');
-                Array.from(tags).forEach((tag) => {
-                    if (tag.textContent !== "None") {
-                        tag.classList.remove("off", "on", "label-hover");
-                        tag.classList.add("inactive");
-                    }
-                });
-            } else if (event.target.textContent === "None" && event.target.classList.contains("on")) {
+            const nonRelationalUncheckedOptions = allLabelOptions.filter(([tagBox, checkBox, label]) => (checkBox.id !== "none" && checkBox.id !== "work" && checkBox.id !== "study" && checkBox.id !== "groceries" && checkBox.id !== "daily" && checkBox.id !== "weekly" && checkBox.id !== "monthly" && checkBox.id !== "yearly") && !checkBox.checked);
+            const nonRelationalCheckedOptions = allLabelOptions.filter(([tagBox, checkBox, label]) => (checkBox.id !== "none" && checkBox.id !== "work" && checkBox.id !== "study" && checkBox.id !== "groceries" && checkBox.id !== "daily" && checkBox.id !== "weekly" && checkBox.id !== "monthly" && checkBox.id !== "yearly") && checkBox.checked);
+            
+            
+            nonRelationalUncheckedOptions.forEach(([tagBox, checkBox, label]) => {
+                if (event.target.htmlFor === checkBox.id) {
+                    label.classList.remove("off");
+                    checkBox.checked;
+                }
+            });
+            nonRelationalCheckedOptions.forEach(([tagBox, checkBox, label]) => {
+                if (event.target.htmlFor === checkBox.id) {
+                    label.classList.add("off");
+                    !checkBox.checked;
+                }
+            });
+            
+            if (event.target.htmlFor === "none" && noneOption[1].checked === true) {
                 event.target.classList.add("off");
-                event.target.classList.remove("on");
-                const tags = defaultListTagBox.getElementsByClassName('label-option');
-                Array.from(tags).forEach((tag) => {
-                    if (tag.textContent !== "None") {
-                        tag.classList.add("off");
-                        tag.classList.remove("inactive");
-                    }
+                console.log('None is unselected');
+                const allOtherOptions = allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id !== "none").map(([tagBox, checkBox, label]) => label.textContent).join(', ');
+                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id !== "none").forEach(([tagBox, checkBox, label]) => {
+                    checkBox.disabled = false;
+                    label.classList.add("off");
+                    label.classList.remove("inactive");
                 });
-            } else if (event.target.textContent === "Work" && event.target.classList.contains("off")) {
-                event.target.classList.add("on");
+                if (allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id !== "none")) {
+                    console.log(`Options available to select: `, allOtherOptions);
+                }
+            } else if (event.target.htmlFor === "none" && noneOption[1].checked === false) {
                 event.target.classList.remove("off");
-                const tags = defaultListTagBox.getElementsByClassName('label-option');
-                Array.from(tags).forEach((tag) => {
-                    if (tag.textContent === "Study" || tag.textContent === "Groceries") {
-                        tag.classList.add("inactive");
-                        tag.classList.remove("on", "off");
-                    }
+                console.log('None is selected');
+                const allOtherOptions = allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id !== "none").map(([tagBox, checkBox, label]) => label.textContent).join(', ');
+                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id !== "none").forEach(([tagBox, checkBox, label]) => {
+                    checkBox.disabled = true;
+                    label.classList.add("inactive");
+                    label.classList.remove("off");
                 });
-            } else if (event.target.textContent === "Work" && event.target.classList.contains("on")) {
-                event.target.classList.add("off");
-                event.target.classList.remove("on");
-                const tags = defaultListTagBox.getElementsByClassName('label-option');
-                Array.from(tags).forEach((tag) => {
-                    if (tag.textContent === "Study" || tag.textContent === "Groceries") {
-                        tag.classList.add("off");
-                        tag.classList.remove("inactive");
-                    }
-                });
-            } else if (event.target.textContent === "Study" && event.target.classList.contains("off")) {
-                event.target.classList.add("on");
-                event.target.classList.remove("off");
-                const tags = defaultListTagBox.getElementsByClassName('label-option');
-                Array.from(tags).forEach((tag) => {
-                    if (tag.textContent === "Work" || tag.textContent === "Groceries") {
-                        tag.classList.add("inactive");
-                        tag.classList.remove("on", "off");
-                    }
-                });
-            } else if (event.target.textContent === "Study" && event.target.classList.contains("on")) {
-                event.target.classList.add("off");
-                event.target.classList.remove("on");
-                const tags = defaultListTagBox.getElementsByClassName('label-option');
-                Array.from(tags).forEach((tag) => {
-                    if (tag.textContent === "Work" || tag.textContent === "Groceries") {
-                        tag.classList.add("off");
-                        tag.classList.remove("inactive");
-                    }
-                });
-            } else if (event.target.textContent === "Groceries" && event.target.classList.contains("off")) {
-                event.target.classList.add("on");
-                event.target.classList.remove("off");
-                const tags = defaultListTagBox.getElementsByClassName('label-option');
-                Array.from(tags).forEach((tag) => {
-                    if (tag.textContent === "Work" || tag.textContent === "Study") {
-                        tag.classList.add("inactive");
-                        tag.classList.remove("on", "off");
-                    }
-                });
-            } else if (event.target.textContent === "Groceries" && event.target.classList.contains("on")) {
-                event.target.classList.add("off");
-                event.target.classList.remove("on");
-                const tags = defaultListTagBox.getElementsByClassName('label-option');
-                Array.from(tags).forEach((tag) => {
-                    if (tag.textContent === "Work" || tag.textContent === "Study") {
-                        tag.classList.add("off");
-                        tag.classList.remove("inactive");
-                    }
-                });
-            } else if (event.target.textContent === "Daily" && event.target.classList.contains("off")) {
-                event.target.classList.add("on");
-                event.target.classList.remove("off");
-                const tags = defaultListTagBox.getElementsByClassName('label-option');
-                Array.from(tags).forEach((tag) => {
-                    if (tag.textContent === "Weekly" || tag.textContent === "Monthly" || tag.textContent === "Yearly") {
-                        tag.classList.add("inactive");
-                        tag.classList.remove("on", "off");
-                    }
-                });
-            } else if (event.target.textContent === "Daily" && event.target.classList.contains("on")) {
-                event.target.classList.add("off");
-                event.target.classList.remove("on");
-                const tags = defaultListTagBox.getElementsByClassName('label-option');
-                Array.from(tags).forEach((tag) => {
-                    if (tag.textContent === "Weekly" || tag.textContent === "Monthly" || tag.textContent === "Yearly") {
-                        tag.classList.add("off");
-                        tag.classList.remove("inactive");
-                    }
-                });
-            } else if (event.target.textContent === "Weekly" && event.target.classList.contains("off")) {
-                event.target.classList.add("on");
-                event.target.classList.remove("off");
-                const tags = defaultListTagBox.getElementsByClassName('label-option');
-                Array.from(tags).forEach((tag) => {
-                    if (tag.textContent === "Daily" || tag.textContent === "Monthly" || tag.textContent === "Yearly") {
-                        tag.classList.add("inactive");
-                        tag.classList.remove("on", "off");
-                    }
-                });
-            } else if (event.target.textContent === "Weekly" && event.target.classList.contains("on")) {
-                event.target.classList.add("off");
-                event.target.classList.remove("on");
-                const tags = defaultListTagBox.getElementsByClassName('label-option');
-                Array.from(tags).forEach((tag) => {
-                    if (tag.textContent === "Daily" || tag.textContent === "Monthly" || tag.textContent === "Yearly") {
-                        tag.classList.add("off");
-                        tag.classList.remove("inactive");
-                    }
-                });
-            } else if (event.target.textContent === "Monthly" && event.target.classList.contains("off")) {
-                event.target.classList.add("on");
-                event.target.classList.remove("off");
-                const tags = defaultListTagBox.getElementsByClassName('label-option');
-                Array.from(tags).forEach((tag) => {
-                    if (tag.textContent === "Daily" || tag.textContent === "Weekly" || tag.textContent === "Yearly") {
-                        tag.classList.add("inactive");
-                        tag.classList.remove("on", "off");
-                    }
-                });
-            } else if (event.target.textContent === "Monthly" && event.target.classList.contains("on")) {
-                event.target.classList.add("off");
-                event.target.classList.remove("on");
-                const tags = defaultListTagBox.getElementsByClassName('label-option');
-                Array.from(tags).forEach((tag) => {
-                    if (tag.textContent === "Daily" || tag.textContent === "Weekly" || tag.textContent === "Yearly") {
-                        tag.classList.add("off");
-                        tag.classList.remove("inactive");
-                    }
-                });
-            } else if (event.target.textContent === "Yearly" && event.target.classList.contains("off")) {
-                event.target.classList.add("on");
-                event.target.classList.remove("off");
-                const tags = defaultListTagBox.getElementsByClassName('label-option');
-                Array.from(tags).forEach((tag) => {
-                    if (tag.textContent === "Daily" || tag.textContent === "Weekly" || tag.textContent === "Monthly") {
-                        tag.classList.add("inactive");
-                        tag.classList.remove("on", "off");
-                    }
-                });
-            } else if (event.target.textContent === "Yearly" && event.target.classList.contains("on")) {
-                event.target.classList.add("off");
-                event.target.classList.remove("on");
-                const tags = defaultListTagBox.getElementsByClassName('label-option');
-                Array.from(tags).forEach((tag) => {
-                    if (tag.textContent === "Daily" || tag.textContent === "Weekly" || tag.textContent === "Monthly") {
-                        tag.classList.add("off");
-                        tag.classList.remove("inactive");
-                    }
-                });
-            } else if (event.target.textContent !== "None" && event.target.textContent !== "Work" && event.target.textContent !== "Study" && event.target.textContent !== "Groceries" && event.target.textContent !== "Daily" && event.target.textContent !== "Weekly" && event.target.textContent !== "Monthly" && event.target.textContent !== "Yearly" && event.target.classList.contains("off")) {
-                event.target.classList.add("on");
-                event.target.classList.remove("off");
-                const tags = defaultListTagBox.getElementsByClassName('label-option');
-                Array.from(tags).forEach((tag) => {
-                    if (tag.textContent === "" || tag.textContent === "" || tag.textContent === "") {
-                        tag.classList.add("inactive");
-                        tag.classList.remove("on", "off");
-                    }
-                });
-            } else if (event.target.textContent !== "None" && event.target.textContent !== "Work" && event.target.textContent !== "Study" && event.target.textContent !== "Groceries" && event.target.textContent !== "Daily" && event.target.textContent !== "Weekly" && event.target.textContent !== "Monthly" && event.target.textContent !== "Yearly" && event.target.classList.contains("on")) {
-                event.target.classList.add("off");
-                event.target.classList.remove("on");
-                const tags = defaultListTagBox.getElementsByClassName('label-option');
-                Array.from(tags).forEach((tag) => {
-                    if (tag.textContent === "" || tag.textContent === "" || tag.textContent === "") {
-                        tag.classList.add("off");
-                        tag.classList.remove("inactive");
-                    }
-                });
-            }
-        }
-    });
-    
-    const tagCheckboxes = document.querySelectorAll(".checkbox");
+                if (allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id !== "none")) {
+                    console.log(`Options unavailable to select: `, allOtherOptions);
+                }
+                const currentOnOptions = allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id !== "none" && checkBox.checked);
+                if (currentOnOptions) {
+                    currentOnOptions.forEach(([tagBox, checkBox, label]) => {
+                        checkBox.checked = false;
+                        console.log(`${label.textContent} has been unselected`);
+                    });
+                }
 
-    // CURRENTLY NOT WORKING AS EXPECTED
-    tagCheckboxes.forEach((checkbox) => {
-        checkbox.addEventListener("click", () => {
-            console.log(`You selected a tag`);
-        });
+            } else if (event.target.htmlFor === "work" && workOption[1].checked === true) {
+                event.target.classList.add("off");
+                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "study" || checkBox.id === "groceries").forEach(([tagBox, checkBox, label]) => {
+                    checkBox.disabled = false;
+                    label.classList.add("off");
+                    label.classList.remove("inactive");
+                });
+            } else if (event.target.htmlFor === "work" && workOption[1].checked === false && workOption[1].disabled === false) {
+                event.target.classList.remove("off");
+                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "study" || checkBox.id === "groceries").forEach(([tagBox, checkBox, label]) => {
+                    checkBox.disabled = true;
+                    label.classList.add("inactive");
+                    label.classList.remove("off");
+                });
+            } else if (event.target.htmlFor === "study" && studyOption[1].checked === true) {
+                event.target.classList.add("off");
+                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "work" || checkBox.id === "groceries").forEach(([tagBox, checkBox, label]) => {
+                    checkBox.disabled = false;
+                    label.classList.add("off");
+                    label.classList.remove("inactive");
+                });
+            } else if (event.target.htmlFor === "study" && studyOption[1].checked === false && studyOption[1].disabled === false) {
+                event.target.classList.remove("off");
+                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "work" || checkBox.id === "groceries").forEach(([tagBox, checkBox, label]) => {
+                    checkBox.disabled = true;
+                    label.classList.add("inactive");
+                    label.classList.remove("off");
+                });
+            } else if (event.target.htmlFor === "groceries" && groceriesOption[1].checked === true) {
+                event.target.classList.add("off");
+                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "study" || checkBox.id === "work").forEach(([tagBox, checkBox, label]) => {
+                    checkBox.disabled = false;
+                    label.classList.add("off");
+                    label.classList.remove("inactive");
+                });
+            } else if (event.target.htmlFor === "groceries" && groceriesOption[1].checked === false && groceriesOption[1].disabled === false) {
+                event.target.classList.remove("off");
+                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "study" || checkBox.id === "work").forEach(([tagBox, checkBox, label]) => {
+                    checkBox.disabled = true;
+                    label.classList.add("inactive");
+                    label.classList.remove("off");
+                });
+            } else if (event.target.htmlFor === "daily" && dailyOption[1].checked === true) {
+                event.target.classList.add("off");
+                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "weekly" || checkBox.id === "monthly" || checkBox.id === "yearly").forEach(([tagBox, checkBox, label]) => {
+                    checkBox.disabled = false;
+                    label.classList.add("off");
+                    label.classList.remove("inactive");
+                });
+            } else if (event.target.htmlFor === "daily" && dailyOption[1].checked === false && dailyOption[1].disabled === false) {
+                event.target.classList.remove("off");
+                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "weekly" || checkBox.id === "monthly" || checkBox.id === "yearly").forEach(([tagBox, checkBox, label]) => {
+                    checkBox.disabled = true;
+                    label.classList.add("inactive");
+                    label.classList.remove("off");
+                });
+            } else if (event.target.htmlFor === "weekly" && weeklyOption[1].checked === true) {
+                event.target.classList.add("off");
+                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "daily" || checkBox.id === "monthly" || checkBox.id === "yearly").forEach(([tagBox, checkBox, label]) => {
+                    checkBox.disabled = false;
+                    label.classList.add("off");
+                    label.classList.remove("inactive");
+                });
+            } else if (event.target.htmlFor === "weekly" && weeklyOption[1].checked === false && weeklyOption[1].disabled === false) {
+                event.target.classList.remove("off");
+                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "daily" || checkBox.id === "monthly" || checkBox.id === "yearly").forEach(([tagBox, checkBox, label]) => {
+                    checkBox.disabled = true;
+                    label.classList.add("inactive");
+                    label.classList.remove("off");
+                });
+            } else if (event.target.htmlFor === "monthly" && monthlyOption[1].checked === true) {
+                event.target.classList.add("off");
+                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "daily" || checkBox.id === "weekly" || checkBox.id === "yearly").forEach(([tagBox, checkBox, label]) => {
+                    checkBox.disabled = false;
+                    label.classList.add("off");
+                    label.classList.remove("inactive");
+                });
+            } else if (event.target.htmlFor === "monthly" && monthlyOption[1].checked === false && monthlyOption[1].disabled === false) {
+                event.target.classList.remove("off");
+                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "daily" || checkBox.id === "weekly" || checkBox.id === "yearly").forEach(([tagBox, checkBox, label]) => {
+                    checkBox.disabled = true;
+                    label.classList.add("inactive");
+                    label.classList.remove("off");
+                });
+            } else if (event.target.htmlFor === "yearly" && yearlyOption[1].checked === true) {
+                event.target.classList.add("off");
+                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "daily" || checkBox.id === "weekly" || checkBox.id === "monthly").forEach(([tagBox, checkBox, label]) => {
+                    checkBox.disabled = false;
+                    label.classList.add("off");
+                    label.classList.remove("inactive");
+                });
+            } else if (event.target.htmlFor === "yearly" && yearlyOption[1].checked === false && yearlyOption[1].disabled === false) {
+                event.target.classList.remove("off");
+                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "daily" || checkBox.id === "weekly" || checkBox.id === "monthly").forEach(([tagBox, checkBox, label]) => {
+                    checkBox.disabled = true;
+                    label.classList.add("inactive");
+                    label.classList.remove("off");
+                });
+            }  
+        }
     });
 
     const defaultListDescriptionDiv = document.createElement('div');
@@ -889,7 +722,6 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
     defaultListNotOption.textContent = "select";
     defaultListNotOption.value = '';
     defaultListNotOption.disabled = true;
-    //defaultListNotOption.selected = true;
     defaultListPriorityDropBox.appendChild(defaultListNotOption);
     const defaultListPriorityOptions = ['low priority', 'average priority', 'high priority'];
     defaultListPriorityOptions.forEach(priorityType => {
@@ -949,13 +781,13 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
         DefaultListSubmitButton.classList.remove("pressed");
 
         const defaultTitle = defaultListTitleInput.value;
-        //const defaultLabel = defaultListLabelDropBox.value;
         const defaultNewDescription = defaultListDescriptionInput.value;
         const defaultDueDate = defaultListDueDateInput.value;
         const defaultPriority = defaultListPriorityDropBox.value;
 
+        //let defaultLabels;
+
         if (defaultTitle.trim() === '') {
-            // use invalid stying;
             defaultListTitleInput.classList.remove("input-task");
             defaultListTitleInput.classList.add("invalid");
             defaultListTitleInput.value = '';
@@ -972,64 +804,57 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
         } else {
             defaultListFormContainer.remove();
 
-            defaultName.textContent = defaultTitle;
+            defaultName.textContent = defaultTitle; // applies the list title
 
-            const tags = defaultListTagBox.getElementsByClassName('label-option');
-            const tagArray = Array.from(tags);
-            const allTagsOff = tagArray.every((tag) => tag.classList.contains("off"));
-            const noneTag = tagArray.find((tag) => tag.textContent === "None");
+            // HANDLES LABEL APPLICATION ---------------------------------------------
+            
+            const allCurrentOnOptions = allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.checked).map(([tagBox, checkBox, label]) => label.textContent);
+            const onArray = allCurrentOnOptions.join(', ');
 
-            const allTags = defaultListTagBox.querySelectorAll(".label-option");
-            const combinedTags = Array.from(allTags).map(tag => tag.textContent).join(', ');
-            console.log(`All tags before styling: ` + combinedTags);
+            const allCurrentOffOptions = allLabelOptions.filter(([tagBox, checkBox, label]) => !checkBox.checked).map(([tagBox, checkBox, label]) => label.textContent);
+            const offArray = allCurrentOffOptions.join(', ');
 
-            if (allTagsOff && noneTag) {
-                noneTag.classList.add("on");
-                noneTag.classList.remove("off");
-                tagArray.forEach((tag) => {
-                    if (tag !== noneTag) {
-                        tag.classList.remove("off");
-                        tag.classList.add("inactive");
+            if (allCurrentOnOptions.length === 0) {
+                console.log('All checkboxes were unchecked');
+                noneOption[1].checked = true;
+                noneOption[2].classList.remove("off");
+                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id !== "none").forEach(([tagBox, checkBox, label]) => {
+                    console.log(label.textContent);
+                    checkBox.disabled === true;
+                    label.classList.add("inactive");
+                    label.classList.remove("off");
+                });
+            } else {
+                console.log('All on tags: ' + onArray);
+                console.log('All off tags: ' + offArray);
+
+                allCurrentOnOptions.forEach(label => {
+                    const existingListLabel = Array.from(defaultListLabelBox.children).find(
+                        (listLabel) => listLabel.textContent === label
+                    );
+                    
+                    if (!existingListLabel) {
+                        const listTag = document.createElement('div');
+                        listTag.classList.add('posted-label');
+                        listTag.textContent = label;
+                        defaultListLabelBox.appendChild(listTag);
                     }
                 });
             }
-            
-            const onTags = defaultListTagBox.querySelectorAll(".on");
-            const defaultLabels = Array.from(onTags).map(tag => tag.textContent).join(', ');
-            console.log("All 'ON' tags: " + defaultLabels);
 
-            const offTags = defaultListTagBox.querySelectorAll(".off");
-            const combinedOffTags = Array.from(offTags).map(tag => tag.textContent).join(', ');
-            console.log("All 'OFF' tags: " + combinedOffTags);
-
-            const inactiveTags = defaultListTagBox.querySelectorAll(".inactive");
-            const combinedInactiveTags = Array.from(inactiveTags).map(tag => tag.textContent).join(', ');
-            console.log("All 'INACTIVE' tags: " + combinedInactiveTags);
-
-            tagArray.forEach((tag) => {
-
-                if (tag.classList.contains("on")) {
-                    const existingListLabel = Array.from(defaultListLabelBox.children).find(
-                        (label) => label.textContent === tag.textContent
+            if (allCurrentOffOptions.length !== 0) {
+                allCurrentOffOptions.forEach(label => {
+                    const missingLabel = Array.from(defaultListLabelBox.children).find(
+                        (listLabel) => listLabel.textContent === label
                     );
 
-                    if (!existingListLabel) {
-                        const listTag = document.createElement('div');
-                        listTag.classList.add("posted-label");
-                        listTag.textContent = tag.textContent;
-                        defaultListLabelBox.appendChild(listTag);
+                    if (missingLabel) {
+                        missingLabel.remove();
                     }
-                }
+                });
+            }
 
-                if (tag.classList.contains("off") || tag.classList.contains("inactive")) {
-                    const labelToRemove = Array.from(defaultListLabelBox.children).find(
-                        (label) => label.textContent === tag.textContent
-                    );
-                    if (labelToRemove) {
-                        labelToRemove.remove();
-                    }
-                }
-            });
+            // END OF LABEL HANLDING ----------------------------------------------------
 
             defaultDescription.textContent = defaultNewDescription;
 
@@ -1070,10 +895,6 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
         }
 
         // add the code to make the form work with backend
-    });
-
-    defaultEditBox.addEventListener("click", () => {
-        //add the code to open the default list edit form
     });
 
     // DON'T EDIT PAST THIS LINE!

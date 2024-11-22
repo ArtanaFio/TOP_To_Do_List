@@ -2,7 +2,7 @@
 // single responsibility purpose: manage projects that group todo-items
 
 
-export const labels = new Set(["Work", "School", "Groceries", "Goals", "Daily", "Weekly", "Monthly", "Yearly"]);
+export const labels = new Set(["None", "Work", "Study", "Groceries", "Goals", "Daily", "Weekly", "Monthly", "Yearly"]);
 let userUniqueLabels = [];
 
 //function to let users customize labels
@@ -131,7 +131,7 @@ class makeProject {
 export default makeProject;
 
 // creation of a default project = new project(title, description, due date, priority, label)
-export const defaultProject = new makeProject("Default List", "List to begin tracking general todo items.", null, "average priority", "Work");
+export const defaultProject = new makeProject("Default List", "List to begin tracking general todo items.", null, "average priority", "None");
 
 
 // project completion status

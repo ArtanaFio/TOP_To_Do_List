@@ -187,11 +187,12 @@ body {
     padding: 5px;
 }
 
-#default-label-box {
+#default-label-box { /* defaultListLabelBox */
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 5px;
+    border: 2px dashed teal;
 }
 
 /* STYLING FOR THE DEFAULT LIST TAGS */
@@ -206,6 +207,74 @@ body {
     font-weight: bold;
     border-radius: 25px;
     padding: 5px 10px;
+}
+
+/* STYLING FOR THE DEFAULT LIST FORM TAG BOXES */
+.tag {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* STYLING FOR THE DEFAULT LIST FORM TAGS */
+.label-option {
+    border-radius: 25px;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    padding: 5px 10px;
+    width: fit-content;
+    border: 3px solid transparent;
+    margin: 5px 5px 5px 0px;
+    cursor: pointer;
+}
+
+.checkbox {
+    display: none;
+}
+
+.checkbox:checked + .label-option {
+    background-color: darkviolet;
+}
+
+.add-tag-icon {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+}
+
+.add-tag {
+    width: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 25px;
+    border: 3px solid transparent;
+    background-color: white;
+    color: orchid;
+    font-size: 1.25rem;
+    font-weight: bold;
+    padding: 2px 10px 2px 5px;
+    margin: 5px 5px 5px 0px;
+    cursor: pointer;
+}
+
+.add-tag:hover {
+    box-shadow: 2px 0px 5px violet, 0px 2px 5px violet, -2px 0px 5px violet, 0px -2px 5px violet;
+}
+
+.off {
+    background-color: violet;
+}
+
+.off:hover {
+    border-color: darkviolet;
+}
+
+.inactive {
+    background-color:rgb(192, 188, 192);
+    color: gray;
+    cursor: default;
 }
 
 .info-icon {
@@ -317,71 +386,6 @@ fieldset {
 .half-property {
     width: 100%;
     display: flex;
-}
-
-/* STYLING FOR THE DEFAULT LIST FORM TAG BOXES */
-.tag {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* STYLING FOR THE DEFAULT LIST FORM TAGS */
-.label-option {
-    border-radius: 25px;
-    justify-content: center;
-    font-weight: bold;
-    color: white;
-    padding: 5px 10px;
-    width: fit-content;
-    border: 3px solid transparent;
-    margin: 5px 5px 5px 0px;
-    cursor: pointer;
-}
-
-.add-tag-icon {
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-}
-
-.add-tag {
-    width: fit-content;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 25px;
-    border: 3px solid transparent;
-    background-color: white;
-    color: orchid;
-    font-size: 1.25rem;
-    font-weight: bold;
-    padding: 2px 10px 2px 5px;
-    margin: 5px 5px 5px 0px;
-    cursor: pointer;
-}
-
-.add-tag:hover {
-    
-    box-shadow: 2px 0px 5px violet, 0px 2px 5px violet, -2px 0px 5px violet, 0px -2px 5px violet;
-}
-
-.off {
-    background-color: violet;
-}
-
-.off:hover {
-    border-color: darkviolet;
-}
-
-.on {
-    background-color: darkviolet;
-}
-
-.inactive {
-    background-color:rgb(192, 188, 192);
-    color: gray;
-    cursor: default;
 }
 
 label {

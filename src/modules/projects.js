@@ -2,7 +2,7 @@
 // single responsibility purpose: manage projects that group todo-items
 
 
-export const labels = new Set(["None", "Work", "Study", "Groceries", "Goals", "Daily", "Weekly", "Monthly", "Yearly"]);
+export const labels = new Set(["None", "Daily", "Weekly", "Monthly", "Yearly", "Work", "Study", "Groceries", "Goals"]);
 let userUniqueLabels = [];
 
 //function to let users customize labels
@@ -95,22 +95,36 @@ class makeProject {
     }
 
     // method to set label
-    setLabel(label) {
-        if (labels.has(label) || userUniqueLabels.includes(label)) {
-            this.label.add(label);
-            console.log(label);
-        } else {
-            //console.log("Either no label has been added or the label is invalid.")
-        }
+    setLabel(labelsArray) {
+        labelsArray.forEach(label => {
+            if (labels.has(label) || userUniqueLabels.includes(label)) {
+                this.label.add(label);
+                console.log(label);
+            } else {
+                console.log("Either no label has been added or the label is invalid.")
+            }
+        });
+        
     }
 
     //method to remove label 
-    removelabel(label) {
-        if(this.label.has(label)) {
-            this.label.delete(label);
-            console.log(`${label} label has been removed from ${this.title}`);
+    removelabel(labelsToRemove) {
+        if (Array.isArray(labelsToRemove)) {
+            labelsToRemove.forEach(label => {
+                if(this.label.has(label)) {
+                    this.label.delete(label);
+                    console.log(`${label} label has been removed from ${this.title}`);
+                } else {
+                    console.log(`Error: ${label} label was not assigned to ${this.title}`);
+                }
+            });
         } else {
-            console.log(`Error: ${label} label was not assigned to ${this.title}`);
+            if (this.label.has(labelsToRemove)) {
+                this.label.delete(labelsToRemove);
+                console.log(`${labelsToRemove} label has been removed from ${this.title}`);
+            } else {
+                console.log(`Error: ${labelsToRemove} label was not assigned to ${this.title}`);
+            }
         }
     }
 

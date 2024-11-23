@@ -59,14 +59,18 @@ defaultProjectDisplay(defaultProject.title, defaultProject.description, defaultP
         console.log(`default task array: ${defaultProject.tasks.length}`);
         defaultTaskNumber.textContent = `${defaultProject.tasks.length}`;
     });
-}, function(defaultTitle, defaultNewDescription, defaultDueDate, defaultPriority, defaultLabel) {
+}, function(allCurrentOnOptions) {
+    defaultProject.setLabel(allCurrentOnOptions);
+}, function(allCurrentOffOptions) {
+    defaultProject.removelabel(allCurrentOffOptions);
+}, function(defaultTitle, defaultNewDescription, defaultDueDate, defaultPriority) {
 // function to edit the default list
 
     defaultProject.editTitle(defaultTitle);
     defaultProject.editDescription(defaultNewDescription);
     defaultProject.editDueDate(defaultDueDate);
     defaultProject.editPriority(defaultPriority);
-    defaultProject.setLabel(defaultLabel);
+    //defaultProject.setLabel(defaultLabel);
 
     console.log(defaultProject);
 });

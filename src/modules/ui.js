@@ -62,7 +62,7 @@ export function layout() {
 
 // function to create default project to be exported to entry point
 
-export function defaultProjectDisplay(title, description, dueDate, arrayLength, priority, label, getTaskElements, getDefaultElements) {
+export function defaultProjectDisplay(title, description, dueDate, arrayLength, priority, label, getTaskElements, getLabels, getOldLabels, getDefaultElements) {
     const space = document.getElementById("space");
     
     const defaultList = document.createElement('div');
@@ -311,16 +311,16 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
     };
 
     const noneOption = createLabelOptions('none', 'tag1', 'None');
-    const workOption = createLabelOptions('work', 'tag2', 'Work');
-    const studyOption = createLabelOptions('study', 'tag3', 'Study');
-    const groceriesOption = createLabelOptions('groceries', 'tag4', 'Groceries');
-    const goalsOption = createLabelOptions('goals', 'tag5', 'Goals');
-    const dailyOption = createLabelOptions('daily', 'tag6', 'Daily');
-    const weeklyOption = createLabelOptions('weekly', 'tag7', 'Weekly');
-    const monthlyOption = createLabelOptions('monthly', 'tag8', 'Monthly');
-    const yearlyOption = createLabelOptions('yearly', 'tag9', 'Yearly');
+    const dailyOption = createLabelOptions('daily', 'tag2', 'Daily');
+    const weeklyOption = createLabelOptions('weekly', 'tag3', 'Weekly');
+    const monthlyOption = createLabelOptions('monthly', 'tag4', 'Monthly');
+    const yearlyOption = createLabelOptions('yearly', 'tag5', 'Yearly');
+    const workOption = createLabelOptions('work', 'tag6', 'Work');
+    const studyOption = createLabelOptions('study', 'tag7', 'Study');
+    const groceriesOption = createLabelOptions('groceries', 'tag8', 'Groceries');
+    const goalsOption = createLabelOptions('goals', 'tag9', 'Goals');
 
-    const allLabelOptions = [noneOption, workOption, studyOption, groceriesOption, goalsOption, dailyOption, weeklyOption, monthlyOption, yearlyOption];
+    const allLabelOptions = [noneOption, dailyOption, weeklyOption, monthlyOption, yearlyOption, workOption, studyOption, groceriesOption, goalsOption];
 
     console.log(`Label Option: 'Goals', value: ${goalsOption[1].value}`);
     const newTag = document.createElement('div');
@@ -561,48 +561,6 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
                     });
                 }
 
-            } else if (event.target.htmlFor === "work" && workOption[1].checked === true) {
-                event.target.classList.add("off");
-                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "study" || checkBox.id === "groceries").forEach(([tagBox, checkBox, label]) => {
-                    checkBox.disabled = false;
-                    label.classList.add("off");
-                    label.classList.remove("inactive");
-                });
-            } else if (event.target.htmlFor === "work" && workOption[1].checked === false && workOption[1].disabled === false) {
-                event.target.classList.remove("off");
-                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "study" || checkBox.id === "groceries").forEach(([tagBox, checkBox, label]) => {
-                    checkBox.disabled = true;
-                    label.classList.add("inactive");
-                    label.classList.remove("off");
-                });
-            } else if (event.target.htmlFor === "study" && studyOption[1].checked === true) {
-                event.target.classList.add("off");
-                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "work" || checkBox.id === "groceries").forEach(([tagBox, checkBox, label]) => {
-                    checkBox.disabled = false;
-                    label.classList.add("off");
-                    label.classList.remove("inactive");
-                });
-            } else if (event.target.htmlFor === "study" && studyOption[1].checked === false && studyOption[1].disabled === false) {
-                event.target.classList.remove("off");
-                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "work" || checkBox.id === "groceries").forEach(([tagBox, checkBox, label]) => {
-                    checkBox.disabled = true;
-                    label.classList.add("inactive");
-                    label.classList.remove("off");
-                });
-            } else if (event.target.htmlFor === "groceries" && groceriesOption[1].checked === true) {
-                event.target.classList.add("off");
-                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "study" || checkBox.id === "work").forEach(([tagBox, checkBox, label]) => {
-                    checkBox.disabled = false;
-                    label.classList.add("off");
-                    label.classList.remove("inactive");
-                });
-            } else if (event.target.htmlFor === "groceries" && groceriesOption[1].checked === false && groceriesOption[1].disabled === false) {
-                event.target.classList.remove("off");
-                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "study" || checkBox.id === "work").forEach(([tagBox, checkBox, label]) => {
-                    checkBox.disabled = true;
-                    label.classList.add("inactive");
-                    label.classList.remove("off");
-                });
             } else if (event.target.htmlFor === "daily" && dailyOption[1].checked === true) {
                 event.target.classList.add("off");
                 allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "weekly" || checkBox.id === "monthly" || checkBox.id === "yearly").forEach(([tagBox, checkBox, label]) => {
@@ -659,7 +617,49 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
                     label.classList.add("inactive");
                     label.classList.remove("off");
                 });
-            }  
+            } else if (event.target.htmlFor === "work" && workOption[1].checked === true) {
+                event.target.classList.add("off");
+                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "study" || checkBox.id === "groceries").forEach(([tagBox, checkBox, label]) => {
+                    checkBox.disabled = false;
+                    label.classList.add("off");
+                    label.classList.remove("inactive");
+                });
+            } else if (event.target.htmlFor === "work" && workOption[1].checked === false && workOption[1].disabled === false) {
+                event.target.classList.remove("off");
+                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "study" || checkBox.id === "groceries").forEach(([tagBox, checkBox, label]) => {
+                    checkBox.disabled = true;
+                    label.classList.add("inactive");
+                    label.classList.remove("off");
+                });
+            } else if (event.target.htmlFor === "study" && studyOption[1].checked === true) {
+                event.target.classList.add("off");
+                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "work" || checkBox.id === "groceries").forEach(([tagBox, checkBox, label]) => {
+                    checkBox.disabled = false;
+                    label.classList.add("off");
+                    label.classList.remove("inactive");
+                });
+            } else if (event.target.htmlFor === "study" && studyOption[1].checked === false && studyOption[1].disabled === false) {
+                event.target.classList.remove("off");
+                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "work" || checkBox.id === "groceries").forEach(([tagBox, checkBox, label]) => {
+                    checkBox.disabled = true;
+                    label.classList.add("inactive");
+                    label.classList.remove("off");
+                });
+            } else if (event.target.htmlFor === "groceries" && groceriesOption[1].checked === true) {
+                event.target.classList.add("off");
+                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "study" || checkBox.id === "work").forEach(([tagBox, checkBox, label]) => {
+                    checkBox.disabled = false;
+                    label.classList.add("off");
+                    label.classList.remove("inactive");
+                });
+            } else if (event.target.htmlFor === "groceries" && groceriesOption[1].checked === false && groceriesOption[1].disabled === false) {
+                event.target.classList.remove("off");
+                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id === "study" || checkBox.id === "work").forEach(([tagBox, checkBox, label]) => {
+                    checkBox.disabled = true;
+                    label.classList.add("inactive");
+                    label.classList.remove("off");
+                });
+            }
         }
     });
 
@@ -785,8 +785,6 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
         const defaultDueDate = defaultListDueDateInput.value;
         const defaultPriority = defaultListPriorityDropBox.value;
 
-        //let defaultLabels;
-
         if (defaultTitle.trim() === '') {
             defaultListTitleInput.classList.remove("input-task");
             defaultListTitleInput.classList.add("invalid");
@@ -814,6 +812,8 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
             const allCurrentOffOptions = allLabelOptions.filter(([tagBox, checkBox, label]) => !checkBox.checked).map(([tagBox, checkBox, label]) => label.textContent);
             const offArray = allCurrentOffOptions.join(', ');
 
+            //let defaultLabels;
+
             if (allCurrentOnOptions.length === 0) {
                 console.log('All checkboxes were unchecked');
                 noneOption[1].checked = true;
@@ -838,9 +838,13 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
                         listTag.classList.add('posted-label');
                         listTag.textContent = label;
                         defaultListLabelBox.appendChild(listTag);
+
+                        //getLabels(allCurrentOnOptions);
                     }
                 });
             }
+            //defaultLabels = allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.checked).map(([tagBox, checkBox, label]) => label.textContent);
+            getLabels(allCurrentOnOptions);
 
             if (allCurrentOffOptions.length !== 0) {
                 allCurrentOffOptions.forEach(label => {
@@ -850,10 +854,11 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
 
                     if (missingLabel) {
                         missingLabel.remove();
+
+                        getOldLabels(allCurrentOffOptions);
                     }
                 });
             }
-
             // END OF LABEL HANLDING ----------------------------------------------------
 
             defaultDescription.textContent = defaultNewDescription;
@@ -891,7 +896,7 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
                 console.log("Error: UI doesn't recognize the default priority");
             }
 
-            getDefaultElements(defaultTitle,/* defaultLabels,*/ defaultNewDescription, defaultDueDate, defaultPriority);
+            getDefaultElements(defaultTitle, defaultNewDescription, defaultDueDate, defaultPriority);
         }
 
         // add the code to make the form work with backend

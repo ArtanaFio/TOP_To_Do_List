@@ -1,6 +1,8 @@
 //import { functionName } from './modules/moduleName';
 import makeTodoItem from "./modules/todo-items";
 import { labels } from "./modules/projects";
+import { userUniqueLabels } from "./modules/projects";
+import { makeLabels } from "./modules/projects";
 import makeProject from "./modules/projects";
 import { defaultProject } from "./modules/projects";
 import { layout } from "./modules/ui";
@@ -59,8 +61,15 @@ defaultProjectDisplay(defaultProject.title, defaultProject.description, defaultP
         console.log(`default task array: ${defaultProject.tasks.length}`);
         defaultTaskNumber.textContent = `${defaultProject.tasks.length}`;
     });
+}, function(customLabelName) {
+    makeLabels(customLabelName);
+    console.log(`userUniqueLabels array: ${userUniqueLabels}`);
 }, function(allCurrentOnOptions) {
+    //makeLabels(); how can I just use the custom labels?
+    
     defaultProject.setLabel(allCurrentOnOptions);
+    console.log(`These are all the imported label options: ${allCurrentOnOptions}`);
+    // try using function makeLabels(allCurrentOnOptions) to get the new custom labels to work
 }, function(allCurrentOffOptions) {
     defaultProject.removelabel(allCurrentOffOptions);
 }, function(defaultTitle, defaultNewDescription, defaultDueDate, defaultPriority) {
@@ -70,7 +79,6 @@ defaultProjectDisplay(defaultProject.title, defaultProject.description, defaultP
     defaultProject.editDescription(defaultNewDescription);
     defaultProject.editDueDate(defaultDueDate);
     defaultProject.editPriority(defaultPriority);
-    //defaultProject.setLabel(defaultLabel);
 
     console.log(defaultProject);
 });

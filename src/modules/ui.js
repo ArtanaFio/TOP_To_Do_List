@@ -47,7 +47,7 @@ export function layout() {
     githubLink.target = "_blank";
     githubLink.textContent = "GitHub";
     footer.appendChild(githubLink);
-    
+
     const copyright = document.createElement('span');
     copyright.classList.add("footer-text");
     copyright.textContent = "\u00A9";
@@ -62,9 +62,9 @@ export function layout() {
 
 // function to create default project to be exported to entry point
 
-export function defaultProjectDisplay(title, description, dueDate, arrayLength, priority, label, getTaskElements, getLabels, getOldLabels, getDefaultElements) {
+export function defaultProjectDisplay(title, description, dueDate, arrayLength, priority, label, getTaskElements, getCustomLabel, getLabels, getOldLabels, getDefaultElements) {
     const space = document.getElementById("space");
-    
+
     const defaultList = document.createElement('div');
     defaultList.id = "default";
     defaultList.classList.add("list");
@@ -78,7 +78,7 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
     defaultTop.appendChild(infoBox);
 
     const parser = new DOMParser();
-    
+
     const infoDoc = parser.parseFromString(info, 'image/svg+xml');
     const infoSvg = infoDoc.querySelector('svg');
     infoSvg.classList.add("info-icon");
@@ -115,9 +115,9 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
     editSvg.classList.add("edit-icon");
     defaultEditBox.appendChild(editSvg);
 
-    const defaultExitBox  = document.createElement('div');
+    const defaultExitBox = document.createElement('div');
     pairBox.appendChild(defaultExitBox);
-    
+
     const exitDoc = parser.parseFromString(exit, 'image/svg+xml');
     const exitSvg = exitDoc.querySelector('svg');
     exitSvg.classList.add("exit-icon", "invisible");
@@ -158,7 +158,7 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
     taskArea.classList.add("task-area");
     taskArea.id = "task-area";
     defaultList.appendChild(taskArea);
-    
+
     const taskItem = document.createElement("div");
     taskItem.classList.add("no-task");
     taskItem.textContent = "No tasks have been added yet";
@@ -257,7 +257,7 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
     const defaultListForm = document.createElement('form');
     defaultListForm.id = "default-form";
     defaultListFormContainer.appendChild(defaultListForm);
-            
+
     const defaultListFieldset = document.createElement('fieldset');
     defaultListForm.appendChild(defaultListFieldset);
 
@@ -341,9 +341,9 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
 
     function titleCase(string) {
         const newString = string
-        .split(' ')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-        .join(' ');
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(' ');
         return newString;
     };
 
@@ -448,7 +448,7 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
             addNewLabelInput.classList.add("invalid");
             addNewLabelInput.value = '';
             addNewLabelInput.placeholder = "Cancel or enter a label";
-        
+
             addNewLabelInput.addEventListener("click", () => {
                 if (addNewLabelInput.placeholder === "Cancel or enter a label") {
                     addNewLabelInput.classList.remove("invalid");
@@ -475,9 +475,13 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
             const newCustomLabelOption = createCustomLabelOptions();
             allLabelOptions.push(newCustomLabelOption);
 
+            let customLabelName = newCustomLabelOption[2].textContent;
+
+            getCustomLabel(customLabelName);
+
             addNewLabelInput.placeholder = '';
             addNewLabelFormContainer.remove();
-            
+
             if (noneOption[1].checked === true) {
                 newCustomLabelOption[1].disabled = true;
                 newCustomLabelOption[2].classList.add("inactive");
@@ -514,8 +518,8 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
         if (event.target.classList.contains("label-option")) {
             const nonRelationalUncheckedOptions = allLabelOptions.filter(([tagBox, checkBox, label]) => (checkBox.id !== "none" && checkBox.id !== "work" && checkBox.id !== "study" && checkBox.id !== "groceries" && checkBox.id !== "daily" && checkBox.id !== "weekly" && checkBox.id !== "monthly" && checkBox.id !== "yearly") && !checkBox.checked);
             const nonRelationalCheckedOptions = allLabelOptions.filter(([tagBox, checkBox, label]) => (checkBox.id !== "none" && checkBox.id !== "work" && checkBox.id !== "study" && checkBox.id !== "groceries" && checkBox.id !== "daily" && checkBox.id !== "weekly" && checkBox.id !== "monthly" && checkBox.id !== "yearly") && checkBox.checked);
-            
-            
+
+
             nonRelationalUncheckedOptions.forEach(([tagBox, checkBox, label]) => {
                 if (event.target.htmlFor === checkBox.id) {
                     label.classList.remove("off");
@@ -528,7 +532,7 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
                     !checkBox.checked;
                 }
             });
-            
+
             if (event.target.htmlFor === "none" && noneOption[1].checked === true) {
                 event.target.classList.add("off");
                 console.log('None is unselected');
@@ -700,11 +704,11 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
     defaultListDueDateInput.classList.add("half-input");
     defaultListDueDateDiv.appendChild(defaultListDueDateInput);
 
-    
+
     if (defaultPostedDueDate.textContent === "no due date") {
         defaultListDueDateInput.value = '';
     }
-    
+
     const defaultListPriorityDiv = document.createElement('div');
     defaultListPriorityDiv.classList.add("half-property");
     defaultListDoubleDiv.appendChild(defaultListPriorityDiv);
@@ -740,7 +744,7 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
     } else {
         console.log("Something went wrong with displaying the correct priority type in the dropbox");
     }
-    
+
     defaultListPriorityDiv.appendChild(defaultListPriorityDropBox);
 
     const defaultListSubmitDiv = document.createElement('div');
@@ -805,14 +809,12 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
             defaultName.textContent = defaultTitle; // applies the list title
 
             // HANDLES LABEL APPLICATION ---------------------------------------------
-            
+
             const allCurrentOnOptions = allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.checked).map(([tagBox, checkBox, label]) => label.textContent);
             const onArray = allCurrentOnOptions.join(', ');
 
             const allCurrentOffOptions = allLabelOptions.filter(([tagBox, checkBox, label]) => !checkBox.checked).map(([tagBox, checkBox, label]) => label.textContent);
             const offArray = allCurrentOffOptions.join(', ');
-
-            //let defaultLabels;
 
             if (allCurrentOnOptions.length === 0) {
                 console.log('All checkboxes were unchecked');
@@ -832,18 +834,16 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
                     const existingListLabel = Array.from(defaultListLabelBox.children).find(
                         (listLabel) => listLabel.textContent === label
                     );
-                    
+
                     if (!existingListLabel) {
                         const listTag = document.createElement('div');
                         listTag.classList.add('posted-label');
                         listTag.textContent = label;
                         defaultListLabelBox.appendChild(listTag);
-
-                        //getLabels(allCurrentOnOptions);
                     }
                 });
             }
-            //defaultLabels = allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.checked).map(([tagBox, checkBox, label]) => label.textContent);
+            
             getLabels(allCurrentOnOptions);
 
             if (allCurrentOffOptions.length !== 0) {
@@ -922,14 +922,14 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
     const taskForm = document.createElement('form');
     taskBlock.classList.add("block");
     taskFormContainer.appendChild(taskForm);
-            
+
     const taskFieldset = document.createElement('fieldset');
     taskForm.appendChild(taskFieldset);
 
     const taskBar = document.createElement('div');
     taskBar.classList.add("task-bar");
     taskFieldset.appendChild(taskBar);
-    
+
     const taskTitleInput = document.createElement('input');
     taskTitleInput.classList.add("input-task");
     taskTitleInput.placeholder = "Enter a new task";
@@ -1072,7 +1072,7 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
 
     taskBlock.addEventListener("click", () => {
         taskBlock.remove();
-        taskArea.appendChild(taskFormContainer);                
+        taskArea.appendChild(taskFormContainer);
         taskFieldset.classList.add("fieldset-border");
         taskTitleInput.focus();
     });
@@ -1098,7 +1098,7 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
                     taskTitleInput.classList.add("input-task");
                 }
             });
-        } 
+        }
 
         if (!taskPriority) {
             priorityDropBox.classList.remove("drop-box");
@@ -1113,11 +1113,11 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
                 console.log(priorityDropBox.classList, priorityDropBox.value);
             });
         }
-        
+
         if (taskTitle.trim() !== '' && taskPriority) {
 
             taskFormContainer.remove();
-                    
+
             const fullTaskContainer = document.createElement('div');
             fullTaskContainer.classList.add("block", "full-task");
             taskArea.appendChild(fullTaskContainer);
@@ -1158,12 +1158,12 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
                 fullTaskContainer.addEventListener("mouseenter", () => {
                     taskPriorityBox.classList.add("white-out");
                 });
-    
+
                 fullTaskContainer.addEventListener("mouseleave", () => {
                     taskPriorityBox.classList.remove("white-out");
                 });
             }
-            
+
             const clonedLowSvg = lowSvg.cloneNode(true);
             clonedLowSvg.classList.remove("one");
             clonedLowSvg.classList.add("two");
@@ -1198,7 +1198,7 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
             } else {
                 console.log("Error: UI doesn't recognize task priority");
             }
-                    
+
             const dateDoc = parser.parseFromString(date, 'image/svg+xml');
             const dateSvg = dateDoc.querySelector('svg');
             dateSvg.classList.add("date-icon");
@@ -1211,7 +1211,7 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
             } else {
                 datePopup.textContent = "No due date";
             }
-                    
+
             pictographBox.appendChild(datePopup);
 
             dateSvg.addEventListener("mouseover", () => {
@@ -1221,11 +1221,11 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
             dateSvg.addEventListener("mouseleave", () => {
                 datePopup.classList.add("invisible");
             });
-                
+
             const taskEditBox = document.createElement('div');
             taskEditBox.classList.add("invisible");
             pictographBox.appendChild(taskEditBox);
-            
+
             const clonedEditSvg = editSvg.cloneNode(true);
             taskEditBox.appendChild(clonedEditSvg);
 
@@ -1311,7 +1311,7 @@ export function projectDisplay() {
 
     const newListButton = document.getElementById("new-list-button");
     newListButton.classList.add("static-list-button");
-    
+
     newListButton.addEventListener("click", () => {
         const newProject = document.createElement("div");
         newProject.classList.add("list");
@@ -1337,5 +1337,5 @@ export function projectDisplay() {
         newListButton.classList.add("list-button-unpressed");
         newListButton.classList.remove("list-button-pressed", "static-list-button");
     });
-    
+
 };

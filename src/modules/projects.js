@@ -3,10 +3,10 @@
 
 
 export const labels = new Set(["None", "Daily", "Weekly", "Monthly", "Yearly", "Work", "Study", "Groceries", "Goals"]);
-let userUniqueLabels = [];
+export let userUniqueLabels = [];
 
 //function to let users customize labels
-function makeLabels(label) {
+export function makeLabels(label) {
     if (!labels.has(label) || !userUniqueLabels.includes(label)) {
         userUniqueLabels.push(label);
         console.log(`${label} label has been created.`);
@@ -114,8 +114,6 @@ class makeProject {
                 if(this.label.has(label)) {
                     this.label.delete(label);
                     console.log(`${label} label has been removed from ${this.title}`);
-                } else {
-                    console.log(`Error: ${label} label was not assigned to ${this.title}`);
                 }
             });
         } else {

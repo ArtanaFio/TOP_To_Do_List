@@ -65,11 +65,8 @@ defaultProjectDisplay(defaultProject.title, defaultProject.description, defaultP
     makeLabels(customLabelName);
     console.log(`userUniqueLabels array: ${userUniqueLabels}`);
 }, function(allCurrentOnOptions) {
-    //makeLabels(); how can I just use the custom labels?
-    
     defaultProject.setLabel(allCurrentOnOptions);
     console.log(`These are all the imported label options: ${allCurrentOnOptions}`);
-    // try using function makeLabels(allCurrentOnOptions) to get the new custom labels to work
 }, function(allCurrentOffOptions) {
     defaultProject.removelabel(allCurrentOffOptions);
 }, function(defaultTitle, defaultNewDescription, defaultDueDate, defaultPriority) {

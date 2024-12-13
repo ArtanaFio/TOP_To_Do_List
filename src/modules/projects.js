@@ -2,7 +2,7 @@
 // single responsibility purpose: manage projects that group todo-items
 
 
-export const labels = new Set(["None", "Daily", "Weekly", "Monthly", "Yearly", "Work", "Study", "Groceries", "Goals"]);
+export const labels = new Set(["Daily", "Weekly", "Monthly", "Yearly", "Work", "Study", "Groceries", "Goals"]);
 export let userUniqueLabels = [];
 
 //function to let users customize labels
@@ -42,7 +42,7 @@ class makeProject {
         if (labels.has(label) || userUniqueLabels.includes(label)) {
             this.label.add(label);
         } else {
-            console.log("Error: the label is invalid.");
+            console.log("Error: the label is either null or invalid.");
         }
 
         // Add project to Master Storage
@@ -143,7 +143,7 @@ class makeProject {
 export default makeProject;
 
 // creation of a default project = new project(title, description, due date, priority, label)
-export const defaultProject = new makeProject("Default List", "List to begin tracking general todo items.", null, "average priority", "None");
+export const defaultProject = new makeProject("Default List", "List to begin tracking general todo items.", null, "average priority", null);
 
 
 // project completion status

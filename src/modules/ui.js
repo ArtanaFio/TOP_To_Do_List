@@ -145,15 +145,6 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
     defaultListLabelBox.id = "default-label-box";
     middleBox.appendChild(defaultListLabelBox);
 
-    // THIS IS FOR THE DEFAULT LISTS TAGS
-    const defaultPostedLabel = document.createElement('div');
-    defaultPostedLabel.classList.add("posted-label");
-    defaultListLabelBox.appendChild(defaultPostedLabel);
-
-    // label is the parameter given to the defaultProjectDisplay function
-    defaultPostedLabel.textContent = Array.from(label).join(', ');
-    //console.log("HEY NIADA! Don't forget to uncomment line 154 after you finish fixing the other label issues!");
-
     const taskArea = document.createElement('div');
     taskArea.classList.add("task-area");
     taskArea.id = "task-area";
@@ -238,20 +229,6 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
 
     defaultEditBox.addEventListener("click", () => {
         document.body.appendChild(defaultListFormContainer);
-
-        const existingNoneLabel = Array.from(defaultListLabelBox.children).find(
-            (label) => label.textContent === "None"
-        );
-
-        if (existingNoneLabel) {
-            console.log("let's activate the 'inactive' class");
-            tagOptions.forEach((tag) => {
-                if (tag.textContent !== "None") {
-                    tag.classList.add("inactive");
-                    tag.classList.remove("off");
-                }
-            })
-        }
     });
 
     const defaultListForm = document.createElement('form');
@@ -322,7 +299,6 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
 
     const allLabelOptions = [noneOption, dailyOption, weeklyOption, monthlyOption, yearlyOption, workOption, studyOption, groceriesOption, goalsOption];
 
-    console.log(`Label Option: 'Goals', value: ${goalsOption[1].value}`);
     const newTag = document.createElement('div');
     newTag.classList.add("add-tag");
     defaultListTagBox.appendChild(newTag);
@@ -499,9 +475,6 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
     newTag.addEventListener("click", () => {
         document.body.appendChild(addNewLabelFormContainer);
     });
-
-    const labelOptions = document.getElementsByClassName("label-option");
-    const tagOptions = Array.from(labelOptions);
 
     noneOption[1].checked = true;
     noneOption[2].classList.remove("off", "inactive");
@@ -810,38 +783,60 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
 
             // HANDLES LABEL APPLICATION ---------------------------------------------
 
-            const allCurrentOnOptions = allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.checked).map(([tagBox, checkBox, label]) => label.textContent);
+            const allLabelArray = allLabelOptions.map(([tagBox, checkBox, label]) => label.textContent);
+            console.log("allLabelOptions:");
+            console.log(allLabelArray);
+
+            const allCurrentOnOptions = allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.checked && label.textContent !== "None").map(([tagBox, checkBox, label]) => label.textContent);
             const onArray = allCurrentOnOptions.join(', ');
 
             const allCurrentOffOptions = allLabelOptions.filter(([tagBox, checkBox, label]) => !checkBox.checked).map(([tagBox, checkBox, label]) => label.textContent);
-            const offArray = allCurrentOffOptions.join(', ');
+            //const offArray = allCurrentOffOptions.join(', ');
+            console.log("allCurrentOffOptions:");
+            console.log(allCurrentOffOptions);
 
-            if (allCurrentOnOptions.length === 0) {
-                console.log('All checkboxes were unchecked');
-                noneOption[1].checked = true;
-                noneOption[2].classList.remove("off");
-                allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id !== "none").forEach(([tagBox, checkBox, label]) => {
-                    console.log(label.textContent);
-                    checkBox.disabled === true;
-                    label.classList.add("inactive");
-                    label.classList.remove("off");
-                });
-            } else {
+            
+            if (allCurrentOffOptions.length !== allLabelArray.length) {
+                console.log("Testing: at least one option should be currently selected");
                 console.log('All on tags: ' + onArray);
-                console.log('All off tags: ' + offArray);
-
+                //console.log('All off tags: ' + offArray);
                 allCurrentOnOptions.forEach(label => {
                     const existingListLabel = Array.from(defaultListLabelBox.children).find(
                         (listLabel) => listLabel.textContent === label
                     );
 
-                    if (!existingListLabel) {
+                    if (!existingListLabel && label !== "None") {
                         const listTag = document.createElement('div');
                         listTag.classList.add('posted-label');
                         listTag.textContent = label;
                         defaultListLabelBox.appendChild(listTag);
                     }
                 });
+                console.log("come back to this code to fix the disappearing 'None' tag issue");
+            } else {
+                const sortedAllLabelArray = [...allLabelArray].sort();
+                const sortedAllCurrentOffOptions = [...allCurrentOffOptions].sort();
+                
+
+                let arraysAreEqual = true;
+                for (let i = 0; i < sortedAllLabelArray.length; i++) {
+                    if (sortedAllLabelArray[i] !== sortedAllCurrentOffOptions[i]) {
+                        arraysAreEqual = false;
+                        break;
+                    }
+                }
+                if (arraysAreEqual) {
+                    console.log("all options should be deselected and here we can active the None option");
+                    noneOption[1].checked = true;
+                    noneOption[2].classList.remove("off");
+                    allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id !== "none").forEach(([tagBox, checkBox, label]) => {
+                        checkBox.disabled = true;
+                        label.classList.add("inactive");
+                        label.classList.remove("off");
+                    });
+                } else {
+                    console.log("something went wrong; the arrays are the same length but don't match");
+                }
             }
             
             getLabels(allCurrentOnOptions);
@@ -898,8 +893,6 @@ export function defaultProjectDisplay(title, description, dueDate, arrayLength, 
 
             getDefaultElements(defaultTitle, defaultNewDescription, defaultDueDate, defaultPriority);
         }
-
-        // add the code to make the form work with backend
     });
 
     // DON'T EDIT PAST THIS LINE!

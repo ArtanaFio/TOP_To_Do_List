@@ -142,7 +142,7 @@ class makeProject {
 
 export default makeProject;
 
-// creation of a default project = new project(title, description, due date, priority, label)
+// creation of a default project = new project(title, description, due date, priority, label), date format: 2025-03-18T00:00:00-05:00
 export const defaultProject = new makeProject("Default List", "List to begin tracking general todo items.", null, "average priority", null);
 
 

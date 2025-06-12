@@ -10,6 +10,9 @@ module.exports = {
         clean: true,
     },
     devtool: 'inline-source-map',
+    devServer: {
+        watchFiles: ["./src/index.html"],
+    },
     plugins: [
         new HtmlWebpackPlugin({
             template: './src/index.html',

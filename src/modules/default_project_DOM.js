@@ -8,8 +8,7 @@ import mid from '../assets/images/yellow-priority.svg';
 import high from '../assets/images/red-priority.svg';
 import date from '../assets/images/date.svg';
 import trash from '../assets/images/delete.svg';
-
-// function to create default project display to be exported to entry point
+import { formatDateForInput } from './default_project_utility';
 
 export function displayDefaultProject(closeLogic) {
     const projectContainer = document.getElementById('project-container');
@@ -68,6 +67,7 @@ export function displayDefaultProject(closeLogic) {
     const defaultListLabelBox = document.createElement('div');
     defaultListLabelBox.id = "default-label-box";
     middleBox.appendChild(defaultListLabelBox);
+    console.log("REMINDER: come back to the defaultListLabelBox in displayDefaultProject function");
 
     const taskContainer = document.createElement('div');
     taskContainer.id = "default-project-task-container";
@@ -145,6 +145,7 @@ export function displayDefaultProject(closeLogic) {
 export function displayDefaultProjectTitle(title) {
     const defaultTopDiv = document.getElementById('default-top-div');
     const defaultProjectTitle = document.createElement('p');
+    defaultProjectTitle.id = "default-project-title";
     defaultProjectTitle.classList.add('list-name');
     defaultProjectTitle.textContent = title;
     defaultTopDiv.appendChild(defaultProjectTitle);
@@ -154,6 +155,7 @@ export function displayDefaultProjectDescription(description) {
     const defaultList = document.getElementById('default');
     const infoSvg = document.getElementById('default-info-icon');
     const defaultDescription = document.createElement('div');
+    defaultDescription.id = "default-description";
     defaultDescription.classList.add('description', 'invisible');
     defaultDescription.textContent = description;
     defaultList.appendChild(defaultDescription);
@@ -174,6 +176,16 @@ export function displayDefaultProjectDueDate(formattedDueDate) {
     defaultProjectDueDate.classList.add('posted-date');
     defaultProjectDueDate.textContent = formattedDueDate;
     defaultProjectDueDateBox.appendChild(defaultProjectDueDate);
+};
+
+export function displayDefaultProjectLabel(labelArray) {
+    const defaultListLabelBox = document.getElementById('default-label-box');
+    labelArray.forEach(label => {
+        const listLabel = document.createElement('span');
+        listLabel.classList.add('posted-label');
+        listLabel.textContent = label;
+        defaultListLabelBox.appendChild(listLabel);
+    });
 };
 
 export function displayDefaultProjectTasks() {
@@ -248,7 +260,7 @@ export function displayDefaultProjectPriority(instructions) {
 
 };
 
-export function editDefaultProjectDetails(title, description, dueDate, priorityLogicFunction) {
+export function createDefaultProjectEditForm(title, description, dueDate, priorityLogicFunction) {
     const defaultListEditButton = document.getElementById('default-edit-button');
 
     const defaultListFormContainer = document.createElement('div');
@@ -269,7 +281,7 @@ export function editDefaultProjectDetails(title, description, dueDate, priorityL
     defaultListLegend.id = "default-legend";
     defaultListLegend.textContent = "Edit Default List Details";
     defaultListFieldset.appendChild(defaultListLegend);
-   
+
     const defaultListBar = document.createElement('div');
     defaultListBar.classList.add('task-bar');
     defaultListFieldset.appendChild(defaultListBar);
@@ -280,7 +292,7 @@ export function editDefaultProjectDetails(title, description, dueDate, priorityL
     defaultListBar.appendChild(defaultListTitleInput);
 
     const defaultListLabelDiv = document.createElement('div');
-    defaultListLabelDiv.classList.add('task-property');
+    defaultListLabelDiv.classList.add('property-div');
     defaultListFieldset.appendChild(defaultListLabelDiv);
 
     const defaultListLabelLabel = document.createElement('label');
@@ -289,6 +301,7 @@ export function editDefaultProjectDetails(title, description, dueDate, priorityL
     defaultListLabelDiv.appendChild(defaultListLabelLabel);
 
     const defaultListTagBox = document.createElement('div');
+    defaultListTagBox.id = "default-edit-form-label-container";
     defaultListTagBox.classList.add('tag-box');
     defaultListLabelDiv.appendChild(defaultListTagBox);
 
@@ -326,22 +339,8 @@ export function editDefaultProjectDetails(title, description, dueDate, priorityL
 
     const allLabelOptions = [noneOption, dailyOption, weeklyOption, monthlyOption, yearlyOption, workOption, studyOption, groceriesOption, goalsOption];
 
-    const newTag = document.createElement('div');
-    newTag.classList.add('add-tag');
-    defaultListTagBox.appendChild(newTag);
-
-    const parser = new DOMParser();
-    const addDoc = parser.parseFromString(plus, 'image/svg+xml');
-    const addSvg = addDoc.querySelector('svg');
-    addSvg.classList.add('add-tag-icon');
-    newTag.appendChild(addSvg);
-
-    const addTagText = document.createElement('p');
-    addTagText.textContent = "Label";
-    newTag.appendChild(addTagText);
-
     const defaultListDescriptionDiv = document.createElement('div');
-    defaultListDescriptionDiv.classList.add('task-property');
+    defaultListDescriptionDiv.classList.add('property-div');
     defaultListFieldset.appendChild(defaultListDescriptionDiv);
 
     const defaultListDescriptionLabel = document.createElement('label');
@@ -357,7 +356,7 @@ export function editDefaultProjectDetails(title, description, dueDate, priorityL
     defaultListDescriptionDiv.appendChild(defaultListDescriptionInput);
 
     const defaultListDoubleDiv = document.createElement('div');
-    defaultListDoubleDiv.classList.add('task-property', 'double-div');
+    defaultListDoubleDiv.classList.add('property-div', 'double-div');
     defaultListFieldset.appendChild(defaultListDoubleDiv);
 
     const defaultListDueDateDiv = document.createElement('div');
@@ -376,7 +375,7 @@ export function editDefaultProjectDetails(title, description, dueDate, priorityL
     defaultListDueDateInput.name = "task_due_date";
     defaultListDueDateInput.classList.add('half-input');
     if (dueDate) {
-        defaultListDueDateInput.value = dueDate.toISOString().split('T')[0];
+        defaultListDueDateInput.value = formatDateForInput(dueDate);
     } else {
         defaultListDueDateInput.value = '';
     }
@@ -391,9 +390,10 @@ export function editDefaultProjectDetails(title, description, dueDate, priorityL
     defaultListPriorityLabel.textContent = "Priority:";
     defaultListPriorityLabel.classList.add("half-label", "priority-label");
     defaultListPriorityDiv.appendChild(defaultListPriorityLabel);
-
+    
     const defaultListPriorityDropBox = document.createElement('select');
     defaultListPriorityDropBox.classList.add("drop-box");
+    defaultListPriorityDiv.appendChild(defaultListPriorityDropBox);
 
     const defaultListNotOption = document.createElement('option');
     defaultListNotOption.textContent = "select";
@@ -411,17 +411,16 @@ export function editDefaultProjectDetails(title, description, dueDate, priorityL
 
     defaultListPriorityDropBox.selectedIndex = priorityLogicFunction;
 
-    defaultListPriorityDiv.appendChild(defaultListPriorityDropBox);
-
-    const defaultListSubmitDiv = document.createElement('div');
-    defaultListSubmitDiv.classList.add('submit-div', 'shift-down');
-    defaultListFieldset.appendChild(defaultListSubmitDiv);
+    const defaultListEditFormButtonContainer = document.createElement('div');
+    defaultListEditFormButtonContainer.classList.add('submit-div', 'shift-down');
+    defaultListFieldset.appendChild(defaultListEditFormButtonContainer);
 
     const defaultListCancelButton = document.createElement('button');
+    defaultListCancelButton.id = 'default-edit-cancel';
     defaultListCancelButton.type = "button";
     defaultListCancelButton.classList.add('cancel-button', 'cancel-unpressed');
     defaultListCancelButton.textContent = "Cancel";
-    defaultListSubmitDiv.appendChild(defaultListCancelButton);
+    defaultListEditFormButtonContainer.appendChild(defaultListCancelButton);
 
     defaultListCancelButton.addEventListener('mousedown', () => {
         defaultListCancelButton.classList.add('cancel-pressed');
@@ -431,15 +430,14 @@ export function editDefaultProjectDetails(title, description, dueDate, priorityL
     defaultListCancelButton.addEventListener('mouseup', () => {
         defaultListCancelButton.classList.add('cancel-unpressed');
         defaultListCancelButton.classList.remove('cancel-pressed');
-
-        defaultListFormContainer.remove();
+        closeOnCancel();
     });
 
     const DefaultListSubmitButton = document.createElement('button');
     DefaultListSubmitButton.type = "button";
     DefaultListSubmitButton.classList.add('submit-button', 'unpressed');
     DefaultListSubmitButton.textContent = "Submit";
-    defaultListSubmitDiv.appendChild(DefaultListSubmitButton);
+    defaultListEditFormButtonContainer.appendChild(DefaultListSubmitButton);
 
     DefaultListSubmitButton.addEventListener('mousedown', () => {
         DefaultListSubmitButton.classList.add('pressed');
@@ -449,5 +447,167 @@ export function editDefaultProjectDetails(title, description, dueDate, priorityL
     DefaultListSubmitButton.addEventListener('mouseup', () => {
         DefaultListSubmitButton.classList.add('unpressed');
         DefaultListSubmitButton.classList.remove('pressed');
+        editDefaultProjectDetails();
     });
+
+
+    return allLabelOptions;
 };
+
+function closeOnCancel() {
+    const defaultListFormContainer = document.getElementById('default-list-form-box');
+    defaultListFormContainer.remove();
+};
+
+export function selectDefaultListEditFormLabels() {
+    const defaultListTagBox = document.getElementById('default-edit-form-label-container');
+
+    const allLabelOptions = createDefaultProjectEditForm();
+    const noneOption = allLabelOptions[0];
+    const dailyOption = allLabelOptions[1];
+    const weeklyOption = allLabelOptions[2];
+    const monthlyOption = allLabelOptions[3];
+    const yearlyOption = allLabelOptions[4];
+    const workOption = allLabelOptions[5];
+    const studyOption = allLabelOptions[6];
+    const groceriesOption = allLabelOptions[7];
+    const goalsOption = allLabelOptions[8];
+    
+    noneOption[1].checked = true;
+    noneOption[2].classList.remove("off", "inactive");
+
+    if (noneOption[1].checked) {
+        allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id !== "none").forEach(([tagBox, checkBox, label]) => {
+            checkBox.disabled = true;
+            label.classList.add("inactive");
+            label.classList.remove("off");
+        });
+    }
+
+    const nonRelationalUncheckedOptions = allLabelOptions.filter(([tagBox, checkBox, label]) => 
+        (checkBox.id !== "none" && checkBox.id !== "work" && checkBox.id !== "study" && checkBox.id !== "groceries" && checkBox.id !== "daily" && checkBox.id !== "weekly" && checkBox.id !== "monthly" && checkBox.id !== "yearly") && !checkBox.checked);
+    const nonRelationalCheckedOptions = allLabelOptions.filter(([tagBox, checkBox, label]) => 
+        (checkBox.id !== "none" && checkBox.id !== "work" && checkBox.id !== "study" && checkBox.id !== "groceries" && checkBox.id !== "daily" && checkBox.id !== "weekly" && checkBox.id !== "monthly" && checkBox.id !== "yearly") && checkBox.checked);
+
+};
+
+function editDefaultProjectDetails(title, description, dueDate, priorityLogicFunction) {
+    //console.log('REMINDER: This bit of code dealing with the due date might need to be refactored too');
+    /*
+        const defaultNewTitle = defaultListTitleInput.value;
+        const defaultNewDescription = defaultListDescriptionInput.value;
+        const defaultNewDueDate = defaultListDueDateInput.value;
+        const defaultNewPriority = defaultListPriorityDropBox.value;
+
+        if (defaultNewTitle.trim() === '') {
+            defaultListTitleInput.classList.remove("input-task");
+            defaultListTitleInput.classList.add("invalid");
+            defaultListTitleInput.value = '';
+            defaultListTitleInput.placeholder = "Enter a valid list title";
+
+            defaultListTitleInput.addEventListener("blur", () => {
+                console.log("You clicked outside the default title input");
+                if (defaultListTitleInput.value.trim() !== '') {
+                    defaultListTitleInput.classList.remove("invalid");
+                    defaultListTitleInput.classList.add("input-task");
+                    console.log(defaultListTitleInput.value);
+                }
+            });
+        } else {
+            defaultListFormContainer.remove();
+
+            // rethink how to use the logic functions here
+
+
+            const defaultProjectTitle = document.getElementById('default-project-title');
+            defaultProjectTitle.textContent = defaultNewTitle;
+
+            const defaultDescription = document.getElementById('default-description');
+            const defaultListDueDate = document.getElementById('default-due-date-text');
+
+            if (defaultListDescriptionInput.value === '') {
+                defaultListDescriptionInput.placeholder = "Edit default list description";
+                defaultDescription.textContent = "This list prefers to stay mysterious";
+            } else {
+                defaultDescription.textContent = defaultNewDescription;
+            }
+
+            if (defaultNewDueDate === '') {
+                defaultListDueDate.textContent = "no due date";
+            } else {
+                const [year, month, day] = defaultNewDueDate.split('-');
+                defaultListDueDate.textContent = `${month}/${day}/${year}`;
+            }
+        }
+    });
+    */
+};
+
+
+
+/*
+work on this later:
+function checkForDuplicateLabels() {
+        const existingTagOptions = defaultListTagBox.querySelectorAll(".label-option");
+        const currentTagArray = Array.from(existingTagOptions);
+        
+        let labelDuplicate = currentTagArray.find(existingTag => 
+            existingTag.textContent === titleCaseFunction(addNewLabelInput.value.trim())
+        );
+
+        newLabelTextLogic();
+        
+        if (addNewLabelInput.value.trim() === "") {
+            addNewLabelInput.classList.remove('input-task');
+            addNewLabelInput.classList.add('invalid');
+            addNewLabelInput.value = '';
+            addNewLabelInput.placeholder = "Cancel or enter a label";
+
+            addNewLabelInput.addEventListener('click', () => {
+                if (addNewLabelInput.placeholder === "Cancel or enter a label") {
+                    addNewLabelInput.classList.remove('invalid');
+                    addNewLabelInput.classList.add('input-task');
+                    addNewLabelInput.placeholder = '';
+                }
+            });
+        }else if (labelDuplicate) {
+
+            addNewLabelInput.classList.remove("input-task");
+            addNewLabelInput.classList.add("invalid");
+            addNewLabelInput.value = '';
+            addNewLabelInput.placeholder = "That label already exists";
+
+            addNewLabelInput.addEventListener("click", () => {
+                if (addNewLabelInput.placeholder === "That label already exists") {
+                    addNewLabelInput.classList.remove("invalid");
+                    addNewLabelInput.classList.add("input-task");
+                    addNewLabelInput.placeholder = '';
+                }
+            });
+        }else {
+            checkboxCount++; // this needs to go to logic
+
+            const newCustomLabelOption = createCustomLabelOptions(); // where is this function?
+            allLabelOptions.push(newCustomLabelOption);
+
+            let customLabelName = newCustomLabelOption[2].textContent;
+
+            getCustomLabel(customLabelName);
+
+            addNewLabelInput.placeholder = '';
+            addNewLabelFormContainer.remove();
+
+            if (noneOption[1].checked === true) {
+                newCustomLabelOption[1].disabled = true;
+                newCustomLabelOption[2].classList.add("inactive");
+            } else {
+                newCustomLabelOption[1].disabled = false;
+                newCustomLabelOption[2].classList.add("off");
+            }
+
+            addNewLabelInput.value = "";
+            console.log(`New option's id: ${newCustomLabelOption[1].id}, name: ${newCustomLabelOption[1].name}, value: ${newCustomLabelOption[1].value}, label: ${newCustomLabelOption[2].textContent}`);
+            
+            }
+    };
+*/

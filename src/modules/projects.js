@@ -39,11 +39,24 @@ class makeProject {
         this.label = new Set(); //set ensures users can customize
         this.tasks = [];
 
-        if (labels.has(label) || userUniqueLabels.includes(label)) {
+        if(Array.isArray(label)) {
+            label.forEach(tag => {
+                if (labels.has(tag) || userUniqueLabels.includes(tag)) {
+                    this.label.add(tag);
+                } else {
+                    console.log(`Error: '${tag}' is either null or invalid.`);
+                }
+            });
+        } else if (typeof label === "string" && (labels.has(label) || userUniqueLabels.includes(label))) {
             this.label.add(label);
-        } else {
+        } else if (label !== null && label !== undefined) {
             console.log("Error: the label is either null or invalid.");
         }
+        /*if (label && (labels.has(label) || userUniqueLabels.includes(label))) {
+            this.label.add(label);
+        } else if (label !== null) {
+            console.log("Error: the label is invalid.");
+        }*/
 
         // Add project to Master Storage
         makeProject.MASTER_STORAGE.push(this);
@@ -142,7 +155,7 @@ class makeProject {
 
 export default makeProject;
 
-// creation of a default project = new project(title, description, due date, priority, label), date format: 2025-03-18T00:00:00-05:00
+// creation of a default project = new project(title, description, due date, priority, label), date format: "2025-03-18T00:00:00-05:00" or null
 export const defaultProject = new makeProject("Default List", "List to begin tracking general todo items.", null, "average priority", null);
 
 

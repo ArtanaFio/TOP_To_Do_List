@@ -10,6 +10,14 @@ export function defaultProjectDueDateLogic(dueDate) {
     } 
 };
 
+export function defaultProjectLabelLogic(labels) {
+    if (!labels || labels.size === 0) {
+        return ["Not Labeled"];
+    } else {
+        return [...labels];
+    }
+};
+
 export function defaultProjectPriorityLogic(priority) {
     if(priority === "low priority") {
         return { 
@@ -49,6 +57,20 @@ export function priorityFormLogic(priority) {
     } else {
         console.log("priorityFormLogic function is not recognizing any of the priority types");
     }
+};
+
+export function newLabelTextLogic(newLabel, existingLabels) {
+    if (newLabel.trim() === "") {
+        return { valid: false, reason: "empty" };
+    } else if (existingLabels.includes(newLabel)) {
+        return { valid: false, reason: "duplicate" };
+    } else {
+        return { valid: true };
+    }
+};
+
+export function defaultProjectDescriptionLogic(inputValue) {
+    return inputValue === 0;
 };
 
 /*

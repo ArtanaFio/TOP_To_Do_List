@@ -2,7 +2,7 @@
 // single responsibility purpose: manage projects that group todo-items
 
 
-export const labels = new Set(["Daily", "Weekly", "Monthly", "Yearly", "Work", "Study", "Groceries", "Goals"]);
+export const labels = new Set(['Daily', 'Weekly', 'Monthly', 'Yearly']);
 export let userUniqueLabels = [];
 
 //function to let users customize labels
@@ -28,7 +28,7 @@ function deleteLabels(label) {
 // create project using a class
 class makeProject {
 
-    static PRIORITIES = new Set(["low priority", "average priority", "high priority"]);
+    static PRIORITIES = new Set(['Low Priority', 'Average Priority', 'High Priority']);
     static MASTER_STORAGE = []; // Central Storage for ALL lists, including the default list
 
     constructor(title, description, dueDate, priority, label) {
@@ -156,7 +156,7 @@ class makeProject {
 export default makeProject;
 
 // creation of a default project = new project(title, description, due date, priority, label), date format: "2025-03-18T00:00:00-05:00" or null
-export const defaultProject = new makeProject("Default List", "List to begin tracking general todo items.", null, "average priority", null);
+export const defaultProject = new makeProject('Default List', 'List to begin tracking general todo items.', null, 'Average Priority', null);
 
 
 // project completion status

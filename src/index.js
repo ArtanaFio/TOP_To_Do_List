@@ -8,7 +8,7 @@ import { defaultProject } from "./modules/projects";
 import { basicPageLayout } from "./modules/page_layout";
 import { titleCase, lowerCase } from "./modules/default_project_utility";
 import { defaultProjectDueDateLogic, defaultProjectLabelLogic, defaultProjectPriorityLogic, closeListLogic, priorityFormLogic, newLabelTextLogic, defaultProjectDescriptionLogic } from "./modules/default_project_logic";
-import { displayDefaultProject, displayDefaultProjectTitle, displayDefaultProjectDescription, displayDefaultProjectDueDate, displayDefaultProjectLabel, displayDefaultProjectTasks, displayDefaultProjectTaskNumber, displayDefaultProjectPriority, createDefaultProjectEditForm, selectDefaultListEditFormLabels } from "./modules/default_project_DOM";
+import { displayDefaultProject, displayDefaultProjectTitle, displayDefaultProjectDescription, displayDefaultProjectDueDate, displayDefaultProjectLabel, displayDefaultProjectTasks, displayDefaultProjectTaskNumber, displayDefaultProjectPriority, createDefaultProjectEditForm } from "./modules/default_project_DOM";
 import { projectDisplay } from "./modules/new_project_DOM";
 
 import './assets/styles/main.css';
@@ -50,9 +50,6 @@ basicPageLayout();
 
 // !!! 6/3/2025 REFACTORING!!!
 
-console.log('defaultProject.label:', defaultProject.label);
-//console.log('typeof:', typeof defaultProject.label);
-
 
 displayDefaultProject(closeListLogic(defaultProject.tasks.length));
 displayDefaultProjectTitle(defaultProject.title);
@@ -64,7 +61,6 @@ displayDefaultProjectTaskNumber(defaultProject.tasks.length);
 displayDefaultProjectPriority(defaultProjectPriorityLogic(defaultProject.priority));
 
 createDefaultProjectEditForm(defaultProject.title, defaultProject.description, defaultProject.dueDate, priorityFormLogic(defaultProject.priority));
-selectDefaultListEditFormLabels();
 
 
 projectDisplay();

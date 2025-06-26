@@ -67,7 +67,6 @@ export function displayDefaultProject(closeLogic) {
     const defaultListLabelBox = document.createElement('div');
     defaultListLabelBox.id = "default-label-box";
     middleBox.appendChild(defaultListLabelBox);
-    console.log("REMINDER: come back to the defaultListLabelBox in displayDefaultProject function");
 
     const taskContainer = document.createElement('div');
     taskContainer.id = "default-project-task-container";
@@ -190,7 +189,7 @@ export function displayDefaultProjectLabel(labelArray) {
 
 export function displayDefaultProjectTasks() {
     const taskContainer = document.getElementById('default-project-task-container');
-
+    console.log("REMINDER: displayDefaultProjectTasks() function is incomplete");
 };
 
 export function displayDefaultProjectTaskNumber(arrayLength) {
@@ -282,63 +281,20 @@ export function createDefaultProjectEditForm(title, description, dueDate, priori
     defaultListLegend.textContent = "Edit Default List Details";
     defaultListFieldset.appendChild(defaultListLegend);
 
-    const defaultListBar = document.createElement('div');
-    defaultListBar.classList.add('task-bar');
-    defaultListFieldset.appendChild(defaultListBar);
+    const defaultListTitleDiv = document.createElement('div');
+    defaultListTitleDiv.classList.add('property-div');
+    defaultListFieldset.appendChild(defaultListTitleDiv);
+
+    const defaultListTitleLabel = document.createElement('label');
+    defaultListTitleLabel.for = "title";
+    defaultListTitleLabel.textContent = "Title:";
+    defaultListTitleDiv.appendChild(defaultListTitleLabel);
 
     const defaultListTitleInput = document.createElement('input');
-    defaultListTitleInput.classList.add('input-task');
     defaultListTitleInput.value = title;
-    defaultListBar.appendChild(defaultListTitleInput);
-
-    const defaultListLabelDiv = document.createElement('div');
-    defaultListLabelDiv.classList.add('property-div');
-    defaultListFieldset.appendChild(defaultListLabelDiv);
-
-    const defaultListLabelLabel = document.createElement('label');
-    defaultListLabelLabel.for = "label";
-    defaultListLabelLabel.textContent = "Label:";
-    defaultListLabelDiv.appendChild(defaultListLabelLabel);
-
-    const defaultListTagBox = document.createElement('div');
-    defaultListTagBox.id = "default-edit-form-label-container";
-    defaultListTagBox.classList.add('tag-box');
-    defaultListLabelDiv.appendChild(defaultListTagBox);
-
-    function createLabelOptions(id, value, labelText) {
-        const tagBox = document.createElement('div');
-        tagBox.classList.add('tag');
-        defaultListTagBox.appendChild(tagBox);
-
-        const checkBox = document.createElement('input');
-        checkBox.type = "checkbox";
-        checkBox.id = id;
-        checkBox.name = "label-option";
-        checkBox.value = value;
-        checkBox.classList.add('checkbox', 'default-checkbox');
-        tagBox.appendChild(checkBox);
-
-        const label = document.createElement('label');
-        label.htmlFor = id; // associates the label with the checkbox
-        label.textContent = labelText;
-        label.classList.add('label-option', 'off');
-        tagBox.appendChild(label);
-
-        return [tagBox, checkBox, label];
-    };
-
-    const noneOption = createLabelOptions('none', 'tag1', 'None');
-    const dailyOption = createLabelOptions('daily', 'tag2', 'Daily');
-    const weeklyOption = createLabelOptions('weekly', 'tag3', 'Weekly');
-    const monthlyOption = createLabelOptions('monthly', 'tag4', 'Monthly');
-    const yearlyOption = createLabelOptions('yearly', 'tag5', 'Yearly');
-    const workOption = createLabelOptions('work', 'tag6', 'Work');
-    const studyOption = createLabelOptions('study', 'tag7', 'Study');
-    const groceriesOption = createLabelOptions('groceries', 'tag8', 'Groceries');
-    const goalsOption = createLabelOptions('goals', 'tag9', 'Goals');
-
-    const allLabelOptions = [noneOption, dailyOption, weeklyOption, monthlyOption, yearlyOption, workOption, studyOption, groceriesOption, goalsOption];
-
+    defaultListTitleInput.classList.add('default-input');
+    defaultListTitleDiv.appendChild(defaultListTitleInput);
+    
     const defaultListDescriptionDiv = document.createElement('div');
     defaultListDescriptionDiv.classList.add('property-div');
     defaultListFieldset.appendChild(defaultListDescriptionDiv);
@@ -355,25 +311,20 @@ export function createDefaultProjectEditForm(title, description, dueDate, priori
     defaultListDescriptionInput.value = description;
     defaultListDescriptionDiv.appendChild(defaultListDescriptionInput);
 
-    const defaultListDoubleDiv = document.createElement('div');
-    defaultListDoubleDiv.classList.add('property-div', 'double-div');
-    defaultListFieldset.appendChild(defaultListDoubleDiv);
-
     const defaultListDueDateDiv = document.createElement('div');
-    defaultListDueDateDiv.classList.add('half-property');
-    defaultListDoubleDiv.appendChild(defaultListDueDateDiv);
+    defaultListDueDateDiv.classList.add('property-div');
+    defaultListFieldset.appendChild(defaultListDueDateDiv);
 
     const defaultListDueDateLabel = document.createElement('label');
     defaultListDueDateLabel.for = "due-date";
     defaultListDueDateLabel.textContent = "Due Date:";
-    defaultListDueDateLabel.classList.add('half-label');
     defaultListDueDateDiv.appendChild(defaultListDueDateLabel);
 
     const defaultListDueDateInput = document.createElement('input');
     defaultListDueDateInput.type = "date";
     defaultListDueDateInput.id = "due-date";
     defaultListDueDateInput.name = "task_due_date";
-    defaultListDueDateInput.classList.add('half-input');
+    defaultListDueDateInput.classList.add('default-input');
     if (dueDate) {
         defaultListDueDateInput.value = formatDateForInput(dueDate);
     } else {
@@ -381,18 +332,49 @@ export function createDefaultProjectEditForm(title, description, dueDate, priori
     }
     defaultListDueDateDiv.appendChild(defaultListDueDateInput);
 
+    const defaultListDoubleDiv = document.createElement('div');
+    defaultListDoubleDiv.classList.add('property-div', 'double-property-gap');
+    defaultListFieldset.appendChild(defaultListDoubleDiv);
+
+    const defaultListLabelDiv = document.createElement('div');
+    defaultListLabelDiv.classList.add('half-property');
+    defaultListDoubleDiv.appendChild(defaultListLabelDiv);
+
+    const defaultListLabelLabel = document.createElement('label');
+    defaultListLabelLabel.for = "label";
+    defaultListLabelLabel.textContent = "Label:";
+    defaultListLabelDiv.appendChild(defaultListLabelLabel);
+
+    const defaultListLabelDropBox = document.createElement('select');
+    defaultListLabelDropBox.classList.add('drop-box');
+    defaultListLabelDiv.appendChild(defaultListLabelDropBox);
+
+    const defaultListLabelNotOption = document.createElement('option');
+    defaultListLabelNotOption.textContent = "select";
+    defaultListLabelNotOption.value = '';
+    defaultListLabelNotOption.disabled = true;
+    defaultListLabelDropBox.appendChild(defaultListLabelNotOption);
+    const defaultListLabelOptions = ['None', 'Daily', 'Weekly', 'Monthly', 'Yearly'];
+    
+    defaultListLabelOptions.forEach(label => {
+        const option = document.createElement('option');
+        option.classList.add('drop-box-option');
+        option.value = label;
+        option.textContent = label;
+        defaultListLabelDropBox.appendChild(option);
+    });
+
     const defaultListPriorityDiv = document.createElement('div');
-    defaultListPriorityDiv.classList.add("half-property");
+    defaultListPriorityDiv.classList.add('half-property');
     defaultListDoubleDiv.appendChild(defaultListPriorityDiv);
 
     const defaultListPriorityLabel = document.createElement('label');
     defaultListPriorityLabel.for = "priority-level";
     defaultListPriorityLabel.textContent = "Priority:";
-    defaultListPriorityLabel.classList.add("half-label", "priority-label");
     defaultListPriorityDiv.appendChild(defaultListPriorityLabel);
     
     const defaultListPriorityDropBox = document.createElement('select');
-    defaultListPriorityDropBox.classList.add("drop-box");
+    defaultListPriorityDropBox.classList.add('drop-box');
     defaultListPriorityDiv.appendChild(defaultListPriorityDropBox);
 
     const defaultListNotOption = document.createElement('option');
@@ -400,14 +382,15 @@ export function createDefaultProjectEditForm(title, description, dueDate, priori
     defaultListNotOption.value = '';
     defaultListNotOption.disabled = true;
     defaultListPriorityDropBox.appendChild(defaultListNotOption);
-    const defaultListPriorityOptions = ['low priority', 'average priority', 'high priority'];
+    const defaultListPriorityOptions = ['Low Priority', 'Average Priority', 'High Priority'];
 
     defaultListPriorityOptions.forEach(priorityType => {
         const option = document.createElement('option');
+        option.classList.add('drop-box-option');
         option.value = priorityType;
         option.textContent = priorityType;
         defaultListPriorityDropBox.appendChild(option);
-    })
+    });
 
     defaultListPriorityDropBox.selectedIndex = priorityLogicFunction;
 
@@ -449,46 +432,11 @@ export function createDefaultProjectEditForm(title, description, dueDate, priori
         DefaultListSubmitButton.classList.remove('pressed');
         editDefaultProjectDetails();
     });
-
-
-    return allLabelOptions;
 };
 
 function closeOnCancel() {
     const defaultListFormContainer = document.getElementById('default-list-form-box');
     defaultListFormContainer.remove();
-};
-
-export function selectDefaultListEditFormLabels() {
-    const defaultListTagBox = document.getElementById('default-edit-form-label-container');
-
-    const allLabelOptions = createDefaultProjectEditForm();
-    const noneOption = allLabelOptions[0];
-    const dailyOption = allLabelOptions[1];
-    const weeklyOption = allLabelOptions[2];
-    const monthlyOption = allLabelOptions[3];
-    const yearlyOption = allLabelOptions[4];
-    const workOption = allLabelOptions[5];
-    const studyOption = allLabelOptions[6];
-    const groceriesOption = allLabelOptions[7];
-    const goalsOption = allLabelOptions[8];
-    
-    noneOption[1].checked = true;
-    noneOption[2].classList.remove("off", "inactive");
-
-    if (noneOption[1].checked) {
-        allLabelOptions.filter(([tagBox, checkBox, label]) => checkBox.id !== "none").forEach(([tagBox, checkBox, label]) => {
-            checkBox.disabled = true;
-            label.classList.add("inactive");
-            label.classList.remove("off");
-        });
-    }
-
-    const nonRelationalUncheckedOptions = allLabelOptions.filter(([tagBox, checkBox, label]) => 
-        (checkBox.id !== "none" && checkBox.id !== "work" && checkBox.id !== "study" && checkBox.id !== "groceries" && checkBox.id !== "daily" && checkBox.id !== "weekly" && checkBox.id !== "monthly" && checkBox.id !== "yearly") && !checkBox.checked);
-    const nonRelationalCheckedOptions = allLabelOptions.filter(([tagBox, checkBox, label]) => 
-        (checkBox.id !== "none" && checkBox.id !== "work" && checkBox.id !== "study" && checkBox.id !== "groceries" && checkBox.id !== "daily" && checkBox.id !== "weekly" && checkBox.id !== "monthly" && checkBox.id !== "yearly") && checkBox.checked);
-
 };
 
 function editDefaultProjectDetails(title, description, dueDate, priorityLogicFunction) {

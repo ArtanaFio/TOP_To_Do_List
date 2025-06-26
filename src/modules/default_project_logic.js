@@ -19,19 +19,19 @@ export function defaultProjectLabelLogic(labels) {
 };
 
 export function defaultProjectPriorityLogic(priority) {
-    if(priority === "low priority") {
+    if(priority === "Low Priority") {
         return { 
             classesToRemove: ["second-level-priority-box", "third-level-priority-box"],
             classesToAdd: ["first-level-priority-box"],
             svgsToAppend: ["low-1"]
         };
-    } else if (priority === "average priority") {
+    } else if (priority === "Average Priority") {
         return { 
             classesToRemove: ["first-level-priority-box", "third-level-priority-box"],
             classesToAdd: ["second-level-priority-box"],
             svgsToAppend: ["mid-1", "mid-2"]
         };
-    } else if (priority === "high priority") {
+    } else if (priority === "High Priority") {
         return { 
             classesToRemove: ["first-level-priority-box", "second-level-priority-box"],
             classesToAdd: ["third-level-priority-box"],
@@ -48,11 +48,11 @@ export function closeListLogic(arrayLength) {
 };
 
 export function priorityFormLogic(priority) {
-    if (priority === "low priority") {
+    if (priority === "Low Priority") {
         return 1;
-    } else if (priority === "average priority") {
+    } else if (priority === "Average Priority") {
         return 2;
-    } else if (priority === "high priority") {
+    } else if (priority === "High Priority") {
         return 3;
     } else {
         console.log("priorityFormLogic function is not recognizing any of the priority types");

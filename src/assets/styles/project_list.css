@@ -112,6 +112,19 @@
     padding: 5px 10px;
 }
 
+.no-label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    background-color: #fff2ff;
+    color: orchid;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 25px;
+    padding: 5px 10px;
+}
+
 /* STYLING FOR THE DEFAULT LIST FORM TAG BOXES */
 .tag {
     display: flex;

@@ -1,3 +1,4 @@
+import { trim } from './default_project_utility';
 
 export function defaultProjectDueDateLogic(dueDate) {
     if (dueDate !== null) {
@@ -10,28 +11,28 @@ export function defaultProjectDueDateLogic(dueDate) {
     } 
 };
 
-export function defaultProjectLabelLogic(labels) {
-    if (!labels || labels.size === 0) {
-        return ["Not Labeled"];
+export function defaultProjectLabelLogic(label) {
+    if(!label || label === "None") {
+        return ["Not labeled", "no-label"];
     } else {
-        return [...labels];
+        return [label, "posted-label"];
     }
 };
 
 export function defaultProjectPriorityLogic(priority) {
-    if(priority === "Low Priority") {
+    if(priority === "Minor") {
         return { 
             classesToRemove: ["second-level-priority-box", "third-level-priority-box"],
             classesToAdd: ["first-level-priority-box"],
             svgsToAppend: ["low-1"]
         };
-    } else if (priority === "Average Priority") {
+    } else if (priority === "Important") {
         return { 
             classesToRemove: ["first-level-priority-box", "third-level-priority-box"],
             classesToAdd: ["second-level-priority-box"],
             svgsToAppend: ["mid-1", "mid-2"]
         };
-    } else if (priority === "High Priority") {
+    } else if (priority === "Urgent") {
         return { 
             classesToRemove: ["first-level-priority-box", "second-level-priority-box"],
             classesToAdd: ["third-level-priority-box"],
@@ -43,58 +44,26 @@ export function defaultProjectPriorityLogic(priority) {
     }
 };
 
-export function closeListLogic(arrayLength) {
+export function closedMessageLogic(arrayLength) {
     return arrayLength === 0;
 };
 
 export function priorityFormLogic(priority) {
-    if (priority === "Low Priority") {
+    if (priority === "Minor") {
         return 1;
-    } else if (priority === "Average Priority") {
+    } else if (priority === "Important") {
         return 2;
-    } else if (priority === "High Priority") {
+    } else if (priority === "Urgent") {
         return 3;
     } else {
         console.log("priorityFormLogic function is not recognizing any of the priority types");
     }
 };
 
-export function newLabelTextLogic(newLabel, existingLabels) {
-    if (newLabel.trim() === "") {
-        return { valid: false, reason: "empty" };
-    } else if (existingLabels.includes(newLabel)) {
-        return { valid: false, reason: "duplicate" };
-    } else {
-        return { valid: true };
-    }
+export function defaultProjectnoLabelLogic(label) {
+    return label === "None";
 };
 
-export function defaultProjectDescriptionLogic(inputValue) {
-    return inputValue === 0;
+export function defaultEmptyInputLogic(inputValue) {
+    return trim(inputValue) === "";
 };
-
-/*
-export function openAndCloseListLogic(arrayLength) {
-    let fullSize = false;
-    let newTaskMade = false;
-
-    function openListLogic() {
-        if (fullSize) return;
-        fullSize = true;
-        return ["1", "default", "invisible", "invisible"];
-    };
-    return openListLogic();
-
-    function closeListLogic(arrayLength) {
-        fullSize = false;
-        return ["0", "pointer", "invisible", "invisible"];
-
-        if (arrayLength === 0) {
-            console.log("there are no tasks");
-        } else {
-            console.log(`arrayLength: ${arrayLength}`);
-        }
-    };
-    return closeListLogic();
-};
-*/

@@ -8,9 +8,10 @@ import mid from '../assets/images/yellow-priority.svg';
 import high from '../assets/images/red-priority.svg';
 import date from '../assets/images/date.svg';
 import trash from '../assets/images/delete.svg';
-import { formatDateForInput } from './default_project_utility';
+import { formatDateForInput, trim, easyFormatDate } from './default_project_utility';
+import { defaultProjectLabelLogic, defaultProjectPriorityLogic, defaultProjectnoLabelLogic, defaultEmptyInputLogic } from './default_project_logic';
 
-export function displayDefaultProject(closeLogic) {
+export function displayDefaultProject(closedMessageLogic) {
     const projectContainer = document.getElementById('project-container');
     
     const defaultList = document.createElement('div');
@@ -121,7 +122,7 @@ export function displayDefaultProject(closeLogic) {
     };
     clickDefaultList();
 
-    function clickExitIcon(closeLogic) {
+    function clickExitIcon(closedMessageLogic) {
         defaultExitBox.addEventListener("click", (event) => {
             event.stopPropagation();
             defaultList.style.flex = "0";
@@ -130,7 +131,7 @@ export function displayDefaultProject(closeLogic) {
             exitSvg.classList.add('invisible');
             taskBlock.remove();
 
-            if (closeLogic) {
+            if (closedMessageLogic) {
                 console.log("there are no tasks");
                 taskContainer.appendChild(noTaskStatement);
             } else {
@@ -138,7 +139,7 @@ export function displayDefaultProject(closeLogic) {
             }
         });
     };
-    clickExitIcon(closeLogic);
+    clickExitIcon(closedMessageLogic);
 };
 
 export function displayDefaultProjectTitle(title) {
@@ -177,14 +178,16 @@ export function displayDefaultProjectDueDate(formattedDueDate) {
     defaultProjectDueDateBox.appendChild(defaultProjectDueDate);
 };
 
-export function displayDefaultProjectLabel(labelArray) {
+export function displayDefaultProjectLabel(label) {
     const defaultListLabelBox = document.getElementById('default-label-box');
-    labelArray.forEach(label => {
-        const listLabel = document.createElement('span');
-        listLabel.classList.add('posted-label');
-        listLabel.textContent = label;
-        defaultListLabelBox.appendChild(listLabel);
-    });
+    while (defaultListLabelBox.lastElementChild) {
+        defaultListLabelBox.removeChild(defaultListLabelBox.lastElementChild);
+    }
+
+    const listLabel = document.createElement('span');
+    listLabel.classList.add(label[1]);
+    listLabel.textContent = label[0];
+    defaultListLabelBox.appendChild(listLabel);
 };
 
 export function displayDefaultProjectTasks() {
@@ -252,6 +255,10 @@ export function displayDefaultProjectPriority(instructions) {
         priorityBox.classList.add(cls);
     });
 
+    while(priorityBox.lastElementChild) {
+        priorityBox.removeChild(priorityBox.lastElementChild);
+    }
+
     instructions.svgsToAppend.forEach(key => {
         const svg = createSvg(key);
         if (svg) priorityBox.appendChild(svg);
@@ -259,7 +266,7 @@ export function displayDefaultProjectPriority(instructions) {
 
 };
 
-export function createDefaultProjectEditForm(title, description, dueDate, priorityLogicFunction) {
+export function createDefaultProjectEditForm(title, description, dueDate, priorityLogicFunction, getInputValues) {
     const defaultListEditButton = document.getElementById('default-edit-button');
 
     const defaultListFormContainer = document.createElement('div');
@@ -291,6 +298,7 @@ export function createDefaultProjectEditForm(title, description, dueDate, priori
     defaultListTitleDiv.appendChild(defaultListTitleLabel);
 
     const defaultListTitleInput = document.createElement('input');
+    defaultListTitleInput.id = "title";
     defaultListTitleInput.value = title;
     defaultListTitleInput.classList.add('default-input');
     defaultListTitleDiv.appendChild(defaultListTitleInput);
@@ -346,6 +354,7 @@ export function createDefaultProjectEditForm(title, description, dueDate, priori
     defaultListLabelDiv.appendChild(defaultListLabelLabel);
 
     const defaultListLabelDropBox = document.createElement('select');
+    defaultListLabelDropBox.id = "label";
     defaultListLabelDropBox.classList.add('drop-box');
     defaultListLabelDiv.appendChild(defaultListLabelDropBox);
 
@@ -374,6 +383,7 @@ export function createDefaultProjectEditForm(title, description, dueDate, priori
     defaultListPriorityDiv.appendChild(defaultListPriorityLabel);
     
     const defaultListPriorityDropBox = document.createElement('select');
+    defaultListPriorityDropBox.id = "priority";
     defaultListPriorityDropBox.classList.add('drop-box');
     defaultListPriorityDiv.appendChild(defaultListPriorityDropBox);
 
@@ -382,7 +392,7 @@ export function createDefaultProjectEditForm(title, description, dueDate, priori
     defaultListNotOption.value = '';
     defaultListNotOption.disabled = true;
     defaultListPriorityDropBox.appendChild(defaultListNotOption);
-    const defaultListPriorityOptions = ['Low Priority', 'Average Priority', 'High Priority'];
+    const defaultListPriorityOptions = ['Minor', 'Important', 'Urgent'];
 
     defaultListPriorityOptions.forEach(priorityType => {
         const option = document.createElement('option');
@@ -413,7 +423,7 @@ export function createDefaultProjectEditForm(title, description, dueDate, priori
     defaultListCancelButton.addEventListener('mouseup', () => {
         defaultListCancelButton.classList.add('cancel-unpressed');
         defaultListCancelButton.classList.remove('cancel-pressed');
-        closeOnCancel();
+        closeOnClick();
     });
 
     const DefaultListSubmitButton = document.createElement('button');
@@ -431,131 +441,82 @@ export function createDefaultProjectEditForm(title, description, dueDate, priori
         DefaultListSubmitButton.classList.add('unpressed');
         DefaultListSubmitButton.classList.remove('pressed');
         editDefaultProjectDetails();
+        console.log(editDefaultProjectDetails());
+        getInputValues(editDefaultProjectDetails());
+        
+        if (editDefaultProjectDetails()) {
+            closeOnClick();
+        }
     });
+    console.log("REMINDER: Now we need to figure out how to send this to the entry point safely");
 };
 
-function closeOnCancel() {
+function closeOnClick() {
     const defaultListFormContainer = document.getElementById('default-list-form-box');
     defaultListFormContainer.remove();
 };
 
-function editDefaultProjectDetails(title, description, dueDate, priorityLogicFunction) {
-    //console.log('REMINDER: This bit of code dealing with the due date might need to be refactored too');
-    /*
-        const defaultNewTitle = defaultListTitleInput.value;
-        const defaultNewDescription = defaultListDescriptionInput.value;
-        const defaultNewDueDate = defaultListDueDateInput.value;
-        const defaultNewPriority = defaultListPriorityDropBox.value;
+function editDefaultProjectDetails() {
+    const defaultTitleInput = document.getElementById('title');
+    const defaultDescriptionInput = document.getElementById('description');
+    const defaultDueDateInput = document.getElementById('due-date');
+    const defaultLabelInput = document.getElementById('label');
+    const defaultPriorityInput = document.getElementById('priority');
 
-        if (defaultNewTitle.trim() === '') {
-            defaultListTitleInput.classList.remove("input-task");
-            defaultListTitleInput.classList.add("invalid");
-            defaultListTitleInput.value = '';
-            defaultListTitleInput.placeholder = "Enter a valid list title";
+    if (defaultEmptyInputLogic(defaultTitleInput.value)) {
+        defaultTitleInput.classList.remove("input-task");
+        defaultTitleInput.classList.add("invalid");
+        defaultTitleInput.value = '';
+        defaultTitleInput.placeholder = "Enter a valid list title";
 
-            defaultListTitleInput.addEventListener("blur", () => {
-                console.log("You clicked outside the default title input");
-                if (defaultListTitleInput.value.trim() !== '') {
-                    defaultListTitleInput.classList.remove("invalid");
-                    defaultListTitleInput.classList.add("input-task");
-                    console.log(defaultListTitleInput.value);
-                }
-            });
+        defaultTitleInput.addEventListener("blur", () => {
+            console.log("You clicked outside the default title input");
+            if (!defaultEmptyInputLogic(defaultTitleInput.value)) {
+                defaultTitleInput.classList.remove("invalid");
+                defaultTitleInput.classList.add("input-task");
+                console.log(defaultTitleInput.value);
+            }
+        });
+    } else {
+        const defaultProjectTitle = document.getElementById('default-project-title');
+        const newTitle = trim(defaultTitleInput.value);
+        defaultProjectTitle.textContent = newTitle;
+
+        const defaultDescription = document.getElementById('default-description');
+        let newDescription;
+
+        if (defaultEmptyInputLogic(defaultDescriptionInput.value)) {
+            defaultDescriptionInput.placeholder = "Edit default list description";
+            defaultDescription.textContent = "This list prefers to stay mysterious";
+            newDescription = null;
         } else {
-            defaultListFormContainer.remove();
-
-            // rethink how to use the logic functions here
-
-
-            const defaultProjectTitle = document.getElementById('default-project-title');
-            defaultProjectTitle.textContent = defaultNewTitle;
-
-            const defaultDescription = document.getElementById('default-description');
-            const defaultListDueDate = document.getElementById('default-due-date-text');
-
-            if (defaultListDescriptionInput.value === '') {
-                defaultListDescriptionInput.placeholder = "Edit default list description";
-                defaultDescription.textContent = "This list prefers to stay mysterious";
-            } else {
-                defaultDescription.textContent = defaultNewDescription;
-            }
-
-            if (defaultNewDueDate === '') {
-                defaultListDueDate.textContent = "no due date";
-            } else {
-                const [year, month, day] = defaultNewDueDate.split('-');
-                defaultListDueDate.textContent = `${month}/${day}/${year}`;
-            }
+            defaultDescription.textContent = trim(defaultDescriptionInput.value);
+            newDescription = trim(defaultDescriptionInput.value);
         }
-    });
-    */
+
+        const defaultProjectDueDate = document.getElementById('default-due-date-text');
+        let newDueDate;
+
+        if (defaultEmptyInputLogic(defaultDueDateInput.value)) {
+            defaultProjectDueDate.textContent = "no due date";
+            newDueDate = null;
+        } else {
+            defaultProjectDueDate.textContent = easyFormatDate(defaultDueDateInput.value);
+            newDueDate = easyFormatDate(defaultDueDateInput.value);
+        }
+
+        const newPriority = defaultPriorityInput.value;
+
+        let newLabel;
+        if (defaultProjectnoLabelLogic(defaultLabelInput.value)) {
+            newLabel = null;
+        } else {
+            newLabel = defaultLabelInput.value;
+        }
+
+        displayDefaultProjectPriority(defaultProjectPriorityLogic(defaultPriorityInput.value));
+        displayDefaultProjectLabel(defaultProjectLabelLogic(defaultLabelInput.value));
+
+        return [newTitle, newDescription, newDueDate, newPriority, newLabel];
+    }
 };
-
-
-
-/*
-work on this later:
-function checkForDuplicateLabels() {
-        const existingTagOptions = defaultListTagBox.querySelectorAll(".label-option");
-        const currentTagArray = Array.from(existingTagOptions);
-        
-        let labelDuplicate = currentTagArray.find(existingTag => 
-            existingTag.textContent === titleCaseFunction(addNewLabelInput.value.trim())
-        );
-
-        newLabelTextLogic();
-        
-        if (addNewLabelInput.value.trim() === "") {
-            addNewLabelInput.classList.remove('input-task');
-            addNewLabelInput.classList.add('invalid');
-            addNewLabelInput.value = '';
-            addNewLabelInput.placeholder = "Cancel or enter a label";
-
-            addNewLabelInput.addEventListener('click', () => {
-                if (addNewLabelInput.placeholder === "Cancel or enter a label") {
-                    addNewLabelInput.classList.remove('invalid');
-                    addNewLabelInput.classList.add('input-task');
-                    addNewLabelInput.placeholder = '';
-                }
-            });
-        }else if (labelDuplicate) {
-
-            addNewLabelInput.classList.remove("input-task");
-            addNewLabelInput.classList.add("invalid");
-            addNewLabelInput.value = '';
-            addNewLabelInput.placeholder = "That label already exists";
-
-            addNewLabelInput.addEventListener("click", () => {
-                if (addNewLabelInput.placeholder === "That label already exists") {
-                    addNewLabelInput.classList.remove("invalid");
-                    addNewLabelInput.classList.add("input-task");
-                    addNewLabelInput.placeholder = '';
-                }
-            });
-        }else {
-            checkboxCount++; // this needs to go to logic
-
-            const newCustomLabelOption = createCustomLabelOptions(); // where is this function?
-            allLabelOptions.push(newCustomLabelOption);
-
-            let customLabelName = newCustomLabelOption[2].textContent;
-
-            getCustomLabel(customLabelName);
-
-            addNewLabelInput.placeholder = '';
-            addNewLabelFormContainer.remove();
-
-            if (noneOption[1].checked === true) {
-                newCustomLabelOption[1].disabled = true;
-                newCustomLabelOption[2].classList.add("inactive");
-            } else {
-                newCustomLabelOption[1].disabled = false;
-                newCustomLabelOption[2].classList.add("off");
-            }
-
-            addNewLabelInput.value = "";
-            console.log(`New option's id: ${newCustomLabelOption[1].id}, name: ${newCustomLabelOption[1].name}, value: ${newCustomLabelOption[1].value}, label: ${newCustomLabelOption[2].textContent}`);
-            
-            }
-    };
-*/

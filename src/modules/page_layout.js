@@ -4,7 +4,7 @@ export function basicPageLayout() {
     const pageSpace = document.getElementById('page-space');
     
     const title = document.createElement('h1');
-    title.id = "title";
+    title.id = "document-title";
     title.textContent = "TOP ToDo Hub";
     pageSpace.appendChild(title);
 

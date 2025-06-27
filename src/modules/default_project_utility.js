@@ -13,3 +13,12 @@ export function lowerCase(string) {
 export function formatDateForInput(dueDate) {
     return dueDate.toISOString().split('T')[0];
 };
+
+export function trim(string) {
+    return string.trim();
+};
+
+export function easyFormatDate(date) {
+    const [year, month, day] = date.split('-');
+    return `${month}/${day}/${year}`;
+}

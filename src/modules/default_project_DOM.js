@@ -8,7 +8,7 @@ import mid from '../assets/images/yellow-priority.svg';
 import high from '../assets/images/red-priority.svg';
 import date from '../assets/images/date.svg';
 import trash from '../assets/images/delete.svg';
-import { formatDateForInput, trim, easyFormatDate } from './default_project_utility';
+import { getTodayDate, formatDateForInput, trim, easyFormatDate } from './default_project_utility';
 import { defaultProjectLabelLogic, defaultProjectPriorityLogic, defaultProjectnoLabelLogic, defaultEmptyInputLogic } from './default_project_logic';
 
 export function displayDefaultProject(closedMessageLogic) {
@@ -16,7 +16,7 @@ export function displayDefaultProject(closedMessageLogic) {
     
     const defaultList = document.createElement('div');
     defaultList.id = "default";
-    defaultList.classList.add('list');
+    defaultList.classList.add('list', 'close-list');
     projectContainer.appendChild(defaultList);
 
     const defaultTopDiv = document.createElement('div');
@@ -81,13 +81,17 @@ export function displayDefaultProject(closedMessageLogic) {
 
     const taskBlock = document.createElement('div');
     taskBlock.id = "add-task-box";
+    taskBlock.classList.add('invisible');
+    taskContainer.appendChild(taskBlock);
 
     const addDoc = parser.parseFromString(plus, 'image/svg+xml');
     const addSvg = addDoc.querySelector('svg');
+    addSvg.id = "default-addSvg";
     addSvg.classList.add('add-icon');
-    taskBlock.appendChild(addSvg); 
+    taskBlock.appendChild(addSvg);
 
     const dummyInput = document.createElement('div');
+    dummyInput.id = "default-dummy-input";
     dummyInput.classList.add('dummy-input');
     dummyInput.textContent = "Enter a new task here";
     taskBlock.appendChild(dummyInput);
@@ -112,12 +116,12 @@ export function displayDefaultProject(closedMessageLogic) {
 
     function clickDefaultList() {
         defaultList.addEventListener('click', () => {
-            defaultList.style.flex = "1";
-            defaultList.style.cursor = "default";
+            defaultList.classList.add('open-list');
+            defaultList.classList.remove('close-list');
             defaultEditBox.classList.remove('invisible');
             exitSvg.classList.remove('invisible');
             noTaskStatement.remove();
-            taskContainer.appendChild(taskBlock);
+            show(taskBlock);
         });
     };
     clickDefaultList();
@@ -125,11 +129,12 @@ export function displayDefaultProject(closedMessageLogic) {
     function clickExitIcon(closedMessageLogic) {
         defaultExitBox.addEventListener("click", (event) => {
             event.stopPropagation();
-            defaultList.style.flex = "0";
-            defaultList.style.cursor = "pointer";
+            defaultList.classList.add('close-list');
+            defaultList.classList.remove('open-list');
             defaultEditBox.classList.add('invisible');
             exitSvg.classList.add('invisible');
-            taskBlock.remove();
+            hide(taskBlock);
+            //taskBlock.remove();
 
             if (closedMessageLogic) {
                 console.log("there are no tasks");
@@ -156,17 +161,21 @@ export function displayDefaultProjectDescription(description) {
     const infoSvg = document.getElementById('default-info-icon');
     const defaultDescription = document.createElement('div');
     defaultDescription.id = "default-description";
-    defaultDescription.classList.add('description', 'invisible');
+    defaultDescription.classList.add('description-pop-up', 'invisible');
     defaultDescription.textContent = description;
     defaultList.appendChild(defaultDescription);
 
     infoSvg.addEventListener('mouseover', () => {
-        defaultDescription.classList.remove('invisible');
-    })
+        if (defaultList.classList.contains('open-list')) {
+            defaultDescription.classList.remove('invisible');
+        }
+    });
 
     infoSvg.addEventListener('mouseleave', () => {
-        defaultDescription.classList.add('invisible')
-    })
+        if (defaultList.classList.contains('open-list')) {
+            defaultDescription.classList.add('invisible');
+        }
+    });
 };
 
 export function displayDefaultProjectDueDate(formattedDueDate) {
@@ -203,47 +212,7 @@ export function displayDefaultProjectTaskNumber(arrayLength) {
     defaultTaskTracker.appendChild(defaultTaskNumber);
 };
 
-function createSvg(key) {
-    const parser = new DOMParser();
-    let doc, svg;
-    
-    switch (key) {
-        case 'low-1':
-            doc = parser.parseFromString(low, 'image/svg+xml');
-            svg = doc.querySelector('svg');
-            svg.classList.add('first-position');
-            return svg;
-        case 'mid-1':
-            doc = parser.parseFromString(mid, 'image/svg+xml');
-            svg = doc.querySelector('svg');
-            svg.classList.add('first-position');
-            return svg;
-        case 'mid-2':
-            doc = parser.parseFromString(mid, 'image/svg+xml');
-            svg = doc.querySelector('svg');
-            svg.classList.add('third-position');
-            return svg;
-        case 'high-1':
-            doc = parser.parseFromString(high, 'image/svg+xml');
-            svg = doc.querySelector('svg');
-            svg.classList.add('first-position');
-            return svg;
-        case 'high-2':
-            doc = parser.parseFromString(high, 'image/svg+xml');
-            svg = doc.querySelector('svg');
-            svg.classList.add('second-position');
-            return svg;
-        case 'high-3':
-            doc = parser.parseFromString(high, 'image/svg+xml');
-            svg = doc.querySelector('svg');
-            svg.classList.add('third-position');
-            return svg;
-        default:
-            return null;
-    }
-};
-
-export function displayDefaultProjectPriority(instructions) {
+export function displayDefaultProjectPriority(instructions, priority) {
     const priorityBox = document.getElementById('priority-container');
     if (!instructions) return;
     
@@ -263,6 +232,29 @@ export function displayDefaultProjectPriority(instructions) {
         const svg = createSvg(key);
         if (svg) priorityBox.appendChild(svg);
     });
+
+    const defaultList = document.getElementById('default');
+    const defaultPriorityPopup = document.createElement('div');
+    defaultPriorityPopup.id = "default-priority-pop-up";
+    defaultPriorityPopup.classList.add('priority-pop-up', 'invisible');
+    defaultPriorityPopup.textContent = priority;
+    priorityBox.appendChild(defaultPriorityPopup);
+
+    
+    priorityBox.addEventListener('mouseover', () => {
+        if (defaultList.classList.contains('open-list')) {
+            priorityBox.classList.add('pointer-cursor');
+            defaultPriorityPopup.classList.remove('invisible');
+        }
+    });
+
+    priorityBox.addEventListener('mouseleave', () => {
+        if (defaultList.classList.contains('open-list')) {
+            priorityBox.classList.remove('pointer-cursor');
+            defaultPriorityPopup.classList.add('invisible');
+        }
+    });
+    
 
 };
 
@@ -331,7 +323,9 @@ export function createDefaultProjectEditForm(title, description, dueDate, priori
     const defaultListDueDateInput = document.createElement('input');
     defaultListDueDateInput.type = "date";
     defaultListDueDateInput.id = "due-date";
-    defaultListDueDateInput.name = "task_due_date";
+    defaultListDueDateInput.name = "due_date";
+    defaultListDueDateInput.min = getTodayDate();
+    defaultListDueDateInput.value = getTodayDate();
     defaultListDueDateInput.classList.add('default-input');
     if (dueDate) {
         defaultListDueDateInput.value = formatDateForInput(dueDate);
@@ -378,7 +372,7 @@ export function createDefaultProjectEditForm(title, description, dueDate, priori
     defaultListDoubleDiv.appendChild(defaultListPriorityDiv);
 
     const defaultListPriorityLabel = document.createElement('label');
-    defaultListPriorityLabel.for = "priority-level";
+    defaultListPriorityLabel.for = "priority";
     defaultListPriorityLabel.textContent = "Priority:";
     defaultListPriorityDiv.appendChild(defaultListPriorityLabel);
     
@@ -392,8 +386,8 @@ export function createDefaultProjectEditForm(title, description, dueDate, priori
     defaultListNotOption.value = '';
     defaultListNotOption.disabled = true;
     defaultListPriorityDropBox.appendChild(defaultListNotOption);
+    
     const defaultListPriorityOptions = ['Minor', 'Important', 'Urgent'];
-
     defaultListPriorityOptions.forEach(priorityType => {
         const option = document.createElement('option');
         option.classList.add('drop-box-option');
@@ -448,12 +442,6 @@ export function createDefaultProjectEditForm(title, description, dueDate, priori
             closeOnClick();
         }
     });
-    console.log("REMINDER: Now we need to figure out how to send this to the entry point safely");
-};
-
-function closeOnClick() {
-    const defaultListFormContainer = document.getElementById('default-list-form-box');
-    defaultListFormContainer.remove();
 };
 
 function editDefaultProjectDetails() {
@@ -514,9 +502,249 @@ function editDefaultProjectDetails() {
             newLabel = defaultLabelInput.value;
         }
 
-        displayDefaultProjectPriority(defaultProjectPriorityLogic(defaultPriorityInput.value));
+        displayDefaultProjectPriority(defaultProjectPriorityLogic(defaultPriorityInput.value), defaultPriorityInput.value);
         displayDefaultProjectLabel(defaultProjectLabelLogic(defaultLabelInput.value));
 
         return [newTitle, newDescription, newDueDate, newPriority, newLabel];
     }
+};
+
+export function createTaskForm() {
+    const taskContainer = document.getElementById('default-project-task-container');
+    const taskBlock = document.getElementById('add-task-box');
+    const addSvg = document.getElementById('default-addSvg');
+    const dummyInput = document.getElementById('default-dummy-input');
+    const taskFormContainer = document.createElement('div');
+    taskFormContainer.id = "default-task-form-box";
+
+    addSvg.addEventListener('click', (event) => {
+        event.stopPropagation();
+        hide(taskBlock);
+        taskContainer.appendChild(taskFormContainer);
+    });
+
+    dummyInput.addEventListener('click', (event) => {
+        event.stopPropagation();
+        hide(taskBlock);
+        taskContainer.appendChild(taskFormContainer);
+    });
+
+    const taskForm = document.createElement('form');
+    taskForm.classList.add('task-form');
+    taskFormContainer.appendChild(taskForm);
+
+    const taskFieldset = document.createElement('fieldset');
+    taskForm.appendChild(taskFieldset);
+
+    const taskTitleDiv = document.createElement('div');
+    taskTitleDiv.classList.add("task-bar");
+    taskFieldset.appendChild(taskTitleDiv);
+
+    const taskTitleLabel = document.createElement('label');
+    taskTitleLabel.for = "task-title";
+    taskTitleLabel.textContent = "Task:";
+    taskTitleLabel.classList.add("textarea-label");
+    taskTitleDiv.appendChild(taskTitleLabel);
+
+    const taskTitleInput = document.createElement('input');
+    taskTitleInput.type = "text";
+    taskTitleInput.id = "task-title";
+    taskTitleInput.classList.add("input-task");
+    taskTitleInput.placeholder = "Enter a new task";
+    taskTitleDiv.appendChild(taskTitleInput);
+
+    const taskDescriptionDiv = document.createElement('div');
+    taskDescriptionDiv.classList.add("task-property");
+    taskFieldset.appendChild(taskDescriptionDiv);
+
+    const taskDescriptionLabel = document.createElement('label');
+    taskDescriptionLabel.for = "task-description";
+    taskDescriptionLabel.textContent = "Description:";
+    taskDescriptionLabel.classList.add("textarea-label");
+    taskDescriptionDiv.appendChild(taskDescriptionLabel);
+
+    const taskDescriptionInput = document.createElement('textarea');
+    taskDescriptionInput.id = "task-description";
+    taskDescriptionInput.name = "task_description";
+    taskDescriptionInput.placeholder = "Enter description";
+    taskDescriptionDiv.appendChild(taskDescriptionInput);
+
+    const taskDoubleDiv = document.createElement('div');
+    taskDoubleDiv.classList.add('property-div', 'double-property-gap');
+    taskFieldset.appendChild(taskDoubleDiv);
+
+    const taskDueDateDiv = document.createElement('div');
+    taskDueDateDiv.classList.add("half-property");
+    taskDoubleDiv.appendChild(taskDueDateDiv);
+
+    const taskDueDateLabel = document.createElement('label');
+    taskDueDateLabel.for = "task-due-date";
+    taskDueDateLabel.textContent = "Due Date:";
+    taskDueDateLabel.classList.add("half-label");
+    taskDueDateDiv.appendChild(taskDueDateLabel);
+
+    const taskDueDateInput = document.createElement('input');
+    taskDueDateInput.type = "date";
+    taskDueDateInput.id = "task-due-date";
+    taskDueDateInput.name = "task_due_date";
+    taskDueDateInput.classList.add('drop-box');
+    taskDueDateInput.min = getTodayDate();
+    taskDueDateDiv.appendChild(taskDueDateInput);
+
+    const taskPriorityDiv = document.createElement('div');
+    taskPriorityDiv.classList.add('half-property');
+    taskDoubleDiv.appendChild(taskPriorityDiv);
+
+    const taskPriorityLabel = document.createElement('label');
+    taskPriorityLabel.for = "task-priority";
+    taskPriorityLabel.textContent = "Priority:";
+    taskPriorityDiv.appendChild(taskPriorityLabel);
+    
+    const taskPriorityDropBox = document.createElement('select');
+    taskPriorityDropBox.id = "task-priority";
+    taskPriorityDropBox.classList.add('drop-box');
+    taskPriorityDiv.appendChild(taskPriorityDropBox);
+
+    const taskNotOption = document.createElement('option');
+    taskNotOption.textContent = "select";
+    taskNotOption.value = '';
+    taskNotOption.disabled = true;
+    taskPriorityDropBox.appendChild(taskNotOption);
+
+    const taskPriorityOptions = ['Minor', 'Important', 'Urgent'];
+    taskPriorityOptions.forEach(priorityType => {
+        const option = document.createElement('option');
+        option.classList.add('drop-box-option');
+        option.value = priorityType;
+        option.textContent = priorityType;
+        taskPriorityDropBox.appendChild(option);
+    });
+
+    const taskNotesDiv = document.createElement('div');
+    taskNotesDiv.classList.add('task-property');
+    taskFieldset.appendChild(taskNotesDiv);
+
+    const taskNoteslabel = document.createElement('label');
+    taskNoteslabel.for = "task-notes";
+    taskNoteslabel.textContent = "Notes:";
+    taskNoteslabel.classList.add('textarea-label');
+    taskNotesDiv.appendChild(taskNoteslabel);
+
+    const taskNotesInput = document.createElement('textarea');
+    taskNotesInput.id = "task-notes";
+    taskNotesInput.name = "task_notes";
+    taskNotesInput.placeholder = "Enter notes";
+    taskNotesDiv.appendChild(taskNotesInput);
+
+    const taskChecklistDiv = document.createElement('div');
+    taskChecklistDiv.classList.add("task-property");
+    taskFieldset.appendChild(taskChecklistDiv);
+
+    const taskChecklistLabel = document.createElement('label');
+    taskChecklistLabel.for = "task-checklist";
+    taskChecklistLabel.textContent = "Checklist:";
+    taskChecklistLabel.classList.add("textarea-label");
+    taskChecklistDiv.appendChild(taskChecklistLabel);
+
+    const taskChecklistInput = document.createElement('textarea');
+    taskChecklistInput.id = "task-checklist";
+    taskChecklistInput.name = "checklist_items";
+    taskChecklistInput.placeholder = "Enter checklist reminders";
+    taskChecklistDiv.appendChild(taskChecklistInput);
+
+    const taskFormButtonContainer = document.createElement('div');
+    taskFormButtonContainer.classList.add('submit-div');
+    taskFieldset.appendChild(taskFormButtonContainer);
+
+    const taskCancelButton = document.createElement('button');
+    taskCancelButton.id = 'default-edit-cancel';
+    taskCancelButton.type = "button";
+    taskCancelButton.classList.add('cancel-button', 'cancel-unpressed');
+    taskCancelButton.textContent = "Cancel";
+    taskFormButtonContainer.appendChild(taskCancelButton);
+
+    taskCancelButton.addEventListener('mousedown', () => {
+        taskCancelButton.classList.add('cancel-pressed');
+        taskCancelButton.classList.remove('cancel-unpressed');
+    });
+
+    taskCancelButton.addEventListener('mouseup', () => {
+        taskCancelButton.classList.add('cancel-unpressed');
+        taskCancelButton.classList.remove('cancel-pressed');
+        taskFormContainer.remove();
+        show(taskBlock);
+    });
+
+    const taskSubmitButton = document.createElement('button');
+    taskSubmitButton.type = "button";
+    taskSubmitButton.classList.add('submit-button', 'unpressed');
+    taskSubmitButton.textContent = "Submit";
+    taskFormButtonContainer.appendChild(taskSubmitButton);
+
+    taskSubmitButton.addEventListener('mousedown', () => {
+        taskSubmitButton.classList.add('pressed');
+        taskSubmitButton.classList.remove('unpressed');
+    });
+
+    taskSubmitButton.addEventListener('mouseup', () => {
+        taskSubmitButton.classList.add('unpressed');
+        taskSubmitButton.classList.remove('pressed');
+
+    });
+
+};
+
+function createSvg(key) {
+    const parser = new DOMParser();
+    let doc, svg;
+    
+    switch (key) {
+        case 'low-1':
+            doc = parser.parseFromString(low, 'image/svg+xml');
+            svg = doc.querySelector('svg');
+            svg.classList.add('first-position');
+            return svg;
+        case 'mid-1':
+            doc = parser.parseFromString(mid, 'image/svg+xml');
+            svg = doc.querySelector('svg');
+            svg.classList.add('first-position');
+            return svg;
+        case 'mid-2':
+            doc = parser.parseFromString(mid, 'image/svg+xml');
+            svg = doc.querySelector('svg');
+            svg.classList.add('third-position');
+            return svg;
+        case 'high-1':
+            doc = parser.parseFromString(high, 'image/svg+xml');
+            svg = doc.querySelector('svg');
+            svg.classList.add('first-position');
+            return svg;
+        case 'high-2':
+            doc = parser.parseFromString(high, 'image/svg+xml');
+            svg = doc.querySelector('svg');
+            svg.classList.add('second-position');
+            return svg;
+        case 'high-3':
+            doc = parser.parseFromString(high, 'image/svg+xml');
+            svg = doc.querySelector('svg');
+            svg.classList.add('third-position');
+            return svg;
+        default:
+            return null;
+    }
+};
+
+function closeOnClick() {
+    const defaultListFormContainer = document.getElementById('default-list-form-box');
+    defaultListFormContainer.remove();
+};
+
+function show(element) {
+    element.classList.remove('invisible');
+    element.classList.add('flexing');
+};
+
+function hide(element) {
+    element.classList.remove('flexing');
+    element.classList.add('invisible');
 };

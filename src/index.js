@@ -4,7 +4,7 @@ import makeProject from './modules/projects';
 import { defaultProject } from './modules/projects';
 import { basicPageLayout } from './modules/page_layout';
 import { defaultProjectDueDateLogic, defaultProjectLabelLogic, defaultProjectPriorityLogic, closedMessageLogic, priorityFormLogic } from './modules/default_project_logic';
-import { displayDefaultProject, displayDefaultProjectTitle, displayDefaultProjectDescription, displayDefaultProjectDueDate, displayDefaultProjectLabel, displayDefaultProjectTasks, displayDefaultProjectTaskNumber, displayDefaultProjectPriority, createDefaultProjectEditForm, createTaskForm} from './modules/default_project_DOM';
+import { displayDefaultProject, displayDefaultProjectTitle, displayDefaultProjectDescription, displayDefaultProjectDueDate, displayDefaultProjectLabel, displayDefaultProjectTaskNumber, displayDefaultProjectPriority, createDefaultProjectEditForm, createTaskForm} from './modules/default_project_DOM';
 import { projectDisplay } from './modules/new_project_DOM';
 
 import './assets/styles/main.css';
@@ -53,7 +53,6 @@ displayDefaultProjectTitle(defaultProject.title);
 displayDefaultProjectDescription(defaultProject.description);
 displayDefaultProjectDueDate(defaultProjectDueDateLogic(defaultProject.dueDate));
 displayDefaultProjectLabel(defaultProjectLabelLogic(defaultProject.label));
-displayDefaultProjectTasks();
 displayDefaultProjectTaskNumber(defaultProject.tasks.length);
 displayDefaultProjectPriority(defaultProjectPriorityLogic(defaultProject.priority), defaultProject.priority);
 

@@ -29,11 +29,8 @@ export function displayDefaultProject(closedMessageLogic) {
 
     const parser = new DOMParser();
 
-    const infoDoc = parser.parseFromString(info, 'image/svg+xml');
-    const infoSvg = infoDoc.querySelector('svg');
+    const infoSvg = makeIcon(info, 'info-icon', infoBox);
     infoSvg.id = "default-info-icon";
-    infoSvg.classList.add('info-icon');
-    infoBox.appendChild(infoSvg);
 
     const editExitBox = document.createElement('div');
     editExitBox.classList.add('edit-exit-svg-pair');
@@ -43,19 +40,13 @@ export function displayDefaultProject(closedMessageLogic) {
     defaultEditBox.classList.add('invisible');
     editExitBox.appendChild(defaultEditBox);
 
-    const editDoc = parser.parseFromString(edit, 'image/svg+xml');
-    const editSvg = editDoc.querySelector('svg');
+    const editSvg = makeIcon(edit, 'edit-icon', defaultEditBox);
     editSvg.id = "default-edit-button";
-    editSvg.classList.add('edit-icon');
-    defaultEditBox.appendChild(editSvg);
 
     const defaultExitBox = document.createElement('div');
     editExitBox.appendChild(defaultExitBox);
 
-    const exitDoc = parser.parseFromString(exit, 'image/svg+xml');
-    const exitSvg = exitDoc.querySelector('svg');
-    exitSvg.classList.add('exit-icon', 'invisible');
-    defaultExitBox.appendChild(exitSvg);
+    const exitSvg = makeIcon(exit,['exit-icon', 'invisible'], defaultExitBox);
 
     const middleBox = document.createElement('div');
     middleBox.classList.add('date-label-box');
@@ -74,6 +65,10 @@ export function displayDefaultProject(closedMessageLogic) {
     taskContainer.classList.add('task-area');
     defaultList.appendChild(taskContainer);
 
+    const taskListContainer = document.createElement('div');
+    taskListContainer.id = "default-project-task-list-box";
+    taskContainer.appendChild(taskListContainer);
+
     const noTaskStatement = document.createElement('div');
     noTaskStatement.classList.add('no-task');
     noTaskStatement.textContent = "No tasks have been added yet";
@@ -84,11 +79,8 @@ export function displayDefaultProject(closedMessageLogic) {
     taskBlock.classList.add('invisible');
     taskContainer.appendChild(taskBlock);
 
-    const addDoc = parser.parseFromString(plus, 'image/svg+xml');
-    const addSvg = addDoc.querySelector('svg');
+    const addSvg = makeIcon(plus, 'add-icon', taskBlock);
     addSvg.id = "default-addSvg";
-    addSvg.classList.add('add-icon');
-    taskBlock.appendChild(addSvg);
 
     const dummyInput = document.createElement('div');
     dummyInput.id = "default-dummy-input";
@@ -134,7 +126,6 @@ export function displayDefaultProject(closedMessageLogic) {
             defaultEditBox.classList.add('invisible');
             exitSvg.classList.add('invisible');
             hide(taskBlock);
-            //taskBlock.remove();
 
             if (closedMessageLogic) {
                 console.log("there are no tasks");
@@ -199,11 +190,6 @@ export function displayDefaultProjectLabel(label) {
     defaultListLabelBox.appendChild(listLabel);
 };
 
-export function displayDefaultProjectTasks() {
-    const taskContainer = document.getElementById('default-project-task-container');
-    console.log("REMINDER: displayDefaultProjectTasks() function is incomplete");
-};
-
 export function displayDefaultProjectTaskNumber(arrayLength) {
     const defaultTaskTracker = document.getElementById('default-task-tracker');
     const defaultTaskNumber = document.createElement('span');
@@ -254,7 +240,6 @@ export function displayDefaultProjectPriority(instructions, priority) {
             defaultPriorityPopup.classList.add('invisible');
         }
     });
-    
 
 };
 
@@ -543,7 +528,6 @@ export function createTaskForm() {
     const taskTitleLabel = document.createElement('label');
     taskTitleLabel.for = "task-title";
     taskTitleLabel.textContent = "Task:";
-    taskTitleLabel.classList.add("textarea-label");
     taskTitleDiv.appendChild(taskTitleLabel);
 
     const taskTitleInput = document.createElement('input');
@@ -566,7 +550,7 @@ export function createTaskForm() {
     const taskDescriptionInput = document.createElement('textarea');
     taskDescriptionInput.id = "task-description";
     taskDescriptionInput.name = "task_description";
-    taskDescriptionInput.placeholder = "Enter description";
+    taskDescriptionInput.placeholder = "Enter description (optional)";
     taskDescriptionDiv.appendChild(taskDescriptionInput);
 
     const taskDoubleDiv = document.createElement('div');
@@ -633,7 +617,7 @@ export function createTaskForm() {
     const taskNotesInput = document.createElement('textarea');
     taskNotesInput.id = "task-notes";
     taskNotesInput.name = "task_notes";
-    taskNotesInput.placeholder = "Enter notes";
+    taskNotesInput.placeholder = "Enter notes (optional)";
     taskNotesDiv.appendChild(taskNotesInput);
 
     const taskChecklistDiv = document.createElement('div');
@@ -649,7 +633,7 @@ export function createTaskForm() {
     const taskChecklistInput = document.createElement('textarea');
     taskChecklistInput.id = "task-checklist";
     taskChecklistInput.name = "checklist_items";
-    taskChecklistInput.placeholder = "Enter checklist reminders";
+    taskChecklistInput.placeholder = "Enter checklist reminders (optional)";
     taskChecklistDiv.appendChild(taskChecklistInput);
 
     const taskFormButtonContainer = document.createElement('div');
@@ -689,9 +673,190 @@ export function createTaskForm() {
     taskSubmitButton.addEventListener('mouseup', () => {
         taskSubmitButton.classList.add('unpressed');
         taskSubmitButton.classList.remove('pressed');
-
+        createNewTasks();
     });
 
+};
+
+function createNewTasks() {
+    const taskTitleInput = document.getElementById('task-title');
+    const taskDescriptionInput = document.getElementById('task-description');
+    const taskDueDateInput = document.getElementById('task-due-date');
+    const taskPriorityInput = document.getElementById('task-priority');
+    const taskNotesInput = document.getElementById('task-notes');
+    const taskChecklistInput = document.getElementById('task-checklist');
+
+    if (defaultEmptyInputLogic(taskTitleInput.value)) {
+        taskTitleInput.classList.remove("input-task");
+        taskTitleInput.classList.add("invalid");
+        taskTitleInput.value = '';
+        taskTitleInput.placeholder = "Don't forget to record your task";
+
+        taskTitleInput.addEventListener("blur", () => {
+            console.log("You clicked outside the default title input");
+            if (!defaultEmptyInputLogic(taskTitleInput.value)) {
+                taskTitleInput.classList.remove("invalid");
+                taskTitleInput.classList.add("input-task");
+                console.log(taskTitleInput.value);
+            }
+        });
+    } else {
+        const taskFormContainer = document.getElementById('default-task-form-box');
+        const taskContainer = document.getElementById('default-project-task-container');
+        const taskListContainer = document.getElementById('default-project-task-list-box');
+        const taskBox = document.createElement('div');
+        taskBox.classList.add('block', 'task-box');
+        taskListContainer.appendChild(taskBox);
+
+        taskFormContainer.remove();
+
+        const taskCompletionCircle = document.createElement('div');
+        taskCompletionCircle.classList.add('circle');
+        taskBox.appendChild(taskCompletionCircle);
+
+        const emptyCircle = document.createElement('div');
+        emptyCircle.classList.add('empty-circle');
+        taskCompletionCircle.appendChild(emptyCircle);
+
+        const checkSvg = makeIcon(check, 'check-icon');
+
+        const taskTitle = document.createElement('p');
+        taskTitle.classList.add('task-entry');
+        taskTitle.textContent = trim(taskTitleInput.value);
+        taskBox.appendChild(taskTitle);
+
+        taskCompletionCircle.addEventListener('click', () => {
+            if (!taskTitle.classList.contains('strike-through')) {
+                taskTitle.classList.add('strike-through');
+                emptyCircle.remove();
+                taskCompletionCircle.appendChild(checkSvg);
+            } else {
+                checkSvg.remove();
+                taskCompletionCircle.appendChild(emptyCircle);
+                taskTitle.classList.remove('strike-through');
+            }
+        });
+
+        const pictographBox = document.createElement('div');
+        pictographBox.classList.add('pictographs');
+        taskBox.appendChild(pictographBox);
+
+        const taskPriorityBox = document.createElement('div');
+        taskPriorityBox.id = "priority-task";
+        taskPriorityBox.classList.add('priority-box');
+        pictographBox.appendChild(taskPriorityBox);
+
+        taskBox.addEventListener('mouseenter', () => {
+            taskPriorityBox.classList.add('white-out');
+        });
+
+        taskBox.addEventListener('mouseleave', () => {
+            taskPriorityBox.classList.remove('white-out');
+        });
+
+        console.log("REMINDER: need to figure out how to add the priority selection properly");
+        const parser = new DOMParser();
+        const lowDoc = parser.parseFromString(low, 'image/svg+xml');
+        const lowSvg = lowDoc.querySelector('svg');
+        lowSvg.classList.add('first-level-priority-box');
+        taskPriorityBox.appendChild(lowSvg);
+
+        const dateSvg = makeIcon(date, null, pictographBox);
+
+        const datePopup = document.createElement('div');
+        datePopup.classList.add('date-popup', 'invisible');
+        if (taskDueDateInput.value) {
+            datePopup.textContent = `Due Date: ${easyFormatDate(taskDueDateInput.value)}`;
+        } else {
+            datePopup.textContent = "No due date";
+        }
+
+        pictographBox.appendChild(datePopup);
+
+        dateSvg.addEventListener('mouseover', () => {
+            datePopup.classList.remove('invisible');
+        });
+
+        dateSvg.addEventListener('mouseleave', () => {
+            datePopup.classList.add('invisible');
+        });
+
+        const taskEditBox = document.createElement('div');
+        taskEditBox.classList.add('invisible');
+        pictographBox.appendChild(taskEditBox);
+
+        const editSvg = makeIcon(edit, 'edit-icon', taskEditBox);
+
+        const taskDeleteBox = document.createElement('div');
+        taskDeleteBox.classList.add('invisible');
+        taskBox.appendChild(taskDeleteBox);
+
+        const deleteSvg = makeIcon(trash, 'delete-icon', taskDeleteBox);
+
+        taskBox.addEventListener('mouseover', () => {
+            taskDeleteBox.classList.remove('invisible');
+            taskEditBox.classList.remove('invisible');
+        });
+
+        taskBox.addEventListener('mouseleave', () => {
+            taskDeleteBox.classList.add('invisible');
+            taskEditBox.classList.add('invisible');
+        });
+
+        taskDeleteBox.addEventListener('click', () => {
+            taskBox.remove();
+        });
+
+        taskTitleInput.value = "";
+        taskDescriptionInput.value = "";
+        taskDueDateInput.value = "";
+        taskPriorityInput.selectedIndex = 0;
+        taskNotesInput.value = "";
+        taskChecklistInput.value = "";
+
+    }
+};
+
+function makeIcon(svgName, className, parentElement) {
+    const parser = new DOMParser();
+
+    const doc = parser.parseFromString(svgName, 'image/svg+xml');
+    const svg = doc.querySelector('svg');
+    
+    if (className) {
+        if (Array.isArray(className)) {
+            svg.classList.add(...className);
+        } else {
+            svg.classList.add(className);
+        }
+    }
+
+    if (parentElement) {
+        parentElement.appendChild(svg);
+    }
+    
+    return svg;
+};
+
+function displayTaskPriority(instructions, priority) {
+    const taskPriorityBox = document.getElementById('priority-task');
+
+    instructions.classesToRemove.forEach(cls => {
+        taskPriorityBox.classList.remove(cls);
+    });
+
+    instructions.classesToAdd.forEach(cls => {
+        taskPriorityBox.classList.add(cls);
+    });
+
+    while(taskPriorityBox.lastElementChild) {
+        taskPriorityBox.removeChild(taskPriorityBox.lastElementChild);
+    }
+
+    instructions.svgsToAppend.forEach(key => {
+        const svg = createSvg(key);
+        if (svg) taskPriorityBox.appendChild(svg);
+    });
 };
 
 function createSvg(key) {

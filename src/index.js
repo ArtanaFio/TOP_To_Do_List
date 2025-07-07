@@ -48,13 +48,14 @@ basicPageLayout();
 // !!! 6/3/2025 REFACTORING!!!
 
 
-displayDefaultProject(closedMessageLogic(defaultProject.tasks.length));
+const defaultProjectUI = displayDefaultProject(closedMessageLogic(defaultProject.tasks.length));
 displayDefaultProjectTitle(defaultProject.title);
 displayDefaultProjectDescription(defaultProject.description);
 displayDefaultProjectDueDate(defaultProjectDueDateLogic(defaultProject.dueDate));
 displayDefaultProjectLabel(defaultProjectLabelLogic(defaultProject.label));
 displayDefaultProjectTaskNumber(defaultProject.tasks.length);
-displayDefaultProjectPriority(defaultProjectPriorityLogic(defaultProject.priority), defaultProject.priority);
+
+displayDefaultProjectPriority(defaultProjectPriorityLogic(defaultProject.priority), defaultProjectUI.priorityBox, defaultProject.priority);
 
 createDefaultProjectEditForm(defaultProject.title, defaultProject.description, defaultProject.dueDate, priorityFormLogic(defaultProject.priority), function(newProperties) {
     defaultProject.editTitle(newProperties[0]);
@@ -66,7 +67,7 @@ createDefaultProjectEditForm(defaultProject.title, defaultProject.description, d
     console.log(defaultProject);
 });
 
-createTaskForm();
+createTaskForm(defaultProjectPriorityLogic);
 
 
 projectDisplay();

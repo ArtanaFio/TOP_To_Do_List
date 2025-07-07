@@ -12,99 +12,56 @@ import { getTodayDate, formatDateForInput, trim, easyFormatDate } from './defaul
 import { defaultProjectLabelLogic, defaultProjectPriorityLogic, defaultProjectnoLabelLogic, defaultEmptyInputLogic } from './default_project_logic';
 
 export function displayDefaultProject(closedMessageLogic) {
-    const projectContainer = document.getElementById('project-container');
+    const projectContainer = document.getElementById('project-container');    //makeElement(element, elementId, classes, text, parent)
     
-    const defaultList = document.createElement('div');
-    defaultList.id = "default";
-    defaultList.classList.add('list', 'close-list');
-    projectContainer.appendChild(defaultList);
+    const defaultList = makeElement('div', 'default', 'list close-list', '', projectContainer);
 
-    const defaultTopDiv = document.createElement('div');
-    defaultTopDiv.id = "default-top-div";
-    defaultTopDiv.classList.add('list-top-div');
-    defaultList.appendChild(defaultTopDiv);
+    const defaultTopDiv = makeElement('div', 'default-top-div', 'list-top-div', '', defaultList);
 
-    const infoBox = document.createElement('div');
-    defaultTopDiv.appendChild(infoBox);
+    const infoBox = makeElement('div', '', '', '', defaultTopDiv);
 
-    const parser = new DOMParser();
+    console.log("REMINDER: need to edit displayDefaultProjectPriority(instructions, priority) so that it can work with both list and task priorities and replace code unknown");
 
     const infoSvg = makeIcon(info, 'info-icon', infoBox);
     infoSvg.id = "default-info-icon";
 
-    const editExitBox = document.createElement('div');
-    editExitBox.classList.add('edit-exit-svg-pair');
-    defaultTopDiv.appendChild(editExitBox);
+    const editExitBox = makeElement('div', '', 'edit-exit-svg-pair', '', defaultTopDiv);
 
-    const defaultEditBox = document.createElement('div');
-    defaultEditBox.classList.add('invisible');
-    editExitBox.appendChild(defaultEditBox);
+    const defaultEditBox = makeElement('div', '', 'invisible', '', editExitBox);
 
     const editSvg = makeIcon(edit, 'edit-icon', defaultEditBox);
     editSvg.id = "default-edit-button";
 
-    const defaultExitBox = document.createElement('div');
-    editExitBox.appendChild(defaultExitBox);
+    const defaultExitBox = makeElement('div', '', '', '', editExitBox);
 
     const exitSvg = makeIcon(exit,['exit-icon', 'invisible'], defaultExitBox);
 
-    const middleBox = document.createElement('div');
-    middleBox.classList.add('date-label-box');
-    defaultList.appendChild(middleBox);
+    const middleBox = makeElement('div', '', 'date-label-box', '', defaultList);
 
-    const defaultListDueDateBox = document.createElement('div');
-    defaultListDueDateBox.id = "default-date-box";
-    middleBox.appendChild(defaultListDueDateBox);
+    const defaultListDueDateBox = makeElement('div', 'default-date-box', '', '', middleBox);
 
-    const defaultListLabelBox = document.createElement('div');
-    defaultListLabelBox.id = "default-label-box";
-    middleBox.appendChild(defaultListLabelBox);
+    const defaultListLabelBox = makeElement('div', 'default-label-box', '', '', middleBox);
 
-    const taskContainer = document.createElement('div');
-    taskContainer.id = "default-project-task-container";
-    taskContainer.classList.add('task-area');
-    defaultList.appendChild(taskContainer);
+    const taskContainer = makeElement('div', 'default-project-task-container', 'task-area', '', defaultList);
 
-    const taskListContainer = document.createElement('div');
-    taskListContainer.id = "default-project-task-list-box";
-    taskContainer.appendChild(taskListContainer);
+    const taskListContainer = makeElement('div', 'default-project-task-list-box', '', '', taskContainer);
 
-    const noTaskStatement = document.createElement('div');
-    noTaskStatement.classList.add('no-task');
-    noTaskStatement.textContent = "No tasks have been added yet";
-    taskContainer.appendChild(noTaskStatement);
+    const noTaskStatement = makeElement('div', '', 'no-task', 'No tasks have been added yet', taskContainer);
 
-    const taskBlock = document.createElement('div');
-    taskBlock.id = "add-task-box";
-    taskBlock.classList.add('invisible');
-    taskContainer.appendChild(taskBlock);
+    const taskBlock = makeElement('div', 'add-task-box', 'invisible', '', taskContainer);
 
     const addSvg = makeIcon(plus, 'add-icon', taskBlock);
     addSvg.id = "default-addSvg";
 
-    const dummyInput = document.createElement('div');
-    dummyInput.id = "default-dummy-input";
-    dummyInput.classList.add('dummy-input');
-    dummyInput.textContent = "Enter a new task here";
-    taskBlock.appendChild(dummyInput);
+    const dummyInput = makeElement('div', 'default-dummy-input', 'dummy-input', 'Enter a new task here', taskBlock);
 
-    const defaultBottomDiv = document.createElement('div');
-    defaultBottomDiv.classList.add('list-bottom-div');
-    defaultList.appendChild(defaultBottomDiv);
+    const defaultBottomDiv = makeElement('div', '', 'list-bottom-div', '', defaultList);
 
-    const defaultTaskTracker = document.createElement('div');
-    defaultTaskTracker.id = "default-task-tracker";
-    defaultTaskTracker.classList.add('track-task-box');
-    defaultBottomDiv.appendChild(defaultTaskTracker);
+    const defaultTaskTracker = makeElement('div', 'default-task-tracker', 'track-task-box', '', defaultBottomDiv);
 
-    const defaultTaskText  = document.createElement('span');
-    defaultTaskText.textContent = "Tasks: ";
-    defaultTaskTracker.appendChild(defaultTaskText);
+    const defaultTaskText  = makeElement('span', '', '', 'Tasks: ', defaultTaskTracker);
 
-    const priorityBox = document.createElement('div');
-    priorityBox.id = "priority-container";
-    priorityBox.classList.add('priority-box');
-    defaultBottomDiv.appendChild(priorityBox);
+    const priorityBox = makeElement('div','priority-container', 'priority-box', '', defaultBottomDiv);
 
     function clickDefaultList() {
         defaultList.addEventListener('click', () => {
@@ -115,6 +72,7 @@ export function displayDefaultProject(closedMessageLogic) {
             noTaskStatement.remove();
             show(taskBlock);
         });
+        console.log(`show(taskBlock)`);
     };
     clickDefaultList();
 
@@ -136,25 +94,19 @@ export function displayDefaultProject(closedMessageLogic) {
         });
     };
     clickExitIcon(closedMessageLogic);
+
+    return {priorityBox};
 };
 
 export function displayDefaultProjectTitle(title) {
     const defaultTopDiv = document.getElementById('default-top-div');
-    const defaultProjectTitle = document.createElement('p');
-    defaultProjectTitle.id = "default-project-title";
-    defaultProjectTitle.classList.add('list-name');
-    defaultProjectTitle.textContent = title;
-    defaultTopDiv.appendChild(defaultProjectTitle);
+    const defaultProjectTitle = makeElement('p', 'default-project-title', 'list-name', title, defaultTopDiv);
 };
 
 export function displayDefaultProjectDescription(description) {
     const defaultList = document.getElementById('default');
     const infoSvg = document.getElementById('default-info-icon');
-    const defaultDescription = document.createElement('div');
-    defaultDescription.id = "default-description";
-    defaultDescription.classList.add('description-pop-up', 'invisible');
-    defaultDescription.textContent = description;
-    defaultList.appendChild(defaultDescription);
+    const defaultDescription = makeElement('div', 'default-description', 'description-pop-up invisible', description, defaultList);
 
     infoSvg.addEventListener('mouseover', () => {
         if (defaultList.classList.contains('open-list')) {
@@ -171,11 +123,7 @@ export function displayDefaultProjectDescription(description) {
 
 export function displayDefaultProjectDueDate(formattedDueDate) {
     const defaultProjectDueDateBox = document.getElementById('default-date-box');
-    const defaultProjectDueDate = document.createElement('p');
-    defaultProjectDueDate.id = "default-due-date-text";
-    defaultProjectDueDate.classList.add('posted-date');
-    defaultProjectDueDate.textContent = formattedDueDate;
-    defaultProjectDueDateBox.appendChild(defaultProjectDueDate);
+    const defaultProjectDueDate = makeElement('p', 'default-due-date-text', 'posted-date', formattedDueDate, defaultProjectDueDateBox);
 };
 
 export function displayDefaultProjectLabel(label) {
@@ -184,10 +132,7 @@ export function displayDefaultProjectLabel(label) {
         defaultListLabelBox.removeChild(defaultListLabelBox.lastElementChild);
     }
 
-    const listLabel = document.createElement('span');
-    listLabel.classList.add(label[1]);
-    listLabel.textContent = label[0];
-    defaultListLabelBox.appendChild(listLabel);
+    const listLabel = makeElement('span', '', label[1], label[0], defaultListLabelBox);
 };
 
 export function displayDefaultProjectTaskNumber(arrayLength) {
@@ -196,47 +141,56 @@ export function displayDefaultProjectTaskNumber(arrayLength) {
     defaultTaskNumber.classList.add('array-number');
     defaultTaskNumber.textContent = arrayLength;
     defaultTaskTracker.appendChild(defaultTaskNumber);
+    console.log("REMINDER: Why won't makeElement() work on defaultTaskNumber?");
 };
 
-export function displayDefaultProjectPriority(instructions, priority) {
-    const priorityBox = document.getElementById('priority-container');
+export function displayDefaultProjectPriority(instructions, container, priority) {
     if (!instructions) return;
+
+    if (!container || !container.classList) {
+        console.error('Container is missing or invalid:', container);
+        return;
+    }
+
+    if (!instructions || !Array.isArray(instructions.classesToRemove)) {
+        console.error('Instructions or classesToRemove missing:', instructions);
+        return;
+    }
     
     instructions.classesToRemove.forEach(cls => {
-        priorityBox.classList.remove(cls);
+        if (cls) {
+            container.classList.remove(cls);
+        } else {
+            console.error('Class name is invalid:', cls);
+        }
     });
 
     instructions.classesToAdd.forEach(cls => {
-        priorityBox.classList.add(cls);
+        container.classList.add(cls);
     });
 
-    while(priorityBox.lastElementChild) {
-        priorityBox.removeChild(priorityBox.lastElementChild);
+    while(container.lastElementChild) {
+        container.removeChild(container.lastElementChild);
     }
 
     instructions.svgsToAppend.forEach(key => {
         const svg = createSvg(key);
-        if (svg) priorityBox.appendChild(svg);
+        if (svg) container.appendChild(svg);
     });
 
     const defaultList = document.getElementById('default');
-    const defaultPriorityPopup = document.createElement('div');
-    defaultPriorityPopup.id = "default-priority-pop-up";
-    defaultPriorityPopup.classList.add('priority-pop-up', 'invisible');
-    defaultPriorityPopup.textContent = priority;
-    priorityBox.appendChild(defaultPriorityPopup);
-
+    const defaultPriorityPopup = makeElement('div', 'default-priority-pop-up', 'priority-pop-up invisible', priority, container);
     
-    priorityBox.addEventListener('mouseover', () => {
+    container.addEventListener('mouseover', () => {
         if (defaultList.classList.contains('open-list')) {
-            priorityBox.classList.add('pointer-cursor');
+            container.classList.add('pointer-cursor');
             defaultPriorityPopup.classList.remove('invisible');
         }
     });
 
-    priorityBox.addEventListener('mouseleave', () => {
+    container.addEventListener('mouseleave', () => {
         if (defaultList.classList.contains('open-list')) {
-            priorityBox.classList.remove('pointer-cursor');
+            container.classList.remove('pointer-cursor');
             defaultPriorityPopup.classList.add('invisible');
         }
     });
@@ -246,153 +200,93 @@ export function displayDefaultProjectPriority(instructions, priority) {
 export function createDefaultProjectEditForm(title, description, dueDate, priorityLogicFunction, getInputValues) {
     const defaultListEditButton = document.getElementById('default-edit-button');
 
-    const defaultListFormContainer = document.createElement('div');
-    defaultListFormContainer.id = "default-list-form-box";
+    const defaultListFormContainer = makeElement('div', 'default-list-form-box', '', '', '');
 
     defaultListEditButton.addEventListener('click', () => {
         document.body.appendChild(defaultListFormContainer);
     });
 
-    const defaultListForm = document.createElement('form');
-    defaultListForm.id = "default-form";
-    defaultListFormContainer.appendChild(defaultListForm);
+    const defaultListForm = makeElement('form', 'default-form', '', '', defaultListFormContainer);
 
-    const defaultListFieldset = document.createElement('fieldset');
-    defaultListForm.appendChild(defaultListFieldset);
+    const defaultListFieldset = makeElement('fieldset', '', '', '', defaultListForm);
 
-    const defaultListLegend = document.createElement('legend');
-    defaultListLegend.id = "default-legend";
-    defaultListLegend.textContent = "Edit Default List Details";
-    defaultListFieldset.appendChild(defaultListLegend);
+    const defaultListLegend = makeElement('legend', 'default-legend', '', 'Edit Default List Details', defaultListFieldset);
 
-    const defaultListTitleDiv = document.createElement('div');
-    defaultListTitleDiv.classList.add('property-div');
-    defaultListFieldset.appendChild(defaultListTitleDiv);
+    const defaultListTitleDiv = makeElement('div', '', 'property-div', '', defaultListFieldset);
 
-    const defaultListTitleLabel = document.createElement('label');
+    const defaultListTitleLabel = makeElement('label', '', '', 'Title:', defaultListTitleDiv);
     defaultListTitleLabel.for = "title";
-    defaultListTitleLabel.textContent = "Title:";
-    defaultListTitleDiv.appendChild(defaultListTitleLabel);
 
-    const defaultListTitleInput = document.createElement('input');
-    defaultListTitleInput.id = "title";
+    const defaultListTitleInput = makeElement('input', 'title', 'default-input', '', defaultListTitleDiv);
     defaultListTitleInput.value = title;
-    defaultListTitleInput.classList.add('default-input');
-    defaultListTitleDiv.appendChild(defaultListTitleInput);
     
-    const defaultListDescriptionDiv = document.createElement('div');
-    defaultListDescriptionDiv.classList.add('property-div');
-    defaultListFieldset.appendChild(defaultListDescriptionDiv);
+    const defaultListDescriptionDiv = makeElement('div', '', 'property-div', '', defaultListFieldset);
 
-    const defaultListDescriptionLabel = document.createElement('label');
+    const defaultListDescriptionLabel = makeElement('label', '', 'textarea-label', 'Description:', defaultListDescriptionDiv);
     defaultListDescriptionLabel.for = "description";
-    defaultListDescriptionLabel.textContent = "Description:";
-    defaultListDescriptionLabel.classList.add('textarea-label');
-    defaultListDescriptionDiv.appendChild(defaultListDescriptionLabel);
 
-    const defaultListDescriptionInput = document.createElement('textarea');
-    defaultListDescriptionInput.id = "description";
+    const defaultListDescriptionInput = makeElement('textarea', 'description', '', '', defaultListDescriptionDiv);
     defaultListDescriptionInput.name = "task_description";
     defaultListDescriptionInput.value = description;
-    defaultListDescriptionDiv.appendChild(defaultListDescriptionInput);
 
-    const defaultListDueDateDiv = document.createElement('div');
-    defaultListDueDateDiv.classList.add('property-div');
-    defaultListFieldset.appendChild(defaultListDueDateDiv);
+    const defaultListDueDateDiv = makeElement('div', '', 'property-div', '', defaultListFieldset);
 
-    const defaultListDueDateLabel = document.createElement('label');
+    const defaultListDueDateLabel = makeElement('label', '', '', 'Due Date:', defaultListDueDateDiv);
     defaultListDueDateLabel.for = "due-date";
-    defaultListDueDateLabel.textContent = "Due Date:";
-    defaultListDueDateDiv.appendChild(defaultListDueDateLabel);
 
-    const defaultListDueDateInput = document.createElement('input');
+    const defaultListDueDateInput = makeElement('input', 'due-date', 'default-input', '', defaultListDueDateDiv);
     defaultListDueDateInput.type = "date";
-    defaultListDueDateInput.id = "due-date";
     defaultListDueDateInput.name = "due_date";
     defaultListDueDateInput.min = getTodayDate();
     defaultListDueDateInput.value = getTodayDate();
-    defaultListDueDateInput.classList.add('default-input');
     if (dueDate) {
         defaultListDueDateInput.value = formatDateForInput(dueDate);
     } else {
         defaultListDueDateInput.value = '';
     }
-    defaultListDueDateDiv.appendChild(defaultListDueDateInput);
 
-    const defaultListDoubleDiv = document.createElement('div');
-    defaultListDoubleDiv.classList.add('property-div', 'double-property-gap');
-    defaultListFieldset.appendChild(defaultListDoubleDiv);
+    const defaultListDoubleDiv = makeElement('div', '', 'property-div double-property-gap', '', defaultListFieldset);
 
-    const defaultListLabelDiv = document.createElement('div');
-    defaultListLabelDiv.classList.add('half-property');
-    defaultListDoubleDiv.appendChild(defaultListLabelDiv);
+    const defaultListLabelDiv = makeElement('div', '', 'half-property', '', defaultListDoubleDiv);
 
-    const defaultListLabelLabel = document.createElement('label');
+    const defaultListLabelLabel = makeElement('label', '', '', 'Label:', defaultListLabelDiv);
     defaultListLabelLabel.for = "label";
-    defaultListLabelLabel.textContent = "Label:";
-    defaultListLabelDiv.appendChild(defaultListLabelLabel);
 
-    const defaultListLabelDropBox = document.createElement('select');
-    defaultListLabelDropBox.id = "label";
-    defaultListLabelDropBox.classList.add('drop-box');
-    defaultListLabelDiv.appendChild(defaultListLabelDropBox);
+    const defaultListLabelDropBox = makeElement('select', 'label', 'drop-box', '', defaultListLabelDiv);
 
-    const defaultListLabelNotOption = document.createElement('option');
-    defaultListLabelNotOption.textContent = "select";
+    const defaultListLabelNotOption = makeElement('option', '', '', 'select', defaultListLabelDropBox);
     defaultListLabelNotOption.value = '';
     defaultListLabelNotOption.disabled = true;
-    defaultListLabelDropBox.appendChild(defaultListLabelNotOption);
     const defaultListLabelOptions = ['None', 'Daily', 'Weekly', 'Monthly', 'Yearly'];
     
     defaultListLabelOptions.forEach(label => {
-        const option = document.createElement('option');
-        option.classList.add('drop-box-option');
+        const option = makeElement('option', '', 'drop-box-option', label, defaultListLabelDropBox);
         option.value = label;
-        option.textContent = label;
-        defaultListLabelDropBox.appendChild(option);
     });
 
-    const defaultListPriorityDiv = document.createElement('div');
-    defaultListPriorityDiv.classList.add('half-property');
-    defaultListDoubleDiv.appendChild(defaultListPriorityDiv);
+    const defaultListPriorityDiv = makeElement('div', '', 'half-property', '', defaultListDoubleDiv);
 
-    const defaultListPriorityLabel = document.createElement('label');
+    const defaultListPriorityLabel = makeElement('label', '', '', 'Priority:', defaultListPriorityDiv);
     defaultListPriorityLabel.for = "priority";
-    defaultListPriorityLabel.textContent = "Priority:";
-    defaultListPriorityDiv.appendChild(defaultListPriorityLabel);
     
-    const defaultListPriorityDropBox = document.createElement('select');
-    defaultListPriorityDropBox.id = "priority";
-    defaultListPriorityDropBox.classList.add('drop-box');
-    defaultListPriorityDiv.appendChild(defaultListPriorityDropBox);
+    const defaultListPriorityDropBox = makeElement('select', 'priority', 'drop-box', '', defaultListPriorityDiv);
 
-    const defaultListNotOption = document.createElement('option');
-    defaultListNotOption.textContent = "select";
+    const defaultListNotOption = makeElement('option', '', '', 'select', defaultListPriorityDropBox);
     defaultListNotOption.value = '';
     defaultListNotOption.disabled = true;
-    defaultListPriorityDropBox.appendChild(defaultListNotOption);
     
     const defaultListPriorityOptions = ['Minor', 'Important', 'Urgent'];
     defaultListPriorityOptions.forEach(priorityType => {
-        const option = document.createElement('option');
-        option.classList.add('drop-box-option');
+        const option = makeElement('option', '', 'drop-box-option', priorityType, defaultListPriorityDropBox);
         option.value = priorityType;
-        option.textContent = priorityType;
-        defaultListPriorityDropBox.appendChild(option);
     });
 
     defaultListPriorityDropBox.selectedIndex = priorityLogicFunction;
 
-    const defaultListEditFormButtonContainer = document.createElement('div');
-    defaultListEditFormButtonContainer.classList.add('submit-div', 'shift-down');
-    defaultListFieldset.appendChild(defaultListEditFormButtonContainer);
+    const defaultListEditFormButtonContainer = makeElement('div', '', 'submit-div shift-down', '', defaultListFieldset);
 
-    const defaultListCancelButton = document.createElement('button');
-    defaultListCancelButton.id = 'default-edit-cancel';
+    const defaultListCancelButton = makeElement('button', 'default-edit-cancel', 'cancel-button cancel-unpressed', 'Cancel', defaultListEditFormButtonContainer);
     defaultListCancelButton.type = "button";
-    defaultListCancelButton.classList.add('cancel-button', 'cancel-unpressed');
-    defaultListCancelButton.textContent = "Cancel";
-    defaultListEditFormButtonContainer.appendChild(defaultListCancelButton);
 
     defaultListCancelButton.addEventListener('mousedown', () => {
         defaultListCancelButton.classList.add('cancel-pressed');
@@ -405,11 +299,8 @@ export function createDefaultProjectEditForm(title, description, dueDate, priori
         closeOnClick();
     });
 
-    const DefaultListSubmitButton = document.createElement('button');
+    const DefaultListSubmitButton = makeElement('button', '', 'submit-button unpressed', 'Submit', defaultListEditFormButtonContainer);
     DefaultListSubmitButton.type = "button";
-    DefaultListSubmitButton.classList.add('submit-button', 'unpressed');
-    DefaultListSubmitButton.textContent = "Submit";
-    defaultListEditFormButtonContainer.appendChild(DefaultListSubmitButton);
 
     DefaultListSubmitButton.addEventListener('mousedown', () => {
         DefaultListSubmitButton.classList.add('pressed');
@@ -419,11 +310,11 @@ export function createDefaultProjectEditForm(title, description, dueDate, priori
     DefaultListSubmitButton.addEventListener('mouseup', () => {
         DefaultListSubmitButton.classList.add('unpressed');
         DefaultListSubmitButton.classList.remove('pressed');
-        editDefaultProjectDetails();
-        console.log(editDefaultProjectDetails());
-        getInputValues(editDefaultProjectDetails());
+        const editResults = editDefaultProjectDetails();
+        console.log(editResults);
+        getInputValues(editResults);
         
-        if (editDefaultProjectDetails()) {
+        if (editResults) {
             closeOnClick();
         }
     });
@@ -487,14 +378,16 @@ function editDefaultProjectDetails() {
             newLabel = defaultLabelInput.value;
         }
 
-        displayDefaultProjectPriority(defaultProjectPriorityLogic(defaultPriorityInput.value), defaultPriorityInput.value);
+        const priorityBox = document.getElementById('priority-container');
+
+        displayDefaultProjectPriority(defaultProjectPriorityLogic(defaultPriorityInput.value), priorityBox, defaultPriorityInput.value);
         displayDefaultProjectLabel(defaultProjectLabelLogic(defaultLabelInput.value));
 
         return [newTitle, newDescription, newDueDate, newPriority, newLabel];
     }
 };
 
-export function createTaskForm() {
+export function createTaskForm(priorityLogic) {
     const taskContainer = document.getElementById('default-project-task-container');
     const taskBlock = document.getElementById('add-task-box');
     const addSvg = document.getElementById('default-addSvg');
@@ -513,6 +406,7 @@ export function createTaskForm() {
         hide(taskBlock);
         taskContainer.appendChild(taskFormContainer);
     });
+    console.log(`hide taskBlock`);
 
     const taskForm = document.createElement('form');
     taskForm.classList.add('task-form');
@@ -658,6 +552,7 @@ export function createTaskForm() {
         taskFormContainer.remove();
         show(taskBlock);
     });
+    console.log(`show(taskBlock)`)
 
     const taskSubmitButton = document.createElement('button');
     taskSubmitButton.type = "button";
@@ -673,12 +568,12 @@ export function createTaskForm() {
     taskSubmitButton.addEventListener('mouseup', () => {
         taskSubmitButton.classList.add('unpressed');
         taskSubmitButton.classList.remove('pressed');
-        createNewTasks();
+        createNewTasks(priorityLogic);
     });
 
 };
 
-function createNewTasks() {
+function createNewTasks(priorityLogic) {
     const taskTitleInput = document.getElementById('task-title');
     const taskDescriptionInput = document.getElementById('task-description');
     const taskDueDateInput = document.getElementById('task-due-date');
@@ -702,28 +597,18 @@ function createNewTasks() {
         });
     } else {
         const taskFormContainer = document.getElementById('default-task-form-box');
-        const taskContainer = document.getElementById('default-project-task-container');
         const taskListContainer = document.getElementById('default-project-task-list-box');
-        const taskBox = document.createElement('div');
-        taskBox.classList.add('block', 'task-box');
-        taskListContainer.appendChild(taskBox);
+        const taskBox = makeElement('div', '', 'block task-box', '', taskListContainer);
 
         taskFormContainer.remove();
 
-        const taskCompletionCircle = document.createElement('div');
-        taskCompletionCircle.classList.add('circle');
-        taskBox.appendChild(taskCompletionCircle);
+        const taskCompletionCircle = makeElement('div', '', 'circle', '', taskBox);
 
-        const emptyCircle = document.createElement('div');
-        emptyCircle.classList.add('empty-circle');
-        taskCompletionCircle.appendChild(emptyCircle);
+        const emptyCircle = makeElement('div', '', 'empty-circle', '', taskCompletionCircle);
 
         const checkSvg = makeIcon(check, 'check-icon');
 
-        const taskTitle = document.createElement('p');
-        taskTitle.classList.add('task-entry');
-        taskTitle.textContent = trim(taskTitleInput.value);
-        taskBox.appendChild(taskTitle);
+        const taskTitle = makeElement('p', '', 'task-entry', trim(taskTitleInput.value), taskBox);
 
         taskCompletionCircle.addEventListener('click', () => {
             if (!taskTitle.classList.contains('strike-through')) {
@@ -737,14 +622,9 @@ function createNewTasks() {
             }
         });
 
-        const pictographBox = document.createElement('div');
-        pictographBox.classList.add('pictographs');
-        taskBox.appendChild(pictographBox);
+        const pictographBox = makeElement('div', '', 'pictographs', '', taskBox);
 
-        const taskPriorityBox = document.createElement('div');
-        taskPriorityBox.id = "priority-task";
-        taskPriorityBox.classList.add('priority-box');
-        pictographBox.appendChild(taskPriorityBox);
+        const taskPriorityBox = makeElement('div', 'priority-task', 'priority-box', '', pictographBox);
 
         taskBox.addEventListener('mouseenter', () => {
             taskPriorityBox.classList.add('white-out');
@@ -754,24 +634,33 @@ function createNewTasks() {
             taskPriorityBox.classList.remove('white-out');
         });
 
-        console.log("REMINDER: need to figure out how to add the priority selection properly");
-        const parser = new DOMParser();
-        const lowDoc = parser.parseFromString(low, 'image/svg+xml');
-        const lowSvg = lowDoc.querySelector('svg');
-        lowSvg.classList.add('first-level-priority-box');
-        taskPriorityBox.appendChild(lowSvg);
+        if(taskPriorityInput.value) {
+            priorityLogic(taskPriorityInput.value).classesToRemove.forEach(cls => {
+                taskPriorityBox.classList.remove(cls);
+            });
 
+            priorityLogic(taskPriorityInput.value).classesToAdd.forEach(cls => {
+                taskPriorityBox.classList.add(cls);
+            });
+
+            while(taskPriorityBox.lastElementChild) {
+                taskPriorityBox.removeChild(taskPriorityBox.lastElementChild);
+            }
+
+            priorityLogic(taskPriorityInput.value).svgsToAppend.forEach(key => {
+                const svg = createSvg(key);
+                if (svg) taskPriorityBox.appendChild(svg);
+            });
+        }
+        
         const dateSvg = makeIcon(date, null, pictographBox);
 
-        const datePopup = document.createElement('div');
-        datePopup.classList.add('date-popup', 'invisible');
+        const datePopup = makeElement('div', '', 'date-popup invisible', '', pictographBox);
         if (taskDueDateInput.value) {
             datePopup.textContent = `Due Date: ${easyFormatDate(taskDueDateInput.value)}`;
         } else {
             datePopup.textContent = "No due date";
         }
-
-        pictographBox.appendChild(datePopup);
 
         dateSvg.addEventListener('mouseover', () => {
             datePopup.classList.remove('invisible');
@@ -781,15 +670,11 @@ function createNewTasks() {
             datePopup.classList.add('invisible');
         });
 
-        const taskEditBox = document.createElement('div');
-        taskEditBox.classList.add('invisible');
-        pictographBox.appendChild(taskEditBox);
+        const taskEditBox = makeElement('div', '', 'invisible', '', pictographBox);
 
         const editSvg = makeIcon(edit, 'edit-icon', taskEditBox);
 
-        const taskDeleteBox = document.createElement('div');
-        taskDeleteBox.classList.add('invisible');
-        taskBox.appendChild(taskDeleteBox);
+        const taskDeleteBox = makeElement('div', '', 'invisible', '', taskBox);
 
         const deleteSvg = makeIcon(trash, 'delete-icon', taskDeleteBox);
 
@@ -813,8 +698,29 @@ function createNewTasks() {
         taskPriorityInput.selectedIndex = 0;
         taskNotesInput.value = "";
         taskChecklistInput.value = "";
-
     }
+};
+
+function makeElement(element, elementId, classes, text, parent) {
+    const genElement = document.createElement(element);
+
+    if (elementId) {
+        genElement.id = elementId;
+    }
+
+    if (classes) {
+        genElement.classList.add(...classes.split(' '));
+    }
+
+    if (text) {
+        genElement.textContent = text;
+    }
+
+    if (parent) {
+        parent.appendChild(genElement);
+    }
+
+    return genElement;
 };
 
 function makeIcon(svgName, className, parentElement) {
@@ -838,6 +744,7 @@ function makeIcon(svgName, className, parentElement) {
     return svg;
 };
 
+/*
 function displayTaskPriority(instructions, priority) {
     const taskPriorityBox = document.getElementById('priority-task');
 
@@ -858,6 +765,7 @@ function displayTaskPriority(instructions, priority) {
         if (svg) taskPriorityBox.appendChild(svg);
     });
 };
+*/
 
 function createSvg(key) {
     const parser = new DOMParser();

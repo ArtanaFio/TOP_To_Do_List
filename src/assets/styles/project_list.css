@@ -430,7 +430,6 @@ button:hover {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    border: 2px dotted red;
 }
 
 .no-task {
@@ -463,12 +462,13 @@ button:hover {
 /* END OF TASK AREA STYLING ---------------------------------------------*/
 /* TASK FORM STYLING ---------------------------------------------*/
 #default-task-form-box {
-    width: 100%;
-    height: 100%;
-    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    
 }
 
 .task-form {
@@ -479,6 +479,7 @@ button:hover {
     border: 1px solid darkorchid;
     /*box-shadow: 1px 1px 5px rgb(98, 34, 131);*/
     padding: 5px;
+    background-color: transparent;
 }
 
 /* END OF TASK FORM STYLING ----------------------------------------*/

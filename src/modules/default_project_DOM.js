@@ -1,17 +1,21 @@
 import plus from '../assets/images/add.svg';
 import check from '../assets/images/check_circle.svg';
-import info from '../assets/images/info.svg';
+import checklist from '../assets/images/checklist.svg';
+import date from '../assets/images/date.svg';
 import edit from '../assets/images/edit.svg';
 import exit from '../assets/images/exit.svg';
+import high from '../assets/images/red-priority.svg';
+import info from '../assets/images/info.svg';
 import low from '../assets/images/green-priority.svg';
 import mid from '../assets/images/yellow-priority.svg';
-import high from '../assets/images/red-priority.svg';
-import date from '../assets/images/date.svg';
+import notes from '../assets/images/notes.svg';
 import trash from '../assets/images/delete.svg';
-import { getTodayDate, formatDateForInput, trim, easyFormatDate } from './default_project_utility';
 import { defaultProjectLabelLogic, defaultProjectPriorityLogic, defaultProjectnoLabelLogic, defaultEmptyInputLogic } from './default_project_logic';
 
 export function displayDefaultProject(closedMessageLogic) {
+
+    console.log('REMINDER: need to finish separating functions in DOM so they only interact in the entry point');
+    console.log('REMINDER: need to update the task number and figure out how to remove "No tasks have been added yet" when there are tasks');
     const projectContainer = document.getElementById('project-container');
     const defaultList = makeElement('div', 'default', 'list close-list', '', projectContainer);
     const defaultTopDiv = makeElement('div', 'default-top-div', 'list-top-div', '', defaultList);
@@ -170,7 +174,7 @@ export function displayDefaultProjectPriority(instructions, container, priority)
 
 };
 
-export function createDefaultProjectEditForm(title, description, dueDate, priorityLogicFunction, getInputValues) {
+export function createDefaultProjectEditForm(title, description, dueDate, getDateFunction, formatInputDate, priorityLogicFunction, cut, easyDateFormat, getInputValues) {
     const defaultListEditButton = document.getElementById('default-edit-button');
     const defaultListFormContainer = makeElement('div', 'default-list-form-box', '', '', '');
 
@@ -192,11 +196,11 @@ export function createDefaultProjectEditForm(title, description, dueDate, priori
     const defaultListDueDateDiv = makeElement('div', '', 'property-div', '', defaultListFieldset);
     const defaultListDueDateLabel = makeLabelsOrInputsOrButtons('label', '', 'due-date', '', '', '', '', 'Due Date:', defaultListDueDateDiv);
     const defaultListDueDateInput = makeLabelsOrInputsOrButtons('input', 'due-date', '', 'due_date', '', 'date', 'default-input', '', defaultListDueDateDiv);
-    defaultListDueDateInput.min = getTodayDate();
-    defaultListDueDateInput.value = getTodayDate();
+    defaultListDueDateInput.min = getDateFunction;
+    defaultListDueDateInput.value = getDateFunction;
 
     if (dueDate) {
-        defaultListDueDateInput.value = formatDateForInput(dueDate);
+        defaultListDueDateInput.value = formatInputDate(dueDate);//formatDateForInput(dueDate);
     } else {
         defaultListDueDateInput.value = '';
     }
@@ -248,16 +252,16 @@ export function createDefaultProjectEditForm(title, description, dueDate, priori
     defaultListSubmitButton.addEventListener('mouseup', () => {
         defaultListSubmitButton.classList.add('unpressed');
         defaultListSubmitButton.classList.remove('pressed');
-        const editResults = editDefaultProjectDetails();
-        getInputValues(editResults);
+        const editResults = editDefaultProjectDetails(cut, easyDateFormat);
         
-        if (editResults) {
+        if (Array.isArray(editResults)) {
+            getInputValues(editResults);
             closeOnClick();
         }
     });
 };
 
-function editDefaultProjectDetails() {
+function editDefaultProjectDetails(cut, easyDateFormat) {
     const defaultTitleInput = document.getElementById('title');
     const defaultDescriptionInput = document.getElementById('description');
     const defaultDueDateInput = document.getElementById('due-date');
@@ -280,7 +284,7 @@ function editDefaultProjectDetails() {
         });
     } else {
         const defaultProjectTitle = document.getElementById('default-project-title');
-        const newTitle = trim(defaultTitleInput.value);
+        const newTitle = cut(defaultTitleInput.value);
         defaultProjectTitle.textContent = newTitle;
 
         const defaultDescription = document.getElementById('default-description');
@@ -291,8 +295,8 @@ function editDefaultProjectDetails() {
             defaultDescription.textContent = "This list prefers to stay mysterious";
             newDescription = null;
         } else {
-            defaultDescription.textContent = trim(defaultDescriptionInput.value);
-            newDescription = trim(defaultDescriptionInput.value);
+            defaultDescription.textContent = cut(defaultDescriptionInput.value);
+            newDescription = cut(defaultDescriptionInput.value);
         }
 
         const defaultProjectDueDate = document.getElementById('default-due-date-text');
@@ -302,8 +306,8 @@ function editDefaultProjectDetails() {
             defaultProjectDueDate.textContent = "no due date";
             newDueDate = null;
         } else {
-            defaultProjectDueDate.textContent = easyFormatDate(defaultDueDateInput.value);
-            newDueDate = easyFormatDate(defaultDueDateInput.value);
+            defaultProjectDueDate.textContent = easyDateFormat(defaultDueDateInput.value); //easyFormatDate(defaultDueDateInput.value);
+            newDueDate = easyDateFormat(defaultDueDateInput.value) //easyFormatDate(defaultDueDateInput.value);
         }
 
         const newPriority = defaultPriorityInput.value;
@@ -324,7 +328,7 @@ function editDefaultProjectDetails() {
     }
 };
 
-export function createTaskForm(priorityLogic) {
+export function createTaskForm(emptyLogic, getDateFunction, cut, easyDateFormat, priorityLogic) {
     const taskContainer = document.getElementById('default-project-task-container');
     const taskBlock = document.getElementById('add-task-box');
     const addSvg = document.getElementById('default-addSvg');
@@ -356,7 +360,7 @@ export function createTaskForm(priorityLogic) {
     const taskDueDateDiv = makeElement('div', '', 'half-property', '', taskDoubleDiv);
     const taskDueDateLabel = makeLabelsOrInputsOrButtons('label', '', 'task-due-date', '', '', '', 'half-label', 'Due Date:', taskDueDateDiv);
     const taskDueDateInput = makeLabelsOrInputsOrButtons('input', 'task-due-date', '', 'task_due_date', '', 'date', 'drop-box', '', taskDueDateDiv);
-    taskDueDateInput.min = getTodayDate();
+    taskDueDateInput.min = getDateFunction;
     const taskPriorityDiv = makeElement('div', '', 'half-property', '', taskDoubleDiv);
     const taskPriorityLabel = makeLabelsOrInputsOrButtons('label', '', 'task-priority', '', '', '', '', 'Priority:', taskPriorityDiv);
     const taskPriorityDropBox = makeElement('select', 'task-priority', 'drop-box',  '', taskPriorityDiv);
@@ -371,7 +375,7 @@ export function createTaskForm(priorityLogic) {
     const taskNoteslabel = makeLabelsOrInputsOrButtons('label', '', 'task-notes', '', '', '', 'textarea-label', 'Notes:', taskNotesDiv);
     const taskNotesInput = makeLabelsOrInputsOrButtons('textarea', 'task-notes', '', 'task_notes', 'Enter notes (optional)', '', '', '', taskNotesDiv);
     const taskChecklistDiv = makeElement('div', '', 'task-property', '', taskFieldset);
-    const taskChecklistLabel = makeLabelsOrInputsOrButtons('label', 'task-checklist', '', '', '', '', 'textarea-label', 'Checklist:', taskChecklistDiv);
+    const taskChecklistLabel = makeLabelsOrInputsOrButtons('label', '', '', '', '', '', 'textarea-label', 'Checklist:', taskChecklistDiv);
     const taskChecklistInput = makeLabelsOrInputsOrButtons('textarea', 'task-checklist', '', 'checklist_items', 'Enter checklist reminders (optional)', '', '', '', taskChecklistDiv);
     const taskFormButtonContainer = makeElement('div', '', 'submit-div', '', taskFieldset);
     const taskCancelButton = makeLabelsOrInputsOrButtons('button', 'default-edit-cancel', '', '', '', 'button', 'cancel-button cancel-unpressed', 'Cancel', taskFormButtonContainer);
@@ -387,7 +391,7 @@ export function createTaskForm(priorityLogic) {
         taskFormContainer.remove();
         show(taskBlock);
     });
-    console.log(`show(taskBlock)`)
+    console.log(`show(taskBlock)`);
 
     const taskSubmitButton = makeLabelsOrInputsOrButtons('button', '', '', '', '', 'button', 'submit-button unpressed', 'Submit', taskFormButtonContainer);
 
@@ -399,11 +403,13 @@ export function createTaskForm(priorityLogic) {
     taskSubmitButton.addEventListener('mouseup', () => {
         taskSubmitButton.classList.add('unpressed');
         taskSubmitButton.classList.remove('pressed');
-        createNewTasks(priorityLogic);
+        const taskResult = createNewTasks(emptyLogic, cut, easyDateFormat, priorityLogic);
+
+        console.log(taskResult);
     });
 };
 
-function createNewTasks(priorityLogic) {
+function createNewTasks(emptyLogic, cut, easyDateFormat, priorityLogic) {
     const taskTitleInput = document.getElementById('task-title');
     const taskDescriptionInput = document.getElementById('task-description');
     const taskDueDateInput = document.getElementById('task-due-date');
@@ -411,75 +417,88 @@ function createNewTasks(priorityLogic) {
     const taskNotesInput = document.getElementById('task-notes');
     const taskChecklistInput = document.getElementById('task-checklist');
 
-    if (defaultEmptyInputLogic(taskTitleInput.value)) {
+    if (emptyLogic(taskTitleInput.value)) {
         taskTitleInput.classList.remove("input-task");
         taskTitleInput.classList.add("invalid");
         taskTitleInput.value = '';
         taskTitleInput.placeholder = "Don't forget to record your task";
 
         taskTitleInput.addEventListener("blur", () => {
-            console.log("You clicked outside the default title input");
-            if (!defaultEmptyInputLogic(taskTitleInput.value)) {
+            if (!emptyLogic(taskTitleInput.value)) {
                 taskTitleInput.classList.remove("invalid");
                 taskTitleInput.classList.add("input-task");
-                console.log(taskTitleInput.value);
             }
         });
     } else {
         const taskFormContainer = document.getElementById('default-task-form-box');
         taskFormContainer.remove();
 
+        const taskTitle = cut(taskTitleInput.value);
+        const taskDescription = taskDescriptionInput.value;
+        const taskPriority = taskPriorityInput.value;
+        const taskDueDate = taskDueDateInput.value;
+        const taskNotes = taskNotesInput.value;
+        const taskChecklist = taskChecklistInput.value;
         const taskListContainer = document.getElementById('default-project-task-list-box');
         const taskBox = makeElement('div', '', 'block task-box', '', taskListContainer);
         const taskCompletionCircle = makeElement('div', '', 'circle', '', taskBox);
         const emptyCircle = makeElement('div', '', 'empty-circle', '', taskCompletionCircle);
         const checkSvg = makeIcon(check, 'check-icon');
-        const taskTitle = makeElement('p', '', 'task-entry', trim(taskTitleInput.value), taskBox);
+        const taskTitleText = makeElement('p', '', 'task-entry', taskTitle, taskBox);
 
         taskCompletionCircle.addEventListener('click', () => {
-            if (!taskTitle.classList.contains('strike-through')) {
-                taskTitle.classList.add('strike-through');
+            if (!taskTitleText.classList.contains('strike-through')) {
+                taskTitleText.classList.add('strike-through');
                 emptyCircle.remove();
                 taskCompletionCircle.appendChild(checkSvg);
             } else {
                 checkSvg.remove();
                 taskCompletionCircle.appendChild(emptyCircle);
-                taskTitle.classList.remove('strike-through');
+                taskTitleText.classList.remove('strike-through');
             }
         });
 
         const pictographBox = makeElement('div', '', 'pictographs', '', taskBox);
-        const taskPriorityBox = makeElement('div', 'priority-task', 'priority-box', '', pictographBox);
+        const taskPriorityBox = makeElement('div', 'priority-task', 'white-out priority-box icon-box', '', pictographBox);
 
-        taskBox.addEventListener('mouseenter', () => {
-            taskPriorityBox.classList.add('white-out');
-        });
-
-        taskBox.addEventListener('mouseleave', () => {
-            taskPriorityBox.classList.remove('white-out');
-        });
-
-        if(taskPriorityInput.value) {
-            displayTaskPriority(priorityLogic, taskPriorityInput.value, taskPriorityBox);
-        }
-        
-        const dateSvg = makeIcon(date, null, pictographBox);
-        const datePopup = makeElement('div', '', 'date-popup invisible', '', pictographBox);
-
-        if (taskDueDateInput.value) {
-            datePopup.textContent = `Due Date: ${easyFormatDate(taskDueDateInput.value)}`;
-        } else {
-            datePopup.textContent = "No due date";
+        if(taskPriority) {
+            displayTaskPriority(priorityLogic, taskPriority, taskPriorityBox);
         }
 
-        dateSvg.addEventListener('mouseover', () => {
-            datePopup.classList.remove('invisible');
-        });
+        const taskDescriptionBox = makeElement('div', '', 'icon-box', '', pictographBox);
 
-        dateSvg.addEventListener('mouseleave', () => {
-            datePopup.classList.add('invisible');
-        });
+        if (taskDescription) {
+            const taskDescriptionSvg = makeIcon(info, 'full-icon', taskDescriptionBox);
+        }
 
+        const taskDescriptionPopup = makeElement('div', '', 'property-popup centered', taskDescription, taskDescriptionBox);
+        const taskDateBox = makeElement('div', '', 'icon-box', '', pictographBox);
+
+        if (taskDueDate) {
+            const dateSvg = makeIcon(date, 'full-icon', taskDateBox);
+        }
+
+        const datePopup = makeElement('div', '', 'property-popup', '', taskDateBox);
+        const dateHeader = makeElement('p', '', 'bold', 'Due Date:', datePopup);
+        const taskDueDateText = makeElement('p', '', '', easyDateFormat(taskDueDate), datePopup);
+        const taskNotesBox = makeElement('div', '', 'icon-box', '', pictographBox);
+
+        if (taskNotes) {
+            const notesSvg = makeIcon(notes, 'full-icon', taskNotesBox);
+        }
+
+        const taskNotesPopup = makeElement('div', '', 'property-popup', '', taskNotesBox);
+        const notesheader = makeElement('p', '', 'bold', 'Notes:', taskNotesPopup);
+        const taskNotesText = makeElement('p', '', 'centered', taskNotes, taskNotesPopup);
+        const taskChecklistBox = makeElement('div', '', 'icon-box', '', pictographBox);
+
+        if (taskChecklist) {
+            const checklistSvg = makeIcon(checklist, 'full-icon', taskChecklistBox);
+        }
+
+        const taskChecklistPopup = makeElement('div', '', 'property-popup', '', taskChecklistBox);
+        const checklistHeader = makeElement('p', '', 'bold', 'Checklist:', taskChecklistPopup);
+        const taskChecklistText = makeElement('p', '', 'centered', taskChecklist, taskChecklistPopup);
         const taskEditBox = makeElement('div', '', 'invisible', '', pictographBox);
         const editSvg = makeIcon(edit, 'edit-icon', taskEditBox);
         const taskDeleteBox = makeElement('div', '', 'invisible', '', taskBox);
@@ -502,9 +521,11 @@ function createNewTasks(priorityLogic) {
         taskTitleInput.value = "";
         taskDescriptionInput.value = "";
         taskDueDateInput.value = "";
-        taskPriorityInput.selectedIndex = 0;
+        taskPriorityInput.selectedIndex = 1;
         taskNotesInput.value = "";
         taskChecklistInput.value = "";
+        
+        return [taskTitle, taskDescription, taskPriority, taskDueDate, taskNotes, taskChecklist];
     }
 };
 
@@ -526,22 +547,8 @@ function displayTaskPriority(logic, value, container) {
         if (svg) container.appendChild(svg);
     });
 
-    const defaultList = document.getElementById('default');
-    const defaultPriorityPopup = makeElement('div', 'default-priority-pop-up', 'date-popup invisible', value, container);
+    const defaultPriorityPopup = makeElement('div', 'default-priority-pop-up', 'task-priority-popup', value, container);
     
-    container.addEventListener('mouseover', () => {
-        if (defaultList.classList.contains('open-list')) {
-            container.classList.add('pointer-cursor');
-            defaultPriorityPopup.classList.remove('invisible');
-        }
-    });
-
-    container.addEventListener('mouseleave', () => {
-        if (defaultList.classList.contains('open-list')) {
-            container.classList.remove('pointer-cursor');
-            defaultPriorityPopup.classList.add('invisible');
-        }
-    });
 };
 
 function makeLabelsOrInputsOrButtons(element, elementId, forLabel, inputName, inputPlaceholder, inputType, classes, text, parent) {

@@ -3,7 +3,8 @@ import makeTodoItem from './modules/todo-items';
 import makeProject from './modules/projects';
 import { defaultProject } from './modules/projects';
 import { basicPageLayout } from './modules/page_layout';
-import { defaultProjectDueDateLogic, defaultProjectLabelLogic, defaultProjectPriorityLogic, closedMessageLogic, priorityFormLogic } from './modules/default_project_logic';
+import { getTodayDate, formatDateForInput, trim, easyFormatDate } from './modules/default_project_utility';
+import { defaultProjectDueDateLogic, defaultProjectLabelLogic, defaultProjectPriorityLogic, closedMessageLogic, priorityFormLogic, defaultEmptyInputLogic } from './modules/default_project_logic';
 import { displayDefaultProject, displayDefaultProjectTitle, displayDefaultProjectDescription, displayDefaultProjectDueDate, displayDefaultProjectLabel, displayDefaultProjectTaskNumber, displayDefaultProjectPriority, createDefaultProjectEditForm, createTaskForm} from './modules/default_project_DOM';
 import { projectDisplay } from './modules/new_project_DOM';
 
@@ -58,7 +59,7 @@ displayDefaultProjectLabel(defaultProjectLabelLogic(defaultProject.label));
 displayDefaultProjectTaskNumber(defaultProject.tasks.length);
 displayDefaultProjectPriority(defaultProjectPriorityLogic(defaultProject.priority), defaultProjectUI.priorityBox, defaultProject.priority);
 
-createDefaultProjectEditForm(defaultProject.title, defaultProject.description, defaultProject.dueDate, priorityFormLogic(defaultProject.priority), function(newProperties) {
+createDefaultProjectEditForm(defaultProject.title, defaultProject.description, defaultProject.dueDate, getTodayDate(), formatDateForInput, priorityFormLogic(defaultProject.priority), trim, easyFormatDate, function(newProperties) {
     defaultProject.editTitle(newProperties[0]);
     defaultProject.editDescription(newProperties[1]);
     defaultProject.editDueDate(newProperties[2]);
@@ -68,9 +69,9 @@ createDefaultProjectEditForm(defaultProject.title, defaultProject.description, d
     console.log(defaultProject);
 });
 
-createTaskForm(defaultProjectPriorityLogic);
+createTaskForm(defaultEmptyInputLogic, getTodayDate(), trim, easyFormatDate, defaultProjectPriorityLogic);
 
 
 projectDisplay();
 
-//console.log(defaultProject);
+console.log(defaultProject);

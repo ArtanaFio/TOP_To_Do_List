@@ -28,5 +28,5 @@ export function trim(string) {
 
 export function easyFormatDate(date) {
     const [year, month, day] = date.split('-');
-    return `finish by ${month}/${day}/${year}`;
+    return `${month}/${day}/${year}`;
 };

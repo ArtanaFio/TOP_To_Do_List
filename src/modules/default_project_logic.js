@@ -5,7 +5,7 @@ export function defaultProjectDueDateLogic(dueDate) {
         let day = dueDate.getDate();
         let month = dueDate.getMonth() + 1;
         let year = dueDate.getFullYear();
-        return `finish by ${month}/${day}/${year}`;
+        return `${month}/${day}/${year}`;
     } else {
         return "no due date";
     } 

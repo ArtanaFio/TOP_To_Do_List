@@ -130,17 +130,6 @@
     padding: 5px 10px;
 }
 
-.date-popup {
-    font-size: 1.2rem;
-    color: darkmagenta;
-    background-color: #ffb6ff;
-    position: absolute;
-    margin-top: 30px;
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid darkmagenta;
-}
-
 .edit-icon, .exit-icon, .add-icon, .delete-icon, .empty-priority-icon, .date-icon {
     width: 25px;
     height: 25px;
@@ -323,6 +312,7 @@ textarea {
     flex: 1;
     display: flex;
     flex-direction: column;
+    border: 5px dashed red;
 }
 
 .shift-down {
@@ -422,7 +412,6 @@ button:hover {
     align-items: center;
     margin-top: 5px;
     gap: 5px;
-    border: 2px dashed blue;
 }
 
 #default-project-task-list-box {
@@ -468,7 +457,6 @@ button:hover {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    
 }
 
 .task-form {
@@ -546,12 +534,67 @@ button:hover {
 .pictographs {
     display: flex;
     flex: 1;
-    border: 2px dashed paleturquoise;
+    align-items: center;
+}
+
+.icon-box {
+    display: inline-flex;
+    position: relative;
+}
+
+.property-popup {
+    display: none;
+    font-size: 1.2rem;
+    color: darkmagenta;
+    background-color: #ffb6ff;
+    position: absolute;
+    margin-top: 30px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid darkmagenta;
+    z-index: 1000;
+    width: max-content;
+    max-width: 200px;
+    white-space: normal;
+}
+
+.task-priority-popup {
+    display: none;
+    font-size: 1.2rem;
+    color: darkmagenta;
+    background-color: #ffb6ff;
+    position: absolute;
+    margin-top: 30px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid darkmagenta;
+    z-index: 1000;
+}
+
+.icon-box:hover .property-popup, .icon-box:hover .task-priority-popup {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .white-out {
+    border: 2px solid transparent;
+
+}
+.white-out:hover {
     background-color: white;
-    border: 2px solid #ffd7ff;
+    border-color: #ffd7ff;
+}
+
+.bold {
+    font-weight: bold;
+    text-decoration: underline;
+    padding-bottom: 5px;
+}
+
+.centered {
+    text-align: center;
 }
 
 /* END OF NEW TASK STYLING ---------------------------------------------*/
@@ -576,7 +619,6 @@ button:hover {
     justify-self: end;
     display: grid;
     grid-template-columns: repeat(1, 1fr);
-    border: 2px dotted red;
 }
 
 .priority-pop-up {

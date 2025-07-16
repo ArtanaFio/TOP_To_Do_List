@@ -10,12 +10,11 @@ import low from '../assets/images/green-priority.svg';
 import mid from '../assets/images/yellow-priority.svg';
 import notes from '../assets/images/notes.svg';
 import trash from '../assets/images/delete.svg';
-import { defaultProjectLabelLogic, defaultProjectPriorityLogic, defaultProjectnoLabelLogic, defaultEmptyInputLogic } from './default_project_logic';
 
-export function displayDefaultProject(closedMessageLogic) {
+export function displayDefaultProject(noTasksLogic, arrayLength) {
 
-    console.log('REMINDER: need to finish separating functions in DOM so they only interact in the entry point');
-    console.log('REMINDER: need to update the task number and figure out how to remove "No tasks have been added yet" when there are tasks');
+    console.log('REMINDER: need to figure out how to remove "No tasks have been added yet" when there are tasks');
+    
     const projectContainer = document.getElementById('project-container');
     const defaultList = makeElement('div', 'default', 'list close-list', '', projectContainer);
     const defaultTopDiv = makeElement('div', 'default-top-div', 'list-top-div', '', defaultList);
@@ -33,7 +32,12 @@ export function displayDefaultProject(closedMessageLogic) {
     const defaultListLabelBox = makeElement('div', 'default-label-box', '', '', middleBox);
     const taskContainer = makeElement('div', 'default-project-task-container', 'task-area', '', defaultList);
     const taskListContainer = makeElement('div', 'default-project-task-list-box', '', '', taskContainer);
-    const noTaskStatement = makeElement('div', '', 'no-task', 'No tasks have been added yet', taskContainer);
+    const noTaskStatement = makeElement('div', '', 'no-task', 'No tasks have been added yet', '');
+
+    if (noTasksLogic) {
+        taskContainer.appendChild(noTaskStatement);
+    }
+    
     const taskBlock = makeElement('div', 'add-task-box', 'invisible', '', taskContainer);
     const addSvg = makeIcon(plus, 'add-icon', taskBlock);
     addSvg.id = "default-addSvg";
@@ -41,42 +45,49 @@ export function displayDefaultProject(closedMessageLogic) {
     const defaultBottomDiv = makeElement('div', '', 'list-bottom-div', '', defaultList);
     const defaultTaskTracker = makeElement('div', 'default-task-tracker', 'track-task-box', '', defaultBottomDiv);
     const defaultTaskText  = makeElement('span', '', '', 'Tasks: ', defaultTaskTracker);
+    const defaultTaskNumber = makeElement('span', 'default-task-number', 'array-number', '', defaultTaskTracker);
     const priorityBox = makeElement('div','priority-container', 'priority-box', '', defaultBottomDiv);
-
-    function clickDefaultList() {
-        defaultList.addEventListener('click', () => {
-            defaultList.classList.add('open-list');
-            defaultList.classList.remove('close-list');
-            defaultEditBox.classList.remove('invisible');
-            exitSvg.classList.remove('invisible');
-            noTaskStatement.remove();
-            show(taskBlock);
-        });
-        console.log(`show(taskBlock)`);
-    };
-    clickDefaultList();
-
-    function clickExitIcon(closedMessageLogic) {
-        defaultExitBox.addEventListener("click", (event) => {
-            event.stopPropagation();
-            defaultList.classList.add('close-list');
-            defaultList.classList.remove('open-list');
-            defaultEditBox.classList.add('invisible');
-            exitSvg.classList.add('invisible');
-            hide(taskBlock);
-
-            if (closedMessageLogic) {
-                console.log("there are no tasks");
-                taskContainer.appendChild(noTaskStatement);
-            } else {
-                console.log(`arrayLength: ${arrayLength}`);
-            }
-        });
-    };
-    clickExitIcon(closedMessageLogic);
+    
+    clickDefaultList(defaultList, defaultEditBox, exitSvg, noTaskStatement, taskBlock);
+    clickExitIcon(defaultExitBox, defaultList, defaultEditBox, exitSvg, taskBlock, noTasksLogic, taskContainer, noTaskStatement, arrayLength);
 
     return {priorityBox};
 };
+
+function clickDefaultList(defaultList, defaultEditBox, exitSvg, noTaskStatement, taskBlock) {
+    defaultList.addEventListener('click', () => {
+        defaultList.classList.add('open-list');
+        defaultList.classList.remove('close-list');
+        defaultEditBox.classList.remove('invisible');
+        exitSvg.classList.remove('invisible');
+
+        if (noTaskStatement) {
+            noTaskStatement.remove();
+        }
+            
+        show(taskBlock);
+    });
+    console.log(`show(taskBlock)`);
+};
+
+function clickExitIcon(defaultExitBox, defaultList, defaultEditBox, exitSvg, taskBlock, noTasksLogic, taskContainer, noTaskStatement, arrayLength) {
+    defaultExitBox.addEventListener("click", (event) => {
+        event.stopPropagation();
+        defaultList.classList.add('close-list');
+        defaultList.classList.remove('open-list');
+        defaultEditBox.classList.add('invisible');
+        exitSvg.classList.add('invisible');
+        hide(taskBlock);
+
+        if (noTasksLogic) {
+            console.log("there are no tasks");
+            taskContainer.appendChild(noTaskStatement);
+            console.log(`arrayLength: ${arrayLength}`);
+        } else {
+            console.log(`arrayLength: ${arrayLength}`);
+        }
+        });
+    };
 
 export function displayDefaultProjectTitle(title) {
     const defaultTopDiv = document.getElementById('default-top-div');
@@ -116,8 +127,7 @@ export function displayDefaultProjectLabel(label) {
 };
 
 export function displayDefaultProjectTaskNumber(arrayLength) {
-    const defaultTaskTracker = document.getElementById('default-task-tracker');
-    const defaultTaskNumber = makeElement('span', '', 'array-number', '', defaultTaskTracker);
+    const defaultTaskNumber = document.getElementById('default-task-number');
     defaultTaskNumber.textContent = arrayLength;
 };
 
@@ -174,7 +184,7 @@ export function displayDefaultProjectPriority(instructions, container, priority)
 
 };
 
-export function createDefaultProjectEditForm(title, description, dueDate, getDateFunction, formatInputDate, priorityLogicFunction, cut, easyDateFormat, getInputValues) {
+export function createDefaultProjectEditForm(title, description, dueDate, getDateFunction, formatInputDate, priorityLogicFunction, emptyLogic,cut, easyDateFormat, noLabelLogic, labelLogic, priorityLogic, getInputValues) {
     const defaultListEditButton = document.getElementById('default-edit-button');
     const defaultListFormContainer = makeElement('div', 'default-list-form-box', '', '', '');
 
@@ -200,7 +210,7 @@ export function createDefaultProjectEditForm(title, description, dueDate, getDat
     defaultListDueDateInput.value = getDateFunction;
 
     if (dueDate) {
-        defaultListDueDateInput.value = formatInputDate(dueDate);//formatDateForInput(dueDate);
+        defaultListDueDateInput.value = formatInputDate(dueDate);
     } else {
         defaultListDueDateInput.value = '';
     }
@@ -252,7 +262,7 @@ export function createDefaultProjectEditForm(title, description, dueDate, getDat
     defaultListSubmitButton.addEventListener('mouseup', () => {
         defaultListSubmitButton.classList.add('unpressed');
         defaultListSubmitButton.classList.remove('pressed');
-        const editResults = editDefaultProjectDetails(cut, easyDateFormat);
+        const editResults = editDefaultProjectDetails(emptyLogic, cut, easyDateFormat, noLabelLogic, labelLogic, priorityLogic);
         
         if (Array.isArray(editResults)) {
             getInputValues(editResults);
@@ -261,14 +271,14 @@ export function createDefaultProjectEditForm(title, description, dueDate, getDat
     });
 };
 
-function editDefaultProjectDetails(cut, easyDateFormat) {
+function editDefaultProjectDetails(emptyLogic, cut, easyDateFormat, noLabelLogic, labelLogic, priorityLogic) {
     const defaultTitleInput = document.getElementById('title');
     const defaultDescriptionInput = document.getElementById('description');
     const defaultDueDateInput = document.getElementById('due-date');
     const defaultLabelInput = document.getElementById('label');
     const defaultPriorityInput = document.getElementById('priority');
 
-    if (defaultEmptyInputLogic(defaultTitleInput.value)) {
+    if (emptyLogic(defaultTitleInput.value)) {
         defaultTitleInput.classList.remove("input-task");
         defaultTitleInput.classList.add("invalid");
         defaultTitleInput.value = '';
@@ -276,7 +286,7 @@ function editDefaultProjectDetails(cut, easyDateFormat) {
 
         defaultTitleInput.addEventListener("blur", () => {
             console.log("You clicked outside the default title input");
-            if (!defaultEmptyInputLogic(defaultTitleInput.value)) {
+            if (!emptyLogic(defaultTitleInput.value)) {
                 defaultTitleInput.classList.remove("invalid");
                 defaultTitleInput.classList.add("input-task");
                 console.log(defaultTitleInput.value);
@@ -290,7 +300,7 @@ function editDefaultProjectDetails(cut, easyDateFormat) {
         const defaultDescription = document.getElementById('default-description');
         let newDescription;
 
-        if (defaultEmptyInputLogic(defaultDescriptionInput.value)) {
+        if (emptyLogic(defaultDescriptionInput.value)) {
             defaultDescriptionInput.placeholder = "Edit default list description";
             defaultDescription.textContent = "This list prefers to stay mysterious";
             newDescription = null;
@@ -302,18 +312,18 @@ function editDefaultProjectDetails(cut, easyDateFormat) {
         const defaultProjectDueDate = document.getElementById('default-due-date-text');
         let newDueDate;
 
-        if (defaultEmptyInputLogic(defaultDueDateInput.value)) {
+        if (emptyLogic(defaultDueDateInput.value)) {
             defaultProjectDueDate.textContent = "no due date";
             newDueDate = null;
         } else {
-            defaultProjectDueDate.textContent = easyDateFormat(defaultDueDateInput.value); //easyFormatDate(defaultDueDateInput.value);
-            newDueDate = easyDateFormat(defaultDueDateInput.value) //easyFormatDate(defaultDueDateInput.value);
+            defaultProjectDueDate.textContent = easyDateFormat(defaultDueDateInput.value);
+            newDueDate = easyDateFormat(defaultDueDateInput.value);
         }
 
         const newPriority = defaultPriorityInput.value;
 
         let newLabel;
-        if (defaultProjectnoLabelLogic(defaultLabelInput.value)) {
+        if (noLabelLogic(defaultLabelInput.value)) {
             newLabel = null;
         } else {
             newLabel = defaultLabelInput.value;
@@ -321,14 +331,14 @@ function editDefaultProjectDetails(cut, easyDateFormat) {
 
         const priorityBox = document.getElementById('priority-container');
 
-        displayDefaultProjectPriority(defaultProjectPriorityLogic(defaultPriorityInput.value), priorityBox, defaultPriorityInput.value);
-        displayDefaultProjectLabel(defaultProjectLabelLogic(defaultLabelInput.value));
+        displayDefaultProjectPriority(priorityLogic(defaultPriorityInput.value), priorityBox, defaultPriorityInput.value);
+        displayDefaultProjectLabel(labelLogic(defaultLabelInput.value));
 
         return [newTitle, newDescription, newDueDate, newPriority, newLabel];
     }
 };
 
-export function createTaskForm(emptyLogic, getDateFunction, cut, easyDateFormat, priorityLogic) {
+export function createTaskForm(emptyLogic, getDateFunction, cut, easyDateFormat, priorityLogic, getTaskValues) {
     const taskContainer = document.getElementById('default-project-task-container');
     const taskBlock = document.getElementById('add-task-box');
     const addSvg = document.getElementById('default-addSvg');
@@ -403,9 +413,12 @@ export function createTaskForm(emptyLogic, getDateFunction, cut, easyDateFormat,
     taskSubmitButton.addEventListener('mouseup', () => {
         taskSubmitButton.classList.add('unpressed');
         taskSubmitButton.classList.remove('pressed');
-        const taskResult = createNewTasks(emptyLogic, cut, easyDateFormat, priorityLogic);
+        const taskResults = createNewTasks(emptyLogic, cut, easyDateFormat, priorityLogic);
 
-        console.log(taskResult);
+        if (Array.isArray(taskResults)) {
+            console.log(taskResults);
+            getTaskValues(taskResults);
+        }
     });
 };
 

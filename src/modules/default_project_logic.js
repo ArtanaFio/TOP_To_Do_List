@@ -44,7 +44,7 @@ export function defaultProjectPriorityLogic(priority) {
     }
 };
 
-export function closedMessageLogic(arrayLength) {
+export function emptyArrayLogic(arrayLength) {
     return arrayLength === 0;
 };
 

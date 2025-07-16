@@ -606,13 +606,17 @@ button:hover {
 }
 
 .track-task-box {
+    height: 100%;
     align-self: end;
+    display: flex;
+    align-items: flex-end;
     font-size: 1rem;
     font-weight: bold;
 }
 
 .array-number {
  color: darkmagenta;
+
 }
 
 .priority-box {

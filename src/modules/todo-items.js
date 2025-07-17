@@ -1,9 +1,10 @@
 
 // create todo-item
 class makeTodoItem {
-    static PRIORITIES = new Set(["low priority", "average priority", "high priority"]);
+    static PRIORITIES = new Set(['Minor', 'Important', 'Urgent']);
 
-    constructor(title, description, dueDate, priority, notes, checklist) {
+    constructor( id, title, description, dueDate, priority, notes, checklist) {
+        this.id = id,
         this.title = title; // string
         this.description = description; // string
         this.dueDate = dueDate ? new Date(dueDate) : null; // date object, default to null if not specified
@@ -42,6 +43,7 @@ class makeTodoItem {
             return priority;
         } else {
             console.log("Error: Invalid priority. Choose from the appropriate list of priorities.");
+            console.log(priority);
         }
     }
 

@@ -11,10 +11,9 @@ import mid from '../assets/images/yellow-priority.svg';
 import notes from '../assets/images/notes.svg';
 import trash from '../assets/images/delete.svg';
 
-export function displayDefaultProject(noTasksLogic, arrayLength) {
+export function displayDefaultProject(noTasksLogic) {
 
-    console.log('REMINDER: need to figure out how to remove "No tasks have been added yet" when there are tasks');
-    
+    console.log(`REMINDER: Fix the dummy input reshowing before the task form closes. Look at show(taskBlock) inside clickDefaultList and createTaskForm, hide(taskBlock) also inside createTaskForm and clickExitIcon.`);
     const projectContainer = document.getElementById('project-container');
     const defaultList = makeElement('div', 'default', 'list close-list', '', projectContainer);
     const defaultTopDiv = makeElement('div', 'default-top-div', 'list-top-div', '', defaultList);
@@ -22,55 +21,63 @@ export function displayDefaultProject(noTasksLogic, arrayLength) {
     const infoSvg = makeIcon(info, 'info-icon', infoBox);
     infoSvg.id = "default-info-icon";
     const editExitBox = makeElement('div', '', 'edit-exit-svg-pair', '', defaultTopDiv);
-    const defaultEditBox = makeElement('div', '', 'invisible', '', editExitBox);
+    const defaultEditBox = makeElement('div', 'default-edit-box', 'invisible', '', editExitBox);
     const editSvg = makeIcon(edit, 'edit-icon', defaultEditBox);
     editSvg.id = "default-edit-button";
-    const defaultExitBox = makeElement('div', '', '', '', editExitBox);
+    const defaultExitBox = makeElement('div', 'default-exit-box', '', '', editExitBox);
     const exitSvg = makeIcon(exit,['exit-icon', 'invisible'], defaultExitBox);
+    exitSvg.id = "default-exit-buttom";
     const middleBox = makeElement('div', '', 'date-label-box', '', defaultList);
     const defaultListDueDateBox = makeElement('div', 'default-date-box', '', '', middleBox);
     const defaultListLabelBox = makeElement('div', 'default-label-box', '', '', middleBox);
+    
     const taskContainer = makeElement('div', 'default-project-task-container', 'task-area', '', defaultList);
-    const taskListContainer = makeElement('div', 'default-project-task-list-box', '', '', taskContainer);
-    const noTaskStatement = makeElement('div', '', 'no-task', 'No tasks have been added yet', '');
+    const taskListContainer = makeElement('div', 'default-project-task-list-box', 'flexing', '', taskContainer);
+    const taskStatement = makeElement('div', 'task-statement', 'task-notice', '', taskContainer);
 
     if (noTasksLogic) {
-        taskContainer.appendChild(noTaskStatement);
+        taskStatement.classList.add('no-task');
+        taskStatement.classList.remove('any-task');
+        taskStatement.textContent = "No tasks have been added yet";
     }
     
     const taskBlock = makeElement('div', 'add-task-box', 'invisible', '', taskContainer);
-    const addSvg = makeIcon(plus, 'add-icon', taskBlock);
+    const addTaskBox = makeElement('div', '', 'boxy', '', taskBlock);
+    const addSvg = makeIcon(plus, 'add-icon', addTaskBox);
     addSvg.id = "default-addSvg";
-    const dummyInput = makeElement('div', 'default-dummy-input', 'dummy-input', 'Enter a new task here', taskBlock);
+    const dummyBox = makeElement('div', '', 'content-box', '', taskBlock);
+    const dummyInput = makeElement('div', 'default-dummy-input', 'dummy-input', 'Enter a new task here', dummyBox);
+
+    
     const defaultBottomDiv = makeElement('div', '', 'list-bottom-div', '', defaultList);
     const defaultTaskTracker = makeElement('div', 'default-task-tracker', 'track-task-box', '', defaultBottomDiv);
     const defaultTaskText  = makeElement('span', '', '', 'Tasks: ', defaultTaskTracker);
     const defaultTaskNumber = makeElement('span', 'default-task-number', 'array-number', '', defaultTaskTracker);
     const priorityBox = makeElement('div','priority-container', 'priority-box', '', defaultBottomDiv);
     
-    clickDefaultList(defaultList, defaultEditBox, exitSvg, noTaskStatement, taskBlock);
-    clickExitIcon(defaultExitBox, defaultList, defaultEditBox, exitSvg, taskBlock, noTasksLogic, taskContainer, noTaskStatement, arrayLength);
+    clickDefaultList(defaultList, defaultEditBox, exitSvg, taskStatement, taskBlock, taskListContainer);
+    clickExitIcon(defaultExitBox, defaultList, defaultEditBox, exitSvg, taskBlock, taskListContainer);
 
     return {priorityBox};
 };
 
-function clickDefaultList(defaultList, defaultEditBox, exitSvg, noTaskStatement, taskBlock) {
+function clickDefaultList(defaultList, defaultEditBox, exitSvg, taskStatement, taskBlock, taskListContainer) {
     defaultList.addEventListener('click', () => {
         defaultList.classList.add('open-list');
         defaultList.classList.remove('close-list');
         defaultEditBox.classList.remove('invisible');
         exitSvg.classList.remove('invisible');
 
-        if (noTaskStatement) {
-            noTaskStatement.remove();
+        if (defaultList.classList.contains('open-list')) {
+            taskStatement.classList.add('invisible');
         }
             
         show(taskBlock);
+        show (taskListContainer);
     });
-    console.log(`show(taskBlock)`);
 };
 
-function clickExitIcon(defaultExitBox, defaultList, defaultEditBox, exitSvg, taskBlock, noTasksLogic, taskContainer, noTaskStatement, arrayLength) {
+function clickExitIcon(defaultExitBox, defaultList, defaultEditBox, exitSvg, taskBlock, taskListContainer) {
     defaultExitBox.addEventListener("click", (event) => {
         event.stopPropagation();
         defaultList.classList.add('close-list');
@@ -78,16 +85,31 @@ function clickExitIcon(defaultExitBox, defaultList, defaultEditBox, exitSvg, tas
         defaultEditBox.classList.add('invisible');
         exitSvg.classList.add('invisible');
         hide(taskBlock);
+        hide(taskListContainer);
+    });
+};
 
+export function updateTaskStatement(noTasksLogic, oneTaskLogic, taskArrayLength) {
+    const defaultExitBox = document.getElementById('default-exit-box');
+    const taskContainer = document.getElementById('default-project-task-container');
+    const taskStatement = document.getElementById('task-statement');
+    
+    defaultExitBox.addEventListener('click', (event) => {
+        event.stopPropagation();
+        taskStatement.classList.remove('invisible');
         if (noTasksLogic) {
-            console.log("there are no tasks");
-            taskContainer.appendChild(noTaskStatement);
-            console.log(`arrayLength: ${arrayLength}`);
+            taskStatement.classList.add('no-task');
+            taskStatement.classList.remove('any-task');
+            taskStatement.textContent = "No tasks have been added yet";
+        } else if (oneTaskLogic) {
+            taskStatement.classList.add('no-task');
+            taskStatement.classList.remove('any-task');
+            taskStatement.textContent = `You only have 1 task left!`;
         } else {
-            console.log(`arrayLength: ${arrayLength}`);
+            taskStatement.textContent = `Don't forget to finish your tasks`;
         }
-        });
-    };
+    });
+};
 
 export function displayDefaultProjectTitle(title) {
     const defaultTopDiv = document.getElementById('default-top-div');
@@ -126,7 +148,7 @@ export function displayDefaultProjectLabel(label) {
     const listLabel = makeElement('span', '', label[1], label[0], defaultListLabelBox);
 };
 
-export function displayDefaultProjectTaskNumber(arrayLength) {
+export function displayDefaultProjectTaskNumber(noTaskLogic, arrayLength) {
     const defaultTaskNumber = document.getElementById('default-task-number');
     defaultTaskNumber.textContent = arrayLength;
 };
@@ -356,7 +378,6 @@ export function createTaskForm(emptyLogic, getDateFunction, cut, easyDateFormat,
         hide(taskBlock);
         taskContainer.appendChild(taskFormContainer);
     });
-    console.log(`hide taskBlock`);
 
     const taskForm = makeElement('form', '', 'task-form', '', taskFormContainer);
     const taskFieldset = makeElement('fieldset', '', '', '', taskForm);
@@ -401,7 +422,6 @@ export function createTaskForm(emptyLogic, getDateFunction, cut, easyDateFormat,
         taskFormContainer.remove();
         show(taskBlock);
     });
-    console.log(`show(taskBlock)`);
 
     const taskSubmitButton = makeLabelsOrInputsOrButtons('button', '', '', '', '', 'button', 'submit-button unpressed', 'Submit', taskFormButtonContainer);
 
@@ -454,10 +474,12 @@ function createNewTasks(emptyLogic, cut, easyDateFormat, priorityLogic) {
         const taskChecklist = taskChecklistInput.value;
         const taskListContainer = document.getElementById('default-project-task-list-box');
         const taskBox = makeElement('div', '', 'block task-box', '', taskListContainer);
-        const taskCompletionCircle = makeElement('div', '', 'circle', '', taskBox);
+        const cicleBox = makeElement('div', '', 'boxy', '', taskBox);
+        const taskCompletionCircle = makeElement('div', '', 'circle', '', cicleBox);
         const emptyCircle = makeElement('div', '', 'empty-circle', '', taskCompletionCircle);
         const checkSvg = makeIcon(check, 'check-icon');
-        const taskTitleText = makeElement('p', '', 'task-entry', taskTitle, taskBox);
+        const taskContentBox = makeElement('div', '', 'content-box', '', taskBox);
+        const taskTitleText = makeElement('p', '', 'task-entry', taskTitle, taskContentBox);
 
         taskCompletionCircle.addEventListener('click', () => {
             if (!taskTitleText.classList.contains('strike-through')) {
@@ -471,7 +493,7 @@ function createNewTasks(emptyLogic, cut, easyDateFormat, priorityLogic) {
             }
         });
 
-        const pictographBox = makeElement('div', '', 'pictographs', '', taskBox);
+        const pictographBox = makeElement('div', '', 'pictographs', '', taskContentBox);
         const taskPriorityBox = makeElement('div', 'priority-task', 'white-out priority-box icon-box', '', pictographBox);
 
         if(taskPriority) {
@@ -529,6 +551,7 @@ function createNewTasks(emptyLogic, cut, easyDateFormat, priorityLogic) {
 
         taskDeleteBox.addEventListener('click', () => {
             taskBox.remove();
+            console.log('removed task from DOM');
         });
 
         taskTitleInput.value = "";
@@ -540,6 +563,10 @@ function createNewTasks(emptyLogic, cut, easyDateFormat, priorityLogic) {
         
         return [taskTitle, taskDescription, taskPriority, taskDueDate, taskNotes, taskChecklist];
     }
+};
+
+export function renderTaskToDOM(taskObject) {
+    
 };
 
 function displayTaskPriority(logic, value, container) {

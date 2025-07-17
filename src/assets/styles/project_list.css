@@ -308,13 +308,6 @@ textarea {
     color: black;
 }
 
-.notes-box {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    border: 5px dashed red;
-}
-
 .shift-down {
     margin-top: 50px;
 }
@@ -416,19 +409,26 @@ button:hover {
 
 #default-project-task-list-box {
     width: 100%;
-    display: flex;
     flex-direction: column;
     gap: 5px;
 }
 
-.no-task {
+.task-notice {
     margin-top: 10px;
     font-size: 1.25rem;
+}
+
+.no-task {
     color: orchid;
 }
 
+.any-task {
+    color: darkorchid;
+    font-weight: bold;
+}
+
 #add-task-box {
-    width: 98%;
+    width: 100%;
 }
 
 .dummy-input {
@@ -473,8 +473,6 @@ button:hover {
 /* NEW TASK STYLING ---------------------------------------------*/
 .task-box { /* full-task */
     width: 100%;
-    height: 28px;
-    padding: 0 5px;
     display: flex;
     align-items: center;
 }
@@ -482,6 +480,19 @@ button:hover {
 .task-box:hover { /* full-task */
     background-color: #ffd7ff;
     border-radius: 20px;
+}
+
+.boxy { /* for containing circles/icons */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content-box { /* for containing all content next to circle */
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .circle {
@@ -736,5 +747,15 @@ button:hover {
 /*
 .fieldset-border {
     border: 1px solid darkorchid;
+}
+*/
+
+/*
+
+.notes-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border: 5px dashed red;
 }
 */

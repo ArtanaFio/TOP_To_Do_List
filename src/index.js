@@ -4,8 +4,8 @@ import makeProject from './modules/projects';
 import { defaultProject } from './modules/projects';
 import { basicPageLayout } from './modules/page_layout';
 import { getTodayDate, formatDateForInput, trim, easyFormatDate } from './modules/default_project_utility';
-import { defaultProjectDueDateLogic, defaultProjectLabelLogic, defaultProjectPriorityLogic, emptyArrayLogic, priorityFormLogic, defaultProjectnoLabelLogic, defaultEmptyInputLogic } from './modules/default_project_logic';
-import { displayDefaultProject, displayDefaultProjectTitle, displayDefaultProjectDescription, displayDefaultProjectDueDate, displayDefaultProjectLabel, displayDefaultProjectTaskNumber, displayDefaultProjectPriority, createDefaultProjectEditForm, createTaskForm} from './modules/default_project_DOM';
+import { defaultProjectDueDateLogic, defaultProjectLabelLogic, defaultProjectPriorityLogic, emptyArrayLogic, oneTaskLogic, priorityFormLogic, defaultProjectnoLabelLogic, defaultEmptyInputLogic } from './modules/default_project_logic';
+import { displayDefaultProject, displayDefaultProjectTitle, displayDefaultProjectDescription, displayDefaultProjectDueDate, displayDefaultProjectLabel, displayDefaultProjectTaskNumber, displayDefaultProjectPriority, updateTaskStatement, createDefaultProjectEditForm, createTaskForm, renderTaskToDOM} from './modules/default_project_DOM';
 import { projectDisplay } from './modules/new_project_DOM';
 
 import './assets/styles/main.css';
@@ -49,12 +49,11 @@ basicPageLayout();
 const defaultProjectUI = displayDefaultProject(emptyArrayLogic(defaultProject.tasks.length), defaultProject.tasks.length);
 displayDefaultProjectTitle(defaultProject.title);
 displayDefaultProjectDescription(defaultProject.description);
-
 displayDefaultProjectDueDate(defaultProjectDueDateLogic(defaultProject.dueDate));
-
 displayDefaultProjectLabel(defaultProjectLabelLogic(defaultProject.label));
-displayDefaultProjectTaskNumber(defaultProject.tasks.length);
 displayDefaultProjectPriority(defaultProjectPriorityLogic(defaultProject.priority), defaultProjectUI.priorityBox, defaultProject.priority);
+displayDefaultProjectTaskNumber(emptyArrayLogic(defaultProject.tasks.length), defaultProject.tasks.length);
+updateTaskStatement(emptyArrayLogic(defaultProject.tasks.length), oneTaskLogic(defaultProject.tasks.length), defaultProject.tasks.length);
 
 createDefaultProjectEditForm(defaultProject.title, defaultProject.description, defaultProject.dueDate, getTodayDate(), formatDateForInput, priorityFormLogic(defaultProject.priority), defaultEmptyInputLogic, trim, easyFormatDate, defaultProjectnoLabelLogic, defaultProjectLabelLogic, defaultProjectPriorityLogic, function(newProperties) {
     editProject(defaultProject, newProperties);
@@ -63,11 +62,13 @@ createDefaultProjectEditForm(defaultProject.title, defaultProject.description, d
 
 createTaskForm(defaultEmptyInputLogic, getTodayDate(), trim, easyFormatDate, defaultProjectPriorityLogic, function(taskProperties) {
     // taskProperties[i] where 0 = title | 1 = description | 2 = priority, 3 = due date | 4 = notes | 5 = checklist
-    addTasksToList(defaultProject, taskProperties);
-    console.log(`default project tasks: ${defaultProject.tasks}`);
+    const newTask = new makeTodoItem(Date.now(), taskProperties[0], taskProperties[1], taskProperties[3], taskProperties[2], taskProperties[4], taskProperties[5]);
+    console.log(newTask);
+    addTasksToList(defaultProject, newTask);
+    console.log(`default project tasks: ${defaultProject.tasks[0]}`);
     console.log(`Default Project task array length: ${defaultProject.tasks.length}`);
-    displayDefaultProjectTaskNumber(defaultProject.tasks.length);
-
+    displayDefaultProjectTaskNumber(emptyArrayLogic(defaultProject.tasks.length), defaultProject.tasks.length);
+    updateTaskStatement(emptyArrayLogic(defaultProject.tasks.length), oneTaskLogic(defaultProject.tasks.length), defaultProject.tasks.length);
 });
 
 

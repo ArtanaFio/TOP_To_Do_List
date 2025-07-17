@@ -48,6 +48,10 @@ export function emptyArrayLogic(arrayLength) {
     return arrayLength === 0;
 };
 
+export function oneTaskLogic(arrayLength) {
+    return arrayLength === 1;
+};
+
 export function priorityFormLogic(priority) {
     if (priority === "Minor") {
         return 1;

@@ -272,22 +272,6 @@ textarea {
     background-color: orchid;
 }
 
-.input-task {
-    height: 25px;
-    flex: 1;
-    display: flex;
-    align-items: center;
-    font-size: 1.25rem;
-    font-weight: bold;
-    color: orchid;
-    padding-left: 10px;
-    margin: 0 5px;
-    background-color: rgba(221, 160, 221, 0.25);
-    cursor: text;
-    border: none;
-    outline: none;
-}
-
 .invalid {
     height: 25px;
     flex: 1;
@@ -452,20 +436,18 @@ button:hover {
 /* TASK FORM STYLING ---------------------------------------------*/
 #default-task-form-box {
     width: 100vw;
-    height: 100vh;
+    height: 70vh;
     position: fixed;
-    display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
 }
 
 .task-form {
     width: 80%;
     max-width: 1000px;
-    background-color: white/*#ffd7ff*/;
+    background-color: #fdf8ff;
     border-radius: 10px;
-    border: 1px solid darkorchid;
-    /*box-shadow: 1px 1px 5px rgb(98, 34, 131);*/
+    box-shadow: 1px 1px 5px #ad84c2;
     padding: 5px;
 }
 
@@ -678,17 +660,8 @@ button:hover {
 }
 
 @media (max-width: 650px) {
-    .task-bar {
-        width: 70vw;
-        display: flex;
-        margin: 0;
-    }
-
     .property-div {
-        width: 70vw;
-        display: flex;
         flex-wrap: wrap;
-        margin: 0 5px;
     }
 
     .half-property {
@@ -757,5 +730,32 @@ button:hover {
     display: flex;
     flex-direction: column;
     border: 5px dashed red;
+}
+*/
+
+/*
+.task-bar {
+        width: 70vw;
+        display: flex;
+        margin: 0;
+        border: 3px dotted purple;
+    }
+*/
+
+/* 
+.input-task {
+    height: 25px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: orchid;
+    padding-left: 10px;
+    margin: 0 5px;
+    background-color: rgba(221, 160, 221, 0.25);
+    cursor: text;
+    border: none;
+    outline: none;
 }
 */

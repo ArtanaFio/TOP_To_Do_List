@@ -71,3 +71,7 @@ export function defaultProjectnoLabelLogic(label) {
 export function defaultEmptyInputLogic(inputValue) {
     return trim(inputValue) === "";
 };
+
+export function greaterThan(first, second) {
+    return first > second;
+}

@@ -3,8 +3,8 @@
 class makeTodoItem {
     static PRIORITIES = new Set(['Minor', 'Important', 'Urgent']);
 
-    constructor( id, title, description, dueDate, priority, notes, checklist) {
-        this.id = id,
+    constructor( index, title, description, dueDate, priority, notes, checklist) {
+        this.index = index;
         this.title = title; // string
         this.description = description; // string
         this.dueDate = dueDate ? new Date(dueDate) : null; // date object, default to null if not specified

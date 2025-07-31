@@ -3,7 +3,7 @@
 class makeTodoItem {
     static PRIORITIES = new Set(['Minor', 'Important', 'Urgent']);
 
-    constructor( index, title, description, dueDate, priority, notes, checklist) {
+    constructor(index, title, description, dueDate, priority, notes, checklist) {
         this.index = index;
         this.title = title; // string
         this.description = description; // string
@@ -57,59 +57,67 @@ class makeTodoItem {
     }
 
     // method to add todo-item note
-    addNote(note) {
+    /*addNote(note) {
         this.notes.push(note);
+    }*/
+    
+    editNote(newNotes) {
+        this.notes = newNotes;
     }
 
     // method to edit todo-item note depending on index
-    editNote(index, newNote) {
+    /*editNote(index, newNote) {
         if (this.notes[index]) {
             this.notes[index] = newNote;
         } else {
             console.log("Error: note index is invalid.");
         }
-    }
+    }*/
 
     // method to delete todo-item note depending on index
-    deleteNote(index) {
+    /*deleteNote(index) {
         if(this.notes[index]) {
             this.notes.splice(index, 1);
         } else {
             console.log("Error: note cannot be deleted because index is invalid.");
         }
-    }
+    }*/
 
     // method to add to todo-item's checklist
-    addChecklistItem(item) {
+    /*addChecklistItem(item) {
         this.checklist.push({ item, completed: false });
+    }*/
+
+    editChecklist(newChecklist) {
+        this.checklist = newChecklist;
     }
 
     // method to edit todo-item's checklist depending on index
-    editChecklistItem(index, newItem) {
+    /*editChecklistItem(index, newItem) {
         if (this.checklist[index]) {
             this.checklist[index].item = newItem;
         } else {
             console.log("Error: checklist index is invalid.");
         }
-    }
+    }*/
 
     // method to delete todo-item's checklist item depending on index
-    deleteChecklistItem(index) {
+    /*deleteChecklistItem(index) {
         if (this.checklist[index]) {
             this.checklist.splice(index, 1);
         } else {
             console.log("Error: checklist item cannot be deleted because index is invalid.");
         }
-    }
+    }*/
 
     // method to edit completion status of todo-item's checklist item
-    toggleChecklistStatus(index) {
+    /*toggleChecklistStatus(index) {
         if (this.checklist[index]) {
             this.checklist[index].completed = !this.addChecklistItem.completed;
         } else {
             console.log("Error: Checklist item index is invalid.");
         }
-    }
+    }*/
 }
 
 export default makeTodoItem;

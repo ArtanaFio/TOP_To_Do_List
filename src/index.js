@@ -5,7 +5,7 @@ import { defaultProject } from './modules/projects';
 import { basicPageLayout } from './modules/page_layout';
 import { getTodayDate, formatDateForInput, trim, easyFormatDate } from './modules/default_project_utility';
 import { defaultProjectDueDateLogic, defaultProjectLabelLogic, defaultProjectPriorityLogic, emptyArrayLogic, oneTaskLogic, priorityFormLogic, defaultProjectnoLabelLogic, defaultEmptyInputLogic, greaterThan } from './modules/default_project_logic';
-import { displayDefaultProject, displayDefaultProjectTitle, displayDefaultProjectDescription, displayDefaultProjectDueDate, displayDefaultProjectLabel, displayDefaultProjectTaskNumber, displayDefaultProjectPriority, updateTaskStatement, createDefaultProjectEditForm, createTaskForm, makeEditTaskButton, makeDeleteTaskButton } from './modules/default_project_DOM';
+import { displayDefaultProject, displayDefaultProjectTitle, displayDefaultProjectDescription, displayDefaultProjectDueDate, displayDefaultProjectLabel, displayDefaultProjectTaskNumber, displayDefaultProjectPriority, updateTaskStatement, createDefaultProjectEditForm, createTaskForm, makeEditTaskButton, makeDeleteTaskButton, createTaskEditForm, show, hide, editTasksUI } from './modules/default_project_DOM';
 import { projectDisplay } from './modules/new_project_DOM';
 
 import './assets/styles/main.css';
@@ -36,6 +36,17 @@ function editProject(list, properties) {
     list.editLabel(properties[4]);
 };
 
+// edit any task 
+function editTask(task, title, description, dueDate, priority, notes, checklist) {
+    task.editTitle(title);
+    task.editDescription(description);
+    task.editDueDate(dueDate);
+    task.editPriority(priority);
+    task.editNote(notes);
+    task.editChecklist(checklist);
+    console.log(task);
+};
+
 basicPageLayout();
 
 const defaultProjectUI = displayDefaultProject(emptyArrayLogic(defaultProject.tasks.length), defaultProject.tasks.length);
@@ -52,6 +63,8 @@ createDefaultProjectEditForm(defaultProject.title, defaultProject.description, d
     console.log(defaultProject);
 });
 
+const taskEditForm = createTaskEditForm(getTodayDate());
+
 createTaskForm(defaultEmptyInputLogic, getTodayDate(), trim, easyFormatDate, defaultProjectPriorityLogic, function(taskPropertiesAndElements) {
     // taskProperties[i] where 0 = title | 1 = description | 2 = priority, 3 = due date | 4 = notes | 5 = checklist
     let index = defaultProject.tasks.length;
@@ -63,8 +76,46 @@ createTaskForm(defaultEmptyInputLogic, getTodayDate(), trim, easyFormatDate, def
     console.log(`You've created ${newTask.title} with index ${index}`);
     const taskBox = taskPropertiesAndElements[1].taskBox;
     const pictographBox = taskPropertiesAndElements[1].pictographBox;
+    const taskEditButton = makeEditTaskButton(taskBox, pictographBox);
+    
+    taskEditButton.addEventListener('click', () => {
+        show(taskEditForm.formContainer);
+        taskEditForm.titleInput.value = taskProperties.title;
+        taskEditForm.descriptionInput.value = taskProperties.description;
+        taskEditForm.dueDateInput.value = taskProperties.dueDate;
+        taskEditForm.priorityInput.value = taskProperties.priority;
+        taskEditForm.notesInput.value = taskProperties.notes;
+        taskEditForm.checklistInput.value = taskProperties.checklist;
+        console.log(`You've clicked ${newTask.title} with index ${newTask.index}`);
+    });
 
-    makeEditTaskButton(taskBox, pictographBox);
+    const taskEditCancelButton = taskEditForm.cancelButton;
+
+    taskEditCancelButton.addEventListener('mouseup', () => {
+        hide(taskEditForm.formContainer);
+    });
+
+    const taskEditSubmitButton = taskEditForm.submitButton;
+    const titleElement = taskPropertiesAndElements[2].titleElement;
+    const priorityElement = taskPropertiesAndElements[2].priorityElement;
+    const descriptionSvg = taskPropertiesAndElements[2].descriptionSvg;
+    const descriptionElement = taskPropertiesAndElements[2].descriptionElement;
+    const dueDateSvg = taskPropertiesAndElements[2].dueDateSvg;
+    const dueDateElement = taskPropertiesAndElements[2].dueDateElement;
+    const notesSvg = taskPropertiesAndElements[2].notesSvg;
+    const notesElement = taskPropertiesAndElements[2].notesElement;
+    const checklistSvg = taskPropertiesAndElements[2].checklistSvg;
+    const checklistElement = taskPropertiesAndElements[2].checklistElement;
+
+    taskEditSubmitButton.addEventListener('mouseup', () => {
+        hide(taskEditForm.formContainer);
+        //editTasksUI(defaultEmptyInputLogic(taskEditForm.titleInput.value), taskEditForm.titleInput, titleElement, taskEditForm.titleInput.value, descriptionSvg, descriptionElement, taskEditForm.descriptionInput.value, dueDateSvg, dueDateElement, easyFormatDate, taskEditForm.dueDateInput.value, defaultProjectPriorityLogic, taskEditForm.priorityInput, priorityElement, taskEditForm.priorityInput.value, notesSvg, notesElement, taskEditForm.notesInput.value, checklistSvg, checklistElement, taskEditForm.checklistInput.value, hide, taskEditForm.formContainer);
+        console.log(`You're trying to edit the ${newTask.index+1}th task called ${newTask.title} with index ${newTask.index}`);
+        //editTask(newTask, taskEditForm.titleInput.value, taskEditForm.descriptionInput.value, taskEditForm.dueDateInput.value, taskEditForm.priorityInput.value, taskEditForm.notesInput.value, taskEditForm.checklistInput.value);
+        
+        console.log(defaultProject.tasks);
+    });
+
     const taskDeleteButton = makeDeleteTaskButton(taskBox);
 
     taskDeleteButton.addEventListener('click', () => {
@@ -90,7 +141,6 @@ createTaskForm(defaultEmptyInputLogic, getTodayDate(), trim, easyFormatDate, def
     updateTaskStatement(emptyArrayLogic(defaultProject.tasks.length), oneTaskLogic(defaultProject.tasks.length));
     console.log(defaultProject.tasks);
 });
-
 
 projectDisplay();
 

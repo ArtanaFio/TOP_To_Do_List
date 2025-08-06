@@ -23,10 +23,6 @@ function deleteTaskFromList(list, task) {
     list.tasks.splice(task, 1); // (task, 1), where task = index where I want to start removing items, and 1 is the number of items I want to remove.
 };
 
-function giveArrayIndex(thisArray, item) {
-    thisArray.indexOf(item);
-};
-
 // edit any project
 function editProject(list, properties) {
     list.editTitle(properties[0]);
@@ -71,54 +67,23 @@ createTaskForm(defaultEmptyInputLogic, getTodayDate(), trim, easyFormatDate, def
     let index = defaultProject.tasks.length;
     const taskProperties = taskPropertiesAndElements[0];
     const newTask = new makeTodoItem(index, taskProperties.title, taskProperties.description, taskProperties.dueDate, taskProperties.priority, taskProperties.notes, taskProperties.checklist);
-    console.log(newTask);
-    console.log(taskProperties.dueDate);
-
     addTasksToList(defaultProject, newTask);
-    //console.log(`You've created ${newTask.title} with index ${index}`);
     const taskBox = taskPropertiesAndElements[1].taskBox;
     const pictographBox = taskPropertiesAndElements[1].pictographBox;
     const taskEditButton = makeEditTaskButton(taskBox, pictographBox);
-
-    let currrentlyEditingTask = null;
-    let currentTaskElements = null;
+    let selectedTask = null;
 
     taskEditButton.addEventListener('click', () => {
-        // yet to use these variables------------------------------------------------------------------
-        currrentlyEditingTask = newTask;
-        currentTaskElements = {
-            titleElement,
-            priorityElement,
-            descriptionSvg,
-            descriptionElement,
-            dueDateSvg,
-            dueDateElement,
-            notesSvg,
-            notesElement,
-            checklistSvg,
-            checklistElement 
-        };
-        console.log('currrentlyEditingTask:');
-        console.log(currrentlyEditingTask);
-        console.log('titleElement text:', titleElement.textContent);
-        //--------------------------------------------------------------------------------------------
+        selectedTask = newTask;
         show(taskEditForm.formContainer);
-
-        // populates the input values with current task properties:------------------------------------
         taskEditForm.titleInput.value = newTask.title;
         taskEditForm.descriptionInput.value = newTask.description;
-        console.log(`reverse date format: ${reverseDate(newTask.dueDate)}`);
-
         taskEditForm.dueDateInput.value = reverseDate(newTask.dueDate);
-
         taskEditForm.priorityInput.value = newTask.priority;
         taskEditForm.notesInput.value = newTask.notes;
         taskEditForm.checklistInput.value = newTask.checklist;
-        //---------------------------------------------------------------------------------------------
-        console.log(`You've clicked the edit button for ${newTask.title} with index ${newTask.index}`);
     });
 
-    const taskEditSubmitButton = taskEditForm.submitButton;
     const titleElement = taskPropertiesAndElements[2].titleElement;
     const priorityElement = taskPropertiesAndElements[2].priorityElement;
     const descriptionSvg = taskPropertiesAndElements[2].descriptionSvg;
@@ -131,20 +96,17 @@ createTaskForm(defaultEmptyInputLogic, getTodayDate(), trim, easyFormatDate, def
     const checklistElement = taskPropertiesAndElements[2].checklistElement;
 
     taskEditForm.submitButton.addEventListener('click', () => {
-        console.log(currrentlyEditingTask);
-        console.log(`You're changing ${newTask.title}, with index ${newTask.index}`);
-        
-        editTasksUI(defaultEmptyInputLogic(taskEditForm.titleInput.value), taskEditForm.titleInput, titleElement, taskEditForm.titleInput.value, descriptionSvg, descriptionElement, taskEditForm.descriptionInput.value, dueDateSvg, dueDateElement, easyFormatDate, taskEditForm.dueDateInput.value, defaultProjectPriorityLogic, taskEditForm.priorityInput, priorityElement, taskEditForm.priorityInput.value, notesSvg, notesElement, taskEditForm.notesInput.value, checklistSvg, checklistElement, taskEditForm.checklistInput.value, hide, taskEditForm.formContainer);
-        editTask(newTask, taskEditForm.titleInput.value, taskEditForm.descriptionInput.value, taskEditForm.dueDateInput.value, taskEditForm.priorityInput.value, taskEditForm.notesInput.value, taskEditForm.checklistInput.value);
-
-        hide(taskEditForm.formContainer);
-
-        console.log(defaultProject.tasks);
-        console.log("----------------------------------------")
+        if (selectedTask) {
+            editTasksUI(defaultEmptyInputLogic(taskEditForm.titleInput.value), taskEditForm.titleInput, titleElement, taskEditForm.titleInput.value, descriptionSvg, descriptionElement, taskEditForm.descriptionInput.value, dueDateSvg, dueDateElement, easyFormatDate, taskEditForm.dueDateInput.value, defaultProjectPriorityLogic, taskEditForm.priorityInput, priorityElement, taskEditForm.priorityInput.value, notesSvg, notesElement, taskEditForm.notesInput.value, checklistSvg, checklistElement, taskEditForm.checklistInput.value, hide, taskEditForm.formContainer);
+            editTask(newTask, taskEditForm.titleInput.value, taskEditForm.descriptionInput.value, taskEditForm.dueDateInput.value, taskEditForm.priorityInput.value, taskEditForm.notesInput.value, taskEditForm.checklistInput.value);
+            selectedTask = null;
+            hide(taskEditForm.formContainer);
+            console.log(defaultProject.tasks);
+        }
     });
 
-    const taskEditCancelButton = taskEditForm.cancelButton;
-    taskEditCancelButton.addEventListener('click', () => {
+    taskEditForm.cancelButton.addEventListener('click', () => {
+        selectedTask = null;
         hide(taskEditForm.formContainer);
     });
 
@@ -152,6 +114,7 @@ createTaskForm(defaultEmptyInputLogic, getTodayDate(), trim, easyFormatDate, def
     taskDeleteButton.addEventListener('click', () => {
         deleteTaskFromList(defaultProject, newTask.index);
         const tasks = defaultProject.tasks;
+
         tasks.forEach(task => {
             if (greaterThan(task.index, newTask.index)) {
                 task.index--;
@@ -170,7 +133,6 @@ createTaskForm(defaultEmptyInputLogic, getTodayDate(), trim, easyFormatDate, def
 
     displayDefaultProjectTaskNumber(defaultProject.tasks.length);
     updateTaskStatement(emptyArrayLogic(defaultProject.tasks.length), oneTaskLogic(defaultProject.tasks.length));
-    //console.log(defaultProject.tasks);
 });
 
 projectDisplay();

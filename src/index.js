@@ -1,7 +1,9 @@
 //import { functionName } from './modules/moduleName';
 import makeTodoItem from './modules/todo-items';
+import {editTask } from './modules/todo-items';
 import makeProject from './modules/projects';
-import { defaultProject } from './modules/projects';
+import { defaultProject, addTasksToList, deleteTaskFromList } from './modules/projects';
+import { editProject } from './modules/projects';
 import { basicPageLayout } from './modules/page_layout';
 import { getTodayDate, formatDateForInput, trim, easyFormatDate, reverseDate } from './modules/default_project_utility';
 import { defaultProjectDueDateLogic, defaultProjectLabelLogic, defaultProjectPriorityLogic, emptyArrayLogic, oneTaskLogic, priorityFormLogic, defaultProjectnoLabelLogic, defaultEmptyInputLogic, greaterThan } from './modules/default_project_logic';
@@ -12,36 +14,6 @@ import './assets/styles/main.css';
 import './assets/styles/project_list.css';
 
 console.log("REMINDER: after fixing all, unenclose this code from 'function everything()'");
-
-// function to add todo-items to any project
-function addTasksToList(list, task) {
-    list.tasks.push(task);
-};
-
-// delete todo-item from project
-function deleteTaskFromList(list, task) {
-    list.tasks.splice(task, 1); // (task, 1), where task = index where I want to start removing items, and 1 is the number of items I want to remove.
-};
-
-// edit any project
-function editProject(list, properties) {
-    list.editTitle(properties[0]);
-    list.editDescription(properties[1]);
-    list.editDueDate(properties[2]);
-    list.editPriority(properties[3]);
-    list.editLabel(properties[4]);
-};
-
-// edit any task 
-function editTask(task, title, description, dueDate, priority, notes, checklist) {
-    task.editTitle(title);
-    task.editDescription(description);
-    task.editDueDate(dueDate);
-    task.editPriority(priority);
-    task.editNote(notes);
-    task.editChecklist(checklist);
-    console.log(task);
-};
 
 basicPageLayout();
 

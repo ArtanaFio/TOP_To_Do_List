@@ -128,3 +128,14 @@ class makeTodoItem {
 }
 
 export default makeTodoItem;
+
+// edit any task 
+export function editTask(task, title, description, dueDate, priority, notes, checklist) {
+    task.editTitle(title);
+    task.editDescription(description);
+    task.editDueDate(dueDate);
+    task.editPriority(priority);
+    task.editNote(notes);
+    task.editChecklist(checklist);
+    console.log(task);
+};

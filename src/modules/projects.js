@@ -115,6 +115,25 @@ class makeProject {
 
 export default makeProject;
 
+// edit any project
+export function editProject(list, properties) {
+    list.editTitle(properties[0]);
+    list.editDescription(properties[1]);
+    list.editDueDate(properties[2]);
+    list.editPriority(properties[3]);
+    list.editLabel(properties[4]);
+};
+
+// function to add todo-items to any project
+export function addTasksToList(list, task) {
+    list.tasks.push(task);
+};
+
+// delete todo-item from project
+export function deleteTaskFromList(list, task) {
+    list.tasks.splice(task, 1); // (task, 1), where task = index where I want to start removing items, and 1 is the number of items I want to remove.
+};
+
 // creation of a default project = new project(title, description, due date, priority, label), date format: "2025-03-18T00:00:00-05:00" or null
 export const defaultProject = new makeProject('Default List', 'List to begin tracking general todo items.', null, 'Important', null);
 

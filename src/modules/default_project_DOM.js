@@ -222,12 +222,12 @@ export function createDefaultProjectEditForm(title, description, dueDate, getDat
     const defaultListTitleInput = makeElement('input', 'title', 'default-input', '', defaultListTitleDiv);
     defaultListTitleInput.value = title;
     const defaultListDescriptionDiv = makeElement('div', '', 'property-div', '', defaultListFieldset);
-    const defaultListDescriptionLabel = makeLabelsOrInputsOrButtons('label', '', 'description', '', '', '', 'textarea-label', 'Description:', defaultListDescriptionDiv);
-    const defaultListDescriptionInput = makeLabelsOrInputsOrButtons('textarea', 'description', '', 'task_description', '', '', '', '', defaultListDescriptionDiv);
+    const defaultListDescriptionLabel = makeLabelsOrInputsOrButtons('label', '', 'default-input-description', '', '', '', 'textarea-label', 'Description:', defaultListDescriptionDiv);
+    const defaultListDescriptionInput = makeLabelsOrInputsOrButtons('textarea', 'default-input-description', '', 'task_description', '', '', '', '', defaultListDescriptionDiv);
     defaultListDescriptionInput.value = description;
     const defaultListDueDateDiv = makeElement('div', '', 'property-div', '', defaultListFieldset);
-    const defaultListDueDateLabel = makeLabelsOrInputsOrButtons('label', '', 'due-date', '', '', '', '', 'Due Date:', defaultListDueDateDiv);
-    const defaultListDueDateInput = makeLabelsOrInputsOrButtons('input', 'due-date', '', 'due_date', '', 'date', 'default-input', '', defaultListDueDateDiv);
+    const defaultListDueDateLabel = makeLabelsOrInputsOrButtons('label', '', 'default-input-due-date', '', '', '', '', 'Due Date:', defaultListDueDateDiv);
+    const defaultListDueDateInput = makeLabelsOrInputsOrButtons('input', 'default-input-due-date', '', 'due_date', '', 'date', 'default-input', '', defaultListDueDateDiv);
     defaultListDueDateInput.min = getDateFunction;
     defaultListDueDateInput.value = getDateFunction;
 
@@ -285,7 +285,7 @@ export function createDefaultProjectEditForm(title, description, dueDate, getDat
         defaultListSubmitButton.classList.add('unpressed');
         defaultListSubmitButton.classList.remove('pressed');
         const editResults = editDefaultProjectDetails(emptyLogic, cut, easyDateFormat, noLabelLogic, labelLogic, priorityLogic);
-        
+
         if (Array.isArray(editResults)) {
             getInputValues(editResults);
             closeOnClick();
@@ -295,8 +295,8 @@ export function createDefaultProjectEditForm(title, description, dueDate, getDat
 
 function editDefaultProjectDetails(emptyLogic, cut, easyDateFormat, noLabelLogic, labelLogic, priorityLogic) {
     const defaultTitleInput = document.getElementById('title');
-    const defaultDescriptionInput = document.getElementById('description');
-    const defaultDueDateInput = document.getElementById('due-date');
+    const defaultDescriptionInput = document.getElementById('default-input-description');
+    const defaultDueDateInput = document.getElementById('default-input-due-date');
     const defaultLabelInput = document.getElementById('label');
     const defaultPriorityInput = document.getElementById('priority');
 
@@ -341,6 +341,7 @@ function editDefaultProjectDetails(emptyLogic, cut, easyDateFormat, noLabelLogic
             defaultProjectDueDate.textContent = easyDateFormat(defaultDueDateInput.value);
             newDueDate = easyDateFormat(defaultDueDateInput.value);
         }
+        console.log('new due date: ', defaultDueDateInput.value);
 
         const newPriority = defaultPriorityInput.value;
 
@@ -659,7 +660,7 @@ export function editTasksUI(emptyInputLogic, titleInput, titleElement, title, de
             }
         });
     } else {
-        console.log(`title: ${title}, description: ${description}, dueDate: ${dueDate}, priority: ${priority}, notes: ${notes}, checklist: ${checklist}`);
+        console.log(`Newly edited properties include title: ${title}, description: ${description}, dueDate: ${dueDate}, priority: ${priority}, notes: ${notes}, checklist: ${checklist}`);
         hideFunction(container);
         titleElement.textContent = title;
 

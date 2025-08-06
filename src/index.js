@@ -3,7 +3,7 @@ import makeTodoItem from './modules/todo-items';
 import makeProject from './modules/projects';
 import { defaultProject } from './modules/projects';
 import { basicPageLayout } from './modules/page_layout';
-import { getTodayDate, formatDateForInput, trim, easyFormatDate } from './modules/default_project_utility';
+import { getTodayDate, formatDateForInput, trim, easyFormatDate, reverseDate } from './modules/default_project_utility';
 import { defaultProjectDueDateLogic, defaultProjectLabelLogic, defaultProjectPriorityLogic, emptyArrayLogic, oneTaskLogic, priorityFormLogic, defaultProjectnoLabelLogic, defaultEmptyInputLogic, greaterThan } from './modules/default_project_logic';
 import { displayDefaultProject, displayDefaultProjectTitle, displayDefaultProjectDescription, displayDefaultProjectDueDate, displayDefaultProjectLabel, displayDefaultProjectTaskNumber, displayDefaultProjectPriority, updateTaskStatement, createDefaultProjectEditForm, createTaskForm, makeEditTaskButton, makeDeleteTaskButton, createTaskEditForm, show, hide, editTasksUI } from './modules/default_project_DOM';
 import { projectDisplay } from './modules/new_project_DOM';
@@ -60,6 +60,7 @@ updateTaskStatement(emptyArrayLogic(defaultProject.tasks.length), oneTaskLogic(d
 
 createDefaultProjectEditForm(defaultProject.title, defaultProject.description, defaultProject.dueDate, getTodayDate(), formatDateForInput, priorityFormLogic(defaultProject.priority), defaultEmptyInputLogic, trim, easyFormatDate, defaultProjectnoLabelLogic, defaultProjectLabelLogic, defaultProjectPriorityLogic, function(newProperties) {
     editProject(defaultProject, newProperties);
+    console.log(newProperties);
     console.log(defaultProject);
 });
 
@@ -71,28 +72,50 @@ createTaskForm(defaultEmptyInputLogic, getTodayDate(), trim, easyFormatDate, def
     const taskProperties = taskPropertiesAndElements[0];
     const newTask = new makeTodoItem(index, taskProperties.title, taskProperties.description, taskProperties.dueDate, taskProperties.priority, taskProperties.notes, taskProperties.checklist);
     console.log(newTask);
+    console.log(taskProperties.dueDate);
 
     addTasksToList(defaultProject, newTask);
-    console.log(`You've created ${newTask.title} with index ${index}`);
+    //console.log(`You've created ${newTask.title} with index ${index}`);
     const taskBox = taskPropertiesAndElements[1].taskBox;
     const pictographBox = taskPropertiesAndElements[1].pictographBox;
     const taskEditButton = makeEditTaskButton(taskBox, pictographBox);
-    
+
+    let currrentlyEditingTask = null;
+    let currentTaskElements = null;
+
     taskEditButton.addEventListener('click', () => {
+        // yet to use these variables------------------------------------------------------------------
+        currrentlyEditingTask = newTask;
+        currentTaskElements = {
+            titleElement,
+            priorityElement,
+            descriptionSvg,
+            descriptionElement,
+            dueDateSvg,
+            dueDateElement,
+            notesSvg,
+            notesElement,
+            checklistSvg,
+            checklistElement 
+        };
+        console.log('currrentlyEditingTask:');
+        console.log(currrentlyEditingTask);
+        console.log('titleElement text:', titleElement.textContent);
+        //--------------------------------------------------------------------------------------------
         show(taskEditForm.formContainer);
-        taskEditForm.titleInput.value = taskProperties.title;
-        taskEditForm.descriptionInput.value = taskProperties.description;
-        taskEditForm.dueDateInput.value = taskProperties.dueDate;
-        taskEditForm.priorityInput.value = taskProperties.priority;
-        taskEditForm.notesInput.value = taskProperties.notes;
-        taskEditForm.checklistInput.value = taskProperties.checklist;
-        console.log(`You've clicked ${newTask.title} with index ${newTask.index}`);
-    });
 
-    const taskEditCancelButton = taskEditForm.cancelButton;
+        // populates the input values with current task properties:------------------------------------
+        taskEditForm.titleInput.value = newTask.title;
+        taskEditForm.descriptionInput.value = newTask.description;
+        console.log(`reverse date format: ${reverseDate(newTask.dueDate)}`);
 
-    taskEditCancelButton.addEventListener('mouseup', () => {
-        hide(taskEditForm.formContainer);
+        taskEditForm.dueDateInput.value = reverseDate(newTask.dueDate);
+
+        taskEditForm.priorityInput.value = newTask.priority;
+        taskEditForm.notesInput.value = newTask.notes;
+        taskEditForm.checklistInput.value = newTask.checklist;
+        //---------------------------------------------------------------------------------------------
+        console.log(`You've clicked the edit button for ${newTask.title} with index ${newTask.index}`);
     });
 
     const taskEditSubmitButton = taskEditForm.submitButton;
@@ -107,17 +130,25 @@ createTaskForm(defaultEmptyInputLogic, getTodayDate(), trim, easyFormatDate, def
     const checklistSvg = taskPropertiesAndElements[2].checklistSvg;
     const checklistElement = taskPropertiesAndElements[2].checklistElement;
 
-    taskEditSubmitButton.addEventListener('mouseup', () => {
-        hide(taskEditForm.formContainer);
-        //editTasksUI(defaultEmptyInputLogic(taskEditForm.titleInput.value), taskEditForm.titleInput, titleElement, taskEditForm.titleInput.value, descriptionSvg, descriptionElement, taskEditForm.descriptionInput.value, dueDateSvg, dueDateElement, easyFormatDate, taskEditForm.dueDateInput.value, defaultProjectPriorityLogic, taskEditForm.priorityInput, priorityElement, taskEditForm.priorityInput.value, notesSvg, notesElement, taskEditForm.notesInput.value, checklistSvg, checklistElement, taskEditForm.checklistInput.value, hide, taskEditForm.formContainer);
-        console.log(`You're trying to edit the ${newTask.index+1}th task called ${newTask.title} with index ${newTask.index}`);
-        //editTask(newTask, taskEditForm.titleInput.value, taskEditForm.descriptionInput.value, taskEditForm.dueDateInput.value, taskEditForm.priorityInput.value, taskEditForm.notesInput.value, taskEditForm.checklistInput.value);
+    taskEditForm.submitButton.addEventListener('click', () => {
+        console.log(currrentlyEditingTask);
+        console.log(`You're changing ${newTask.title}, with index ${newTask.index}`);
         
+        editTasksUI(defaultEmptyInputLogic(taskEditForm.titleInput.value), taskEditForm.titleInput, titleElement, taskEditForm.titleInput.value, descriptionSvg, descriptionElement, taskEditForm.descriptionInput.value, dueDateSvg, dueDateElement, easyFormatDate, taskEditForm.dueDateInput.value, defaultProjectPriorityLogic, taskEditForm.priorityInput, priorityElement, taskEditForm.priorityInput.value, notesSvg, notesElement, taskEditForm.notesInput.value, checklistSvg, checklistElement, taskEditForm.checklistInput.value, hide, taskEditForm.formContainer);
+        editTask(newTask, taskEditForm.titleInput.value, taskEditForm.descriptionInput.value, taskEditForm.dueDateInput.value, taskEditForm.priorityInput.value, taskEditForm.notesInput.value, taskEditForm.checklistInput.value);
+
+        hide(taskEditForm.formContainer);
+
         console.log(defaultProject.tasks);
+        console.log("----------------------------------------")
+    });
+
+    const taskEditCancelButton = taskEditForm.cancelButton;
+    taskEditCancelButton.addEventListener('click', () => {
+        hide(taskEditForm.formContainer);
     });
 
     const taskDeleteButton = makeDeleteTaskButton(taskBox);
-
     taskDeleteButton.addEventListener('click', () => {
         deleteTaskFromList(defaultProject, newTask.index);
         const tasks = defaultProject.tasks;
@@ -139,7 +170,7 @@ createTaskForm(defaultEmptyInputLogic, getTodayDate(), trim, easyFormatDate, def
 
     displayDefaultProjectTaskNumber(defaultProject.tasks.length);
     updateTaskStatement(emptyArrayLogic(defaultProject.tasks.length), oneTaskLogic(defaultProject.tasks.length));
-    console.log(defaultProject.tasks);
+    //console.log(defaultProject.tasks);
 });
 
 projectDisplay();

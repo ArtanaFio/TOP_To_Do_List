@@ -11,13 +11,22 @@ class makeProject {
     constructor(title, description, dueDate, priority, label) {
         this.title = title;
         this.description = description;
-        this.dueDate = dueDate ? new Date(dueDate) : null; // default to null if not specified
+        this.dueDate = dueDate ? this.constructor.parseLocalDate(dueDate) : null;
         this.priority = this.setPriority(priority);
         this.label = this.setLabel(label);
         this.tasks = [];
 
         // Add project to Master Storage
         makeProject.MASTER_STORAGE.push(this);
+    }
+
+    static parseLocalDate(dueDate) {
+        if (typeof dueDate !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(dueDate)) {
+        return new Date(dueDate); // fallback
+        }
+
+        const [year, month, day] = dueDate.split("-").map(Number);
+        return new Date(year, month - 1, day);
     }
 
     // method to edit project title
@@ -42,7 +51,7 @@ class makeProject {
             return;
         }
 
-        const date = new Date(newDueDate);
+        const date = this.constructor.parseLocalDate(newDueDate);
         if (!isNaN(date.getTime())) {
             this.dueDate = date;
         } else {

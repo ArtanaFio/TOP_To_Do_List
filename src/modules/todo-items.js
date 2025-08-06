@@ -7,10 +7,19 @@ class makeTodoItem {
         this.index = index;
         this.title = title; // string
         this.description = description; // string
-        this.dueDate = dueDate ? new Date(dueDate) : null; // date object, default to null if not specified
+        this.dueDate = dueDate ? this.constructor.parseLocalDate(dueDate) : null; // date object, default to null if not specified
         this.priority = this.setPriority(priority); // priority object
         this.notes = notes; // array of strings
         this.checklist = checklist; // array of strings
+    }
+
+    static parseLocalDate(dueDate) {
+        if (typeof dueDate !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(dueDate)) {
+        return new Date(dueDate); // fallback
+        }
+
+        const [year, month, day] = dueDate.split("-").map(Number);
+        return new Date(year, month - 1, day);
     }
 
     // method to edit todo-item title
@@ -29,11 +38,9 @@ class makeTodoItem {
 
     // method to edit todo-item due date
     editDueDate(newDueDate) {
-        const date = new Date(newDueDate);
+        const date = this.constructor.parseLocalDate(newDueDate);
         if (!isNaN(date.getTime())) {
             this.dueDate = date;
-        } else {
-            console.log("Error: date format is invalid.")
         }
     }
 
